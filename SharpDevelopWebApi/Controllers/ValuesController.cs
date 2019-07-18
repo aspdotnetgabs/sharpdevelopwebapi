@@ -10,7 +10,9 @@ namespace SharpDevelopWebApi.Controllers
 	/// </summary>
 	public class ValuesController : ApiController
 	{
-		[Route("api/gabs")]
+		[HttpGet]
+		[Route("")]
+		[Route("api/values")]		
 		public IHttpActionResult Get()
 		{
 			var products = new List<Product>()

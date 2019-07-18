@@ -19,22 +19,10 @@ namespace SharpDevelopWebApi
 	{
 		protected void Application_Start()
 		{
-			GlobalConfiguration.Configuration.MapHttpAttributeRoutes();
-
-			GlobalConfiguration.Configuration
-				.Routes.MapHttpRoute("Default", "{controller}/{id}", new { id = RouteParameter.Optional });
-//			GlobalConfiguration.Configuration.Routes
-//				.MapHttpRoute(
-//			        name: "Default",
-//			        routeTemplate: "api/{controller}/{action}/{id}",
-//			        defaults: new { controller = "Values", action = "Get", id = RouteParameter.Optional }
-//			    );
-			
-			GlobalConfiguration.Configuration
-				.Formatters.JsonFormatter.MediaTypeMappings
-				.Add(new System.Net.Http.Formatting.RequestHeaderMapping("Accept", "text/html", StringComparison.InvariantCultureIgnoreCase, true, "application/json"));
-			
-			GlobalConfiguration.Configuration.EnsureInitialized(); 
+			var config = GlobalConfiguration.Configuration;
+			config.MapHttpAttributeRoutes();		
+			config.Formatters.Remove(config.Formatters.XmlFormatter);		
+			config.EnsureInitialized(); 
 		}
 	}
 }
