@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using System.Web.Mvc;
 using SharpDevelopWebApi.Models;
 
 namespace SharpDevelopWebApi.Controllers
@@ -11,6 +10,7 @@ namespace SharpDevelopWebApi.Controllers
 	/// </summary>
 	public class ValuesController : ApiController
 	{
+		[Route("api/gabs")]
 		public IHttpActionResult Get()
 		{
 			var products = new List<Product>()
