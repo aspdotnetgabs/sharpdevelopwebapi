@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using SharpDevelopWebApi.Models;
 
 namespace SharpDevelopWebApi.Controllers
@@ -11,7 +12,8 @@ namespace SharpDevelopWebApi.Controllers
 	public class ValuesController : ApiController
 	{
 		[HttpGet]
-		[Route("api/values")]		
+		[Route("api/values")]	
+ 		//[EnableCors(origins: "*", headers: "*", methods: "*")]		
 		public IHttpActionResult Get()
 		{
 			var products = new List<Product>()

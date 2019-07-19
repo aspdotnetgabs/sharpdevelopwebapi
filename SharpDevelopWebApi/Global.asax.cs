@@ -23,11 +23,15 @@ namespace SharpDevelopWebApi
 		{
 			var config = GlobalConfiguration.Configuration;
 			
-			var cors = new EnableCorsAttribute("*","*","*");
-			config.EnableCors(cors);
+			config.EnableCors(new EnableCorsAttribute("*","*","*"));		
 			
 			config.MapHttpAttributeRoutes();
-	      	// Redirect root to Swagger UI
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );			      	
+			// Redirect root to Swagger UI
 	        config.Routes.MapHttpRoute(
 	            name: "Swagger UI",
 	            routeTemplate: "",

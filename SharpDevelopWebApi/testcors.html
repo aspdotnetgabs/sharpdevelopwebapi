@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <title>Axios vue.js ajax example</title>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      <meta name="robots" content="noindex, nofollow">
+      <meta name="googlebot" content="noindex, nofollow">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script type="text/javascript" src="https://fiddle.jshell.net/js/babel/babel.js"></script>
+      <script
+         type="text/javascript"
+         src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.1/vue.js"
+         ></script>
+      <link rel="stylesheet" type="text/css" href="https://fiddle.jshell.net/css/result-light.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.js"></script>
+      <style id="compiled-css" type="text/css">
+      </style>
+   </head>
+   <body>
+      <div id="app">
+         <div v-if="loading">
+            loading...
+         </div>
+         <div v-else>
+            <ul>
+               <li v-for="post in posts">
+                  <h1>
+                     {{post.Id}}
+                  </h1>
+                  <p>
+                     {{post.Name}}
+                  </p>
+               </li>
+            </ul>
+         </div>
+      </div>
+      <!-- TODO: Missing CoffeeScript 2 -->
+      <script type="text/jsx"
+         data-presets="es2017,react,stage-0"
+         data-plugins="transform-decorators-legacy">//<![CDATA[
+         const URL = 'http://localhost:8080/api/Values';
+         new Vue({
+         	el: '#app',
+         	data() {
+           	return {
+             	loading: true,
+               posts: [] // add posts here so reactivity is working, also undefined would be OK
+             }
+           },
+           created() {
+           	//this.loading = true --> not needed already set in data
+           	axios.get(URL).then((response) => {
+             	 console.log(response.data, this)
+               this.posts = response.data;
+               this.loading = false
+             })
+           }
+         })
+         
+         
+           //]]>
+      </script>
+      <script>
+         // tell the embed parent frame the height of the content
+         if (window.parent && window.parent.parent){
+           window.parent.parent.postMessage(["resultsFrame", {
+             height: document.body.getBoundingClientRect().height,
+             slug: "ft193k9n"
+           }], "*")
+         }
+         
+         // always overwrite window.name, in case users try to set it manually
+         window.name = "result"
+      </script>
+   </body>
+</html>
