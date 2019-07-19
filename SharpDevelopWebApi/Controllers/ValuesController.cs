@@ -11,7 +11,6 @@ namespace SharpDevelopWebApi.Controllers
 	public class ValuesController : ApiController
 	{
 		[HttpGet]
-		[Route("")]
 		[Route("api/values")]		
 		public IHttpActionResult Get()
 		{

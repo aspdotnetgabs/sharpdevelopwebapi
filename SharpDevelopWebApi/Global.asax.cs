@@ -10,8 +10,10 @@ using System;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Swashbuckle.Application;
 
 namespace SharpDevelopWebApi
 {
@@ -20,7 +22,19 @@ namespace SharpDevelopWebApi
 		protected void Application_Start()
 		{
 			var config = GlobalConfiguration.Configuration;
-			config.MapHttpAttributeRoutes();		
+			
+			var cors = new EnableCorsAttribute("*","*","*");
+			config.EnableCors(cors);
+			
+			config.MapHttpAttributeRoutes();
+	      	// Redirect root to Swagger UI
+	        config.Routes.MapHttpRoute(
+	            name: "Swagger UI",
+	            routeTemplate: "",
+	            defaults: null,
+	            constraints: null,
+	            handler: new RedirectHandler(SwaggerDocsConfig.DefaultRootUrlResolver, "swagger/ui/index"));
+        
 			config.Formatters.Remove(config.Formatters.XmlFormatter);		
 			config.EnsureInitialized(); 
 		}
