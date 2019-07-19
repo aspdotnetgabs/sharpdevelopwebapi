@@ -12,9 +12,8 @@ namespace SharpDevelopWebApi.Controllers
 	public class ValuesController : ApiController
 	{
 		[HttpGet]
-		[Route("api/values")]	
- 		//[EnableCors(origins: "*", headers: "*", methods: "*")]		
-		public IHttpActionResult Get()
+		[Route("api/values")]
+        public IHttpActionResult Get()
 		{
 			var products = new List<Product>()
 	        { 
@@ -25,5 +24,13 @@ namespace SharpDevelopWebApi.Controllers
 			
 			return Ok(products);
 		}
+
+        [HttpPost]
+        [ImportFileParamType.SwaggerForm("ImportImage", "Upload image file")]
+        [Route("api/values")]
+        public IHttpActionResult Post()
+        {
+            return Ok();
+        }
 	}
 }

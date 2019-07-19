@@ -2,6 +2,10 @@ using System.Web.Http;
 using WebActivatorEx;
 using SharpDevelopWebApi;
 using Swashbuckle.Application;
+using System;
+using Swashbuckle.Swagger;
+using System.Web.Http.Description;
+using System.Collections.Generic;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -16,6 +20,7 @@ namespace SharpDevelopWebApi
             GlobalConfiguration.Configuration
                 .EnableSwagger(c =>
                     {
+                        c.OperationFilter<ImportFileParamType>();
                         // By default, the service root url is inferred from the request used to access the docs.
                         // However, there may be situations (e.g. proxy and load-balanced environments) where this does not
                         // resolve correctly. You can workaround this by providing your own code to determine the root URL.
@@ -61,7 +66,7 @@ namespace SharpDevelopWebApi
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")
@@ -252,4 +257,41 @@ namespace SharpDevelopWebApi
                     });
         }
     }
+
+    public class ImportFileParamType : IOperationFilter
+    {
+        [AttributeUsage(AttributeTargets.Method)]
+        public sealed class SwaggerFormAttribute : Attribute
+        {
+            public SwaggerFormAttribute(string name, string description)
+            {
+                Name = name;
+                Description = description;
+            }
+            public string Name { get; private set; }
+
+            public string Description { get; private set; }
+        }
+
+        public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
+        {
+            var requestAttributes = apiDescription.GetControllerAndActionAttributes<SwaggerFormAttribute>();
+            foreach (var attr in requestAttributes)
+            {
+                operation.parameters = operation.parameters ?? new List<Parameter>();
+                operation.parameters.Add(new Parameter
+                {
+                    description = attr.Description,
+                    name = attr.Name,
+                    @in = "formData",
+                    required = true,
+                    type = "file",
+                });
+                operation.consumes.Add("multipart/form-data");
+            }
+        }
+
+    }
+
+
 }
