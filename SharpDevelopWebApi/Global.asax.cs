@@ -13,6 +13,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.SessionState;
 using Swashbuckle.Application;
 
 namespace SharpDevelopWebApi
@@ -40,7 +41,26 @@ namespace SharpDevelopWebApi
                 handler: new RedirectHandler(SwaggerDocsConfig.DefaultRootUrlResolver, "swagger"));
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
-            config.EnsureInitialized(); 
-		}
-	}
+            config.EnsureInitialized();
+        }
+
+        #region SessionInWebAPI
+        // Avoid Session at all cost!!!
+        // Use Session in Web Api in some special cases ONLY if you know what you're doing.
+        public override void Init()
+        {
+            this.PostAuthenticateRequest += MvcApplication_PostAuthenticateRequest;
+            base.Init();
+        }
+
+        void MvcApplication_PostAuthenticateRequest(object sender, EventArgs e)
+        {
+            bool IsWebApiRequest = HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/api");
+            if (IsWebApiRequest)
+            {
+                HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);
+            }
+        }
+        #endregion
+    }
 }

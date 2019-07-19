@@ -16,20 +16,30 @@ namespace SharpDevelopWebApi.Controllers
 		[Route("api/values")]
         public IHttpActionResult Get()
 		{
-			var products = new List<Product>()
-	        { 
+            var sessionData = HttpContext.Current.Session["pn"];
+
+            var products = new List<Product>()
+	        {                 
 	            new Product { Id = 1, Name = "Tomato Soup", Category = "Groceries", Price = 1 }, 
 	            new Product { Id = 2, Name = "Yo-yo", Category = "Toys", Price = 3.75M }, 
 	            new Product { Id = 3, Name = "Hammer", Category = "Hardware", Price = 16.99M } 
 	        };
 			
-			return Ok(products);
+			return Ok(new { sessionData, products });
 		}
 
         [HttpPost]
-        [FileUpload.SwaggerForm()]
         [Route("api/values")]
         public IHttpActionResult Post(Product product)
+        {
+            HttpContext.Current.Session.Add("pn", product.Name);
+            return Ok(product);
+        }
+
+        [HttpPost]
+        [FileUpload.SwaggerForm()]
+        [Route("api/values/upload")]
+        public IHttpActionResult UploadFile()
         {
             var httpRequest = HttpContext.Current.Request;
             if (httpRequest.Files.Count > 0)
@@ -42,7 +52,7 @@ namespace SharpDevelopWebApi.Controllers
                     postedFile.SaveAs(filePath);
                     docfiles.Add(System.IO.Path.GetFileName(filePath));
                 }
-                return Ok(new { product, docfiles });
+                return Ok(new { docfiles });
             }
 
             return BadRequest();
