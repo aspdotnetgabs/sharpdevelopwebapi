@@ -30,16 +30,16 @@ namespace SharpDevelopWebApi
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
-            );			      	
-			// Redirect root to Swagger UI
-	        config.Routes.MapHttpRoute(
-	            name: "Swagger UI",
-	            routeTemplate: "",
-	            defaults: null,
-	            constraints: null,
-	            handler: new RedirectHandler(SwaggerDocsConfig.DefaultRootUrlResolver, "swagger/ui/index"));
-        
-			config.Formatters.Remove(config.Formatters.XmlFormatter);		
+            );
+            // Redirect root to Swagger UI
+            config.Routes.MapHttpRoute(
+                name: "Swagger UI",
+                routeTemplate: "",
+                defaults: null,
+                constraints: null,
+                handler: new RedirectHandler(SwaggerDocsConfig.DefaultRootUrlResolver, "swagger"));
+
+            config.Formatters.Remove(config.Formatters.XmlFormatter);		
 			config.EnsureInitialized(); 
 		}
 	}
