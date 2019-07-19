@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using SharpDevelopWebApi.Models;
@@ -26,11 +27,25 @@ namespace SharpDevelopWebApi.Controllers
 		}
 
         [HttpPost]
-        [ImportFileParamType.SwaggerForm("ImportImage", "Upload image file")]
+        [FileUpload.SwaggerForm()]
         [Route("api/values")]
-        public IHttpActionResult Post()
+        public IHttpActionResult Post(Product product)
         {
-            return Ok();
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
+            {
+                var docfiles = new List<string>();
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    var filePath = HttpContext.Current.Server.MapPath("~/" + postedFile.FileName);
+                    postedFile.SaveAs(filePath);
+                    docfiles.Add(System.IO.Path.GetFileName(filePath));
+                }
+                return Ok(new { product, docfiles });
+            }
+
+            return BadRequest();
         }
 	}
 }

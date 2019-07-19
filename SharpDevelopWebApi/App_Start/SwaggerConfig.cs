@@ -20,7 +20,7 @@ namespace SharpDevelopWebApi
             GlobalConfiguration.Configuration
                 .EnableSwagger(c =>
                     {
-                        c.OperationFilter<ImportFileParamType>();
+                        c.OperationFilter<FileUpload>();
                         // By default, the service root url is inferred from the request used to access the docs.
                         // However, there may be situations (e.g. proxy and load-balanced environments) where this does not
                         // resolve correctly. You can workaround this by providing your own code to determine the root URL.
@@ -258,18 +258,17 @@ namespace SharpDevelopWebApi
         }
     }
 
-    public class ImportFileParamType : IOperationFilter
+    public class FileUpload : IOperationFilter
     {
         [AttributeUsage(AttributeTargets.Method)]
         public sealed class SwaggerFormAttribute : Attribute
         {
-            public SwaggerFormAttribute(string name, string description)
+            public SwaggerFormAttribute(string name = "File", string description = "Upload file for multipart/form-data")
             {
                 Name = name;
                 Description = description;
             }
             public string Name { get; private set; }
-
             public string Description { get; private set; }
         }
 

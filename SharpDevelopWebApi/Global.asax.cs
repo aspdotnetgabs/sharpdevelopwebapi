@@ -39,8 +39,8 @@ namespace SharpDevelopWebApi
                 constraints: null,
                 handler: new RedirectHandler(SwaggerDocsConfig.DefaultRootUrlResolver, "swagger"));
 
-            config.Formatters.Remove(config.Formatters.XmlFormatter);		
-			config.EnsureInitialized(); 
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.EnsureInitialized(); 
 		}
 	}
 }
