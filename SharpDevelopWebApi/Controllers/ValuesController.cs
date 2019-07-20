@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -12,6 +14,7 @@ namespace SharpDevelopWebApi.Controllers
 	/// </summary>
 	public class ValuesController : ApiController
 	{
+        [MustBeAuthorized]
 		[HttpGet]
 		[Route("api/values")]
         public IHttpActionResult Get()
@@ -67,6 +70,25 @@ namespace SharpDevelopWebApi.Controllers
                 return Ok("Successfully sent.");
             else
                 return BadRequest("Sending failed.");
+        }
+    }
+
+
+
+    public class MustBeAuthorized : System.Web.Http.AuthorizeAttribute
+    {
+        public override void OnAuthorization(System.Web.Http.Controllers.HttpActionContext actionContext)
+        {
+            if(HttpContext.Current.Session["pn"] != null)
+            {
+                HttpContext.Current.Response.AddHeader("AuthenticationStatus", "Authorized");
+                //actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.OK);
+            }
+            else
+            {
+                HttpContext.Current.Response.AddHeader("AuthenticationStatus", "Unauthorized");
+                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
         }
     }
 }
