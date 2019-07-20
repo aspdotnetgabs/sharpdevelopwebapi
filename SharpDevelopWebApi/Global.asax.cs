@@ -20,7 +20,9 @@ namespace SharpDevelopWebApi
 {
 	public class MvcApplication : HttpApplication
 	{
-		protected void Application_Start()
+        string apiRoutePrefix = "api";
+
+        protected void Application_Start()
 		{
 			var config = GlobalConfiguration.Configuration;
 			
@@ -29,7 +31,7 @@ namespace SharpDevelopWebApi
 			config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: apiRoutePrefix + "/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
             // Redirect root to Swagger UI
@@ -55,7 +57,7 @@ namespace SharpDevelopWebApi
 
         void MvcApplication_PostAuthenticateRequest(object sender, EventArgs e)
         {
-            bool IsWebApiRequest = HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/api");
+            bool IsWebApiRequest = HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/" + apiRoutePrefix);
             if (IsWebApiRequest)
             {
                 HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);
