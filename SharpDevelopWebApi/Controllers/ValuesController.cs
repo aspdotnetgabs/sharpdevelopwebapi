@@ -16,8 +16,6 @@ namespace SharpDevelopWebApi.Controllers
 		[Route("api/values")]
         public IHttpActionResult Get()
 		{
-            var sessionData = HttpContext.Current.Session["pn"];
-
             var products = new List<Product>()
 	        {                 
 	            new Product { Id = 1, Name = "Tomato Soup", Category = "Groceries", Price = 1 }, 
@@ -25,14 +23,13 @@ namespace SharpDevelopWebApi.Controllers
 	            new Product { Id = 3, Name = "Hammer", Category = "Hardware", Price = 16.99M } 
 	        };
 			
-			return Ok(new { sessionData, products });
+			return Ok(products);
 		}
 
         [HttpPost]
         [Route("api/values")]
         public IHttpActionResult Post(Product product)
         {
-            HttpContext.Current.Session.Add("pn", product.Name);
             return Ok(product);
         }
 
@@ -48,7 +45,7 @@ namespace SharpDevelopWebApi.Controllers
                 foreach (string file in httpRequest.Files)
                 {
                     var postedFile = httpRequest.Files[file];
-                    var filePath = HttpContext.Current.Server.MapPath("~/" + postedFile.FileName);
+                    var filePath = HttpContext.Current.Server.MapPath("~/UploadedFiles/" + postedFile.FileName);
                     postedFile.SaveAs(filePath);
                     docfiles.Add(System.IO.Path.GetFileName(filePath));
                 }
