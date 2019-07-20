@@ -48,7 +48,7 @@ namespace SharpDevelopWebApi.Controllers
                 foreach (string file in httpRequest.Files)
                 {
                     var postedFile = httpRequest.Files[file];
-                    var filePath = HttpContext.Current.Server.MapPath("~/" + postedFile.FileName);
+                    var filePath = HttpContext.Current.Server.MapPath("~/UploadedFiles/" + postedFile.FileName);
                     postedFile.SaveAs(filePath);
                     docfiles.Add(System.IO.Path.GetFileName(filePath));
                 }
@@ -57,5 +57,16 @@ namespace SharpDevelopWebApi.Controllers
 
             return BadRequest();
         }
-	}
+
+        [HttpPost]
+        [Route("api/values/sendmail")]
+        public IHttpActionResult SendEmail(string EmailTo, string Subject, string Message)
+        {
+            var success = EmailService.SendEmail(EmailTo, Subject, Message);
+            if (success)
+                return Ok("Successfully sent.");
+            else
+                return BadRequest("Sending failed.");
+        }
+    }
 }

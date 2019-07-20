@@ -18,6 +18,11 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -106,6 +111,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\EmailService.cs" />
+    <Compile Include="Helpers\FileUploadExtension.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -114,7 +121,9 @@
     <None Include="packages.config" />
     <None Include="web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="UploadedFiles\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
@@ -134,4 +143,5 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v16.0\WebApplications\Microsoft.WebApplication.targets" />
 </Project>
