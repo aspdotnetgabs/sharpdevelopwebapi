@@ -54,5 +54,16 @@ namespace SharpDevelopWebApi.Controllers
 
             return BadRequest();
         }
-	}
+
+        [HttpPost]
+        [Route("api/values/sendmail")]
+        public IHttpActionResult SendEmail(string EmailTo, string Subject, string Message)
+        {
+            var success = EmailService.SendEmail(EmailTo, Subject, Message);
+            if (success)
+                return Ok("Successfully sent.");
+            else
+                return BadRequest("Sending failed.");
+        }
+    }
 }
