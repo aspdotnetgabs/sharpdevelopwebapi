@@ -14,13 +14,11 @@ namespace SharpDevelopWebApi.Controllers
 	/// </summary>
 	public class ValuesController : ApiController
 	{
-        [MustBeAuthorized]
+        [ApiAuthorize]
 		[HttpGet]
 		[Route("api/values")]
         public IHttpActionResult Get()
 		{
-            var sessionData = HttpContext.Current.Session["pn"];
-
             var products = new List<Product>()
 	        {                 
 	            new Product { Id = 1, Name = "Tomato Soup", Category = "Groceries", Price = 1 }, 
@@ -28,14 +26,13 @@ namespace SharpDevelopWebApi.Controllers
 	            new Product { Id = 3, Name = "Hammer", Category = "Hardware", Price = 16.99M } 
 	        };
 			
-			return Ok(new { sessionData, products });
+			return Ok(products);
 		}
 
         [HttpPost]
         [Route("api/values")]
         public IHttpActionResult Post(Product product)
         {
-            HttpContext.Current.Session.Add("pn", product.Name);
             return Ok(product);
         }
 
@@ -75,20 +72,4 @@ namespace SharpDevelopWebApi.Controllers
 
 
 
-    public class MustBeAuthorized : System.Web.Http.AuthorizeAttribute
-    {
-        public override void OnAuthorization(System.Web.Http.Controllers.HttpActionContext actionContext)
-        {
-            if(HttpContext.Current.Session["pn"] != null)
-            {
-                HttpContext.Current.Response.AddHeader("AuthenticationStatus", "Authorized");
-                //actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.OK);
-            }
-            else
-            {
-                HttpContext.Current.Response.AddHeader("AuthenticationStatus", "Unauthorized");
-                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-            }
-        }
-    }
 }
