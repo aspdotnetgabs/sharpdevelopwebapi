@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using SharpDevelopWebApi;
+using SharpDevelopWebApi.Helpers.JWT;
 
 namespace SharpDevelopWebApi.Controllers
 {
@@ -14,6 +15,22 @@ namespace SharpDevelopWebApi.Controllers
 	/// </summary>
 	public class AccountController : ApiController
 	{
+        // THis is naive endpoint for demo, it should use Basic authentication to provide token or POST request
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("TOKEN")]
+        public IHttpActionResult GetToken(string email, string password)
+        {
+            if (UserAccount.Authenticate(email, password))
+            {
+                var data = new { token = JwtManager.GenerateToken(email) };
+                return Ok(data);
+            }
+
+            return BadRequest("Invalid login");
+        }
+
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/account/login")]
         public IHttpActionResult Login(string email, string password)
@@ -28,6 +45,7 @@ namespace SharpDevelopWebApi.Controllers
                 return BadRequest("Invalid login");
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/account/logout")]
         public IHttpActionResult Logout()
@@ -36,6 +54,7 @@ namespace SharpDevelopWebApi.Controllers
             return Ok(new { code = 1, message = "Account logout" });
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/account/register")]
         public IHttpActionResult Register(string email, string password)

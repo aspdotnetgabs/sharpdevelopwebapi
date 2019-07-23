@@ -185,6 +185,8 @@ namespace SharpDevelopWebApi
                     })
                 .EnableSwaggerUi(c =>
                     {
+                        c.EnableApiKeySupport("Authorization", "header");
+
                         // Use the "DocumentTitle" option to change the Document title.
                         // Very helpful when you have multiple Swagger pages open, to tell them apart.
                         //

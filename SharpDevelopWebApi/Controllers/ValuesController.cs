@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using SharpDevelopWebApi.Helpers.JWT;
 using SharpDevelopWebApi.Models;
 
 namespace SharpDevelopWebApi.Controllers
