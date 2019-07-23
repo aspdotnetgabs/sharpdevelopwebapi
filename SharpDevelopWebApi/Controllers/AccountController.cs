@@ -17,7 +17,7 @@ namespace SharpDevelopWebApi.Controllers
 	{
         // THis is naive endpoint for demo, it should use Basic authentication to provide token or POST request
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost]
         [Route("TOKEN")]
         public IHttpActionResult GetToken(string email, string password)
         {

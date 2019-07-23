@@ -14,9 +14,9 @@ namespace SharpDevelopWebApi.Helpers.JWT
             Request = request;
         }
 
-        public string ReasonPhrase { get; }
+        public string ReasonPhrase { get; protected set;}
 
-        public HttpRequestMessage Request { get; }
+        public HttpRequestMessage Request { get; protected set;}
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {

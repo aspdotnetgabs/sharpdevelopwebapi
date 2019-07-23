@@ -16,9 +16,9 @@ namespace SharpDevelopWebApi.Helpers.JWT
             InnerResult = innerResult;
         }
 
-        public AuthenticationHeaderValue Challenge { get; }
+        public AuthenticationHeaderValue Challenge { get; set; }
 
-        public IHttpActionResult InnerResult { get; }
+        public IHttpActionResult InnerResult { get; set; }
 
         public async Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {

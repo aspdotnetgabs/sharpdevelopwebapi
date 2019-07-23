@@ -20,7 +20,7 @@ namespace SharpDevelopWebApi.Helpers.JWT
         {
             if (context == null)
             {
-                throw new ArgumentNullException(nameof(context));
+                //throw new ArgumentNullException(nameof(context));
             }
 
             context.Result = new AddChallengeOnUnauthorizedResult(challenge, context.Result);
