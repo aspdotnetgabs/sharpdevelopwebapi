@@ -10,12 +10,11 @@ using SharpDevelopWebApi.Helpers.JWT;
 
 namespace SharpDevelopWebApi.Controllers
 {
-	/// <summary>
-	/// Description of ValuesController.
-	/// </summary>
-	public class AccountController : ApiController
+    /// <summary>
+    /// Description of AccountController.
+    /// </summary>
+    public class AccountController : ApiController
 	{
-        // THis is naive endpoint for demo, it should use Basic authentication to provide token or POST request
         [AllowAnonymous]
         [HttpPost]
         [Route("TOKEN")]
