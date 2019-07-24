@@ -29,11 +29,6 @@ namespace SharpDevelopWebApi
 			config.EnableCors(new EnableCorsAttribute("*","*","*"));		
 			
 			config.MapHttpAttributeRoutes();
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: apiRoutePrefix + "/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
             // Redirect root to Swagger UI
             config.Routes.MapHttpRoute(
                 name: "Swagger UI",
@@ -41,6 +36,10 @@ namespace SharpDevelopWebApi
                 defaults: null,
                 constraints: null,
                 handler: new RedirectHandler(SwaggerDocsConfig.DefaultRootUrlResolver, "swagger"));
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: apiRoutePrefix + "/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional });
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
             config.EnsureInitialized();

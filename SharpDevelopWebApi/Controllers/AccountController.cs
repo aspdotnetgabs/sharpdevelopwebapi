@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Http.Description;
 using SharpDevelopWebApi;
 using SharpDevelopWebApi.Helpers.JWT;
 
@@ -15,7 +16,6 @@ namespace SharpDevelopWebApi.Controllers
     /// </summary>
     public class AccountController : ApiController
 	{
-        [AllowAnonymous]
         [HttpPost]
         [Route("TOKEN")]
         public IHttpActionResult GetToken(string email, string password)
@@ -29,7 +29,6 @@ namespace SharpDevelopWebApi.Controllers
             return BadRequest("Login failed");
         }
 
-        [AllowAnonymous]
         [HttpGet]
         [Route("api/account/login")]
         public IHttpActionResult Login(string email, string password)
@@ -44,7 +43,6 @@ namespace SharpDevelopWebApi.Controllers
                 return BadRequest("Login failed");
         }
 
-        [AllowAnonymous]
         [HttpGet]
         [Route("api/account/logout")]
         public IHttpActionResult Logout()
@@ -53,7 +51,6 @@ namespace SharpDevelopWebApi.Controllers
             return Ok(new { code = 1, message = "Logout successful" });
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("api/account/register")]
         public IHttpActionResult Register(string email, string password)
@@ -65,9 +62,9 @@ namespace SharpDevelopWebApi.Controllers
                 return BadRequest("Account registration failed");
         }
 
-        [ApiAuthorize]
         [HttpPost]
         [Route("api/account/changepassword")]
+        [ApiAuthorize]
         public IHttpActionResult ChangePassword(string email, string newPassword, string currentPassword = "")
         {
             var currentUser = !string.IsNullOrEmpty(User.Identity.Name) ? User.Identity.Name : (string)HttpContext.Current.Session["currentUser"];

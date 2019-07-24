@@ -128,6 +128,7 @@
     </Compile>
     <Compile Include="Helpers\EmailService.cs" />
     <Compile Include="Helpers\FileUploadExtension.cs" />
+    <Compile Include="Helpers\RedirectToSwagger.cs" />
     <Compile Include="Helpers\JWT\AddChallengeOnUnauthorizedResult.cs" />
     <Compile Include="Helpers\JWT\AuthenticationFailureResult.cs" />
     <Compile Include="Helpers\JWT\HttpAuthenticationChallengeContextExtensions.cs" />
