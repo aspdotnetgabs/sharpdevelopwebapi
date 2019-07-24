@@ -112,31 +112,33 @@ public partial class UserAccount
         }
     }
 
-    public static bool ChangePassword(string email, string userPassword = "", string newPassword = "")
+    public static bool ChangePassword(string email, string userPassword = "", string newPassword = "", bool forceChange = false)
     {
+        if (string.IsNullOrWhiteSpace(newPassword))
+            return false;
+
+        if (forceChange == false && string.IsNullOrWhiteSpace(userPassword))
+            return false;
+
         var user = _db.Users.Where(x => x.Email == email.Trim()).FirstOrDefault();
         if (user == null)
             return false;
 
-        if (!string.IsNullOrWhiteSpace(userPassword) || !string.IsNullOrWhiteSpace(newPassword))
-        {
-            var validPassword = VerifyPasswordHash(userPassword, user.PasswordSalt, user.PasswordHash);
-            if (validPassword)
-            {
-                // Overwrite with new PasswordHash
-                using (var hmac = new System.Security.Cryptography.HMACSHA512())
-                {
-                    user.PasswordSalt = hmac.Key;
-                    user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(userPassword));
-                }
-            }
 
-            _db.Entry(user).State = System.Data.Entity.EntityState.Modified;
-            _db.SaveChanges();
-            return true;
+        var validPassword = !forceChange ? VerifyPasswordHash(userPassword, user.PasswordSalt, user.PasswordHash) : true;
+        if (validPassword)
+        {
+            // Overwrite with new PasswordHash
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                user.PasswordSalt = hmac.Key;
+                user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(newPassword));
+            }
         }
 
-        return false;
+        _db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+        _db.SaveChanges();
+        return true;
     }
 
     public static List<UserAccount> GetAll()

@@ -27,7 +27,7 @@ namespace SharpDevelopWebApi.Controllers
                 return Ok(data);
             }
 
-            return BadRequest("Invalid login");
+            return BadRequest("Login failed");
         }
 
         [AllowAnonymous]
@@ -39,10 +39,10 @@ namespace SharpDevelopWebApi.Controllers
             if (success)
             {
                 HttpContext.Current.Session.Add("currentUser", email);
-                return Ok(new { code = 1, message = "Successful login" });
+                return Ok(new { code = 1, message = "Login successful" });
             }
             else
-                return BadRequest("Invalid login");
+                return BadRequest("Login failed");
         }
 
         [AllowAnonymous]
@@ -51,11 +51,11 @@ namespace SharpDevelopWebApi.Controllers
         public IHttpActionResult Logout()
         {
             HttpContext.Current.Session.Clear();
-            return Ok(new { code = 1, message = "Account logout" });
+            return Ok(new { code = 1, message = "Logout successful" });
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost]
         [Route("api/account/register")]
         public IHttpActionResult Register(string email, string password)
         {
@@ -64,6 +64,24 @@ namespace SharpDevelopWebApi.Controllers
                 return Ok(new { userId = userId, message = "Account successfully created" });
             else
                 return BadRequest("Account registration failed");
+        }
+
+        [ApiAuthorize]
+        [HttpPost]
+        [Route("api/account/changepassword")]
+        public IHttpActionResult ChangePassword(string email, string newPassword, string currentPassword = "")
+        {
+            var currentUser = !string.IsNullOrEmpty(User.Identity.Name) ? User.Identity.Name : (string)HttpContext.Current.Session["currentUser"];
+            var isAdmin = Array.IndexOf(UserAccount.GetUserRoles(currentUser), "admin") > -1;
+
+            var success = UserAccount.ChangePassword(email, currentPassword, newPassword, isAdmin);
+            if (success)
+            {
+                HttpContext.Current.Session.Clear();
+                return Ok("Password successfully changed");
+            }
+            else
+                return BadRequest("Password change failed");
         }
     }
 
