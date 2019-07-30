@@ -1,0 +1,254 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <title>Hello, VueJS!</title>
+</head>
+<body>
+    <div class="container" id="customerApp">
+        <div class="jumbotron">
+            <h1><a href="https://vuejs.org/v2/guide/">Vue</a></h1>
+            <p>Easier to learn than React or Angular 2+ while offering more or less the same capabilities.</p>
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+                <h2>Customers</h2>
+                <div class="input-group mb-3">
+                    <input type="text" v-model="searchKeyword" class="form-control" placeholder="Search">
+                    <div class="input-group-append">
+                        <button @click="searchCustomers" class="btn btn-success">Go</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <p class="float-right">
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addModal">Add</button>
+                </p>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th v-for="column in columnHeader">
+                        {{column}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(customer,index) in customers">
+                    <td>{{customer.Id}}</td>
+                    <td><a href="#" @click="getCustomer(index)">{{customer.FirstName}} {{customer.LastName}}</a></td>
+                    <td>{{customer.Email}}</td>
+                    <td>{{customer.Phone}}</td>
+                    <td>
+                        <button @click="editCustomer(index)" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal">Edit</button>
+                        <button @click="deleteCustomer(index)" class="btn btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>New Customer</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit="postCustomer" class="form" role="form" autocomplete="off">
+                            <div class="form-group">
+                                <label>Last name</label>
+                                <input type="text" v-model="newItem.LastName" class="form-control" required />
+                                <div class="invalid-feedback">Oops, you missed this one.</div>
+                            </div>
+                            <div class="form-group">
+                                <label>First name</label>
+                                <input type="text" v-model="newItem.FirstName" class="form-control" required />
+                                <div class="invalid-feedback">Enter your first name too.</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" v-model="newItem.Email" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="text" v-model="newItem.Phone" class="form-control" />
+                            </div>
+                            <div class="form-group pt-3">
+                                <button class="btn btn-outline-secondary" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                                <button type="submit" class="btn btn-success float-right">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Edit Customer</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit="updateCustomer" class="form" role="form" autocomplete="off">
+                            <div class="form-group">
+                                <label>Id</label>
+                                <input type="text" v-model="editItem.Id" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label>Last name</label>
+                                <input type="text" v-model="editItem.LastName" class="form-control" required />
+                                <div class="invalid-feedback">Oops, you missed this one.</div>
+                            </div>
+                            <div class="form-group">
+                                <label>First name</label>
+                                <input type="text" v-model="editItem.FirstName" class="form-control" required />
+                                <div class="invalid-feedback">Enter your first name too.</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" v-model="editItem.Email" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="text" v-model="editItem.Phone" class="form-control" />
+                            </div>
+                            <div class="form-group pt-3">
+                                <button class="btn btn-outline-secondary" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                                <button type="submit" class="btn btn-success float-right">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="detailModal" style="padding-right: 0;" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" style="min-width: 100%;margin: 0;" role="document">
+                <div class="modal-content" style="min-height: 100vh;border-radius: 0px">
+                    <div class="modal-header pl-5">
+                        <h3>{{detailItem.FirstName}} {{detailItem.LastName}}</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body px-5">
+                        <p>Customer Details</p>
+                        <dl class="dl-horizontal">
+                            <dt>Id</dt>
+                            <dd>{{detailItem.Id}}</dd>
+                            <dt>Last Name</dt>
+                            <dd>{{detailItem.LastName}}</dd>
+                            <dt>First Name</dt>
+                            <dd>{{detailItem.FirstName}}</dd>
+                            <dt>Email</dt>
+                            <dd>{{detailItem.Email}}</dd>
+                            <dt>Phone</dt>
+                            <dd>{{detailItem.Phone}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <!-- Vue JS and Axios -->
+    <script src="js/vue.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>
+        var contactApp = new Vue({
+            el: '#customerApp',
+            data: {
+                baseUrl : "http://localhost:8080",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone', 'Action'],
+                customers: [],                
+                newItem: {},
+                editItem: {},
+                deleteItem: {},
+                detailItem: {},
+                searchKeyword: "",
+            },
+            methods: {
+                getCustomers: function () {
+                    axios.get(this.baseUrl + "/api/customer")
+                        .then((response) => {
+                            this.customers = response.data;
+                        });
+                },
+                postCustomer: function (e) {
+                    e.preventDefault();
+                    axios.post(this.baseUrl + "/api/customer", this.newItem)
+                        .then((response) => {
+                            //alert('Successfully added. Data: ' + JSON.stringify(response.data));
+                            this.getCustomers();
+                            $("#addModal").modal('hide');
+                            this.newItem = {};
+                        });
+                },
+                editCustomer: function (index) {
+                    this.editItem = this.customers[index];
+                },
+                updateCustomer: function (e) {
+                    e.preventDefault();
+                    axios.put(this.baseUrl + "/api/customer", this.editItem)
+                        .then((response) => {
+                            this.getCustomers();
+                            $("#editModal").modal('hide');
+                            this.editItem = {};
+                        });
+                },
+                deleteCustomer: function (index) {
+                    var yes = confirm('Are you sure?');
+                    if (yes) {
+                        this.deleteItem = this.customers[index];
+                        axios.delete(this.baseUrl + "/api/customer/" + this.deleteItem.Id)
+                        .then((response) => {
+                            this.getCustomers();
+                            this.deleteItem = {};
+                        });
+                    }
+                },
+                getCustomer: function (index) {
+                    this.detailItem = this.customers[index];
+                    axios.get(this.baseUrl + "/api/customer/" + this.detailItem.Id)
+                        .then((response) => {
+                            this.detailItem = response.data;
+                            $("#detailModal").modal('show');
+                        });
+                },
+                searchCustomers: function () {
+                    if (this.searchKeyword) {
+                        axios.get(this.baseUrl + "/api/customer?keyword=" + this.searchKeyword)
+                            .then((response) => {
+                                this.customers = response.data;
+                            });
+                    }
+                    else {
+                        this.getCustomers();
+                    }
+                },
+            },
+            mounted: function () {
+                this.getCustomers();
+            }
+        });
+
+    </script>
+
+</body>
+</html>

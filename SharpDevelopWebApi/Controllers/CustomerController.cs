@@ -13,12 +13,21 @@ namespace SharpDevelopWebApi.Controllers
         SDWebApiDbContext _db = new SDWebApiDbContext();
 
         [HttpGet]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(string keyword = "")
         {
-            var customers = _db.Customers.ToList();
+            keyword = keyword.Trim();
+            var customers = new List<Customer>();
+            if(!string.IsNullOrEmpty(keyword))
+            {
+                customers = _db.Customers
+                    .Where(x => x.LastName.Contains(keyword) || x.FirstName.Contains(keyword))
+                    .ToList();
+            }
+            else
+                customers = _db.Customers.ToList();
+
             return Ok(customers);
         }
-
 
         [HttpGet]
         public IHttpActionResult Get(int Id)
