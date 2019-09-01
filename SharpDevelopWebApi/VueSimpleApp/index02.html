@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>Hello, VueJS!</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li><a href="tut/VueJS_4_loop.pdf" target="_blank">v-for loop</a></li>
+            <li><a href=""></a>Array</li>
+            <li>Adding a dynamic column header</li>
+        </ul>
+        <a href="index03.html">2 of 10 [ Next ]</a>
+        <hr />
+    </div>
+    <!-- =============================================================== -->    
+                
+    <div id="customerApp">
+        <h1>{{appName}}</h1>
+
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="column in columnHeader">
+                            {{column}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>          
+        </div>         
+
+    </div>
+
+    <!-- Vue JS -->
+    <script src="js/vue.js"></script>
+    <script>
+        var contactApp = new Vue({
+            el: '#customerApp',
+            data: {
+                appName: "Customer Barebone Webapp",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone']
+            }
+        });
+
+    </script>
+
+</body>
+</html>

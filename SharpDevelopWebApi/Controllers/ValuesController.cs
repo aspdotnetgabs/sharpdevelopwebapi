@@ -13,11 +13,11 @@ namespace SharpDevelopWebApi.Controllers
 	/// <summary>
 	/// Description of ValuesController.
 	/// </summary>
-	public class ValuesController : ApiController
+	public class SampleController : ApiController
 	{
         [ApiAuthorize]
 		[HttpGet]
-		[Route("api/values")]
+		[Route("api/sample")]
         public IHttpActionResult Get()
 		{
             var products = new List<Product>()
@@ -31,7 +31,7 @@ namespace SharpDevelopWebApi.Controllers
 		}
 
         [HttpPost]
-        [Route("api/values")]
+        [Route("api/sample")]
         public IHttpActionResult Post(Product product)
         {
             return Ok(product);
@@ -39,7 +39,7 @@ namespace SharpDevelopWebApi.Controllers
 
         [HttpPost]
         [FileUpload.SwaggerForm()]
-        [Route("api/values/upload")]
+        [Route("api/sample/upload")]
         public IHttpActionResult UploadFile()
         {
             var httpRequest = HttpContext.Current.Request;
@@ -60,7 +60,7 @@ namespace SharpDevelopWebApi.Controllers
         }
 
         [HttpPost]
-        [Route("api/values/sendmail")]
+        [Route("api/sample/sendmail")]
         public IHttpActionResult SendEmail(string EmailTo, string Subject, string Message)
         {
             var success = EmailService.SendEmail(EmailTo, Subject, Message);

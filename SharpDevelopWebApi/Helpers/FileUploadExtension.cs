@@ -1,12 +1,4 @@
-﻿// *** Snippets ***
-// public byte[] MyFile { get; set; }
-// <form action="/controller/create" method="post" enctype="multipart/form-data">
-// <input type="file" name="FileUpload" />
-// [HttpPost]
-// public ActionResult Create(MyClass myObject, HttpPostedFileBase FileUpload)
-// myObject.MyFile = FileUpload.ToFileByteArrayy();
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

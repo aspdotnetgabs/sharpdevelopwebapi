@@ -1,0 +1,84 @@
+<html>
+<head>
+    <title>Hello, VueJS!</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li><a href="https://vuejs.org/v2/guide/forms.html" target="_blank">Input Binding</a></li>
+            <li><a href=""></a>Adding Search function</li>
+        </ul>
+        <a href="index06.html">5 of 10 [ Next ]</a>
+        <hr />
+    </div>
+    <!-- =============================================================== -->                  
+                 
+    <div id="customerApp">
+        <h1>{{appName}}</h1>
+
+        <div>
+            <input type="text" v-model="searchKeyword" placeholder="Search">
+            <button @click="searchCustomers">Go</button>   
+            <br>Your search keyword: {{searchKeyword}}     
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="column in columnHeader">
+                            {{column}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="customer in customers">
+                        <td>{{customer.Id}}</td>
+                        <td>{{customer.FirstName}} {{customer.LastName}}</td>
+                        <td>{{customer.Email}}</td>
+                        <td>{{customer.Phone}}</td>
+                    </tr>
+                </tbody>
+            </table>          
+        </div>
+
+    </div>
+
+    <!-- Vue JS and Axios -->
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>
+        var contactApp = new Vue({
+            el: '#customerApp',
+            data: {
+                appName: "Customer Barebone Webapp",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone'],
+                baseUrl: "http://bernardgabon.somee.com",
+                customers: [],                
+                searchKeyword: ""
+            },
+            methods: {
+                getCustomers: function () {
+                    axios.get(this.baseUrl + "/api/customer")
+                        .then((response) => {
+                            this.customers = response.data;
+                        });
+                },
+                searchCustomers: function () {
+                    if (this.searchKeyword !== '') {
+                        axios.get(this.baseUrl + "/api/customer?keyword=" + this.searchKeyword)
+                            .then((response) => {
+                                this.customers = response.data;
+                            });
+                    }
+                    else {
+                        this.getCustomers();
+                    }     
+                }           
+            },
+            mounted: function () {
+                this.getCustomers();
+            }
+        });
+
+    </script>
+
+</body>
+</html>

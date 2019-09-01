@@ -1,0 +1,69 @@
+<html>
+<head>
+    <title>Hello, VueJS!</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li><a href="https://stackoverflow.com/questions/45021907/vue-js-mounted" target="_blank">Mounted()</a></li>
+            <li><a href=""></a>Loading customers on PageLoad</li>
+        </ul>
+        <a href="index05.html">4 of 10 [ Next ]</a>
+        <hr />
+    </div>
+    <!-- =============================================================== -->
+
+    <div id="customerApp">
+        <h1>{{appName}}</h1>
+
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="column in columnHeader">
+                            {{column}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="customer in customers">
+                        <td>{{customer.Id}}</td>
+                        <td>{{customer.FirstName}} {{customer.LastName}}</td>
+                        <td>{{customer.Email}}</td>
+                        <td>{{customer.Phone}}</td>
+                    </tr>
+                </tbody>
+            </table>          
+        </div>
+
+    </div>
+
+    <!-- Vue JS and Axios -->
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>
+        var contactApp = new Vue({
+            el: '#customerApp',
+            data: {
+                appName: "Customer Barebone Webapp",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone'],
+                baseUrl: "http://bernardgabon.somee.com",
+                customers: [],                
+            },
+            methods: {
+                getCustomers: function () {
+                    axios.get(this.baseUrl + "/api/customer")
+                        .then((response) => {
+                            this.customers = response.data;
+                        });
+                }
+            },
+            mounted: function () {
+                this.getCustomers();
+            }
+        });
+
+    </script>
+
+</body>
+</html>

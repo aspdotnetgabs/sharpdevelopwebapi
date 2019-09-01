@@ -1,0 +1,117 @@
+<html>
+<head>
+    <title>Hello, VueJS!</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li><a href="https://fullstackworld.com/post/vuejs-sending-http-ajax-request-with-axios" target="_blank">Post new data</a></li>
+            <li><a href=""></a>Adding a New Item</li>
+            <li><a href="https://alligator.io/vuejs/vue-form-handling/">Form Handling</a></li>            
+            <li><a href="https://www.w3schools.com/tags/att_input_required.asp" target="_blank">HTML Required attribute</a></li>
+
+        </ul>
+        <a href="index07.html">6 of 10 [ Next ]</a>
+        <hr />
+    </div>
+    <!-- =============================================================== -->                  
+
+    <div id="customerApp">
+        <h1>{{appName}}</h1>
+        
+        <div>
+            <input type="text" v-model="searchKeyword" placeholder="Search">
+            <button @click="searchCustomers">Go</button>                
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="column in columnHeader">
+                            {{column}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="customer in customers">
+                        <td>{{customer.Id}}</td>
+                        <td>{{customer.FirstName}} {{customer.LastName}}</td>
+                        <td>{{customer.Email}}</td>
+                        <td>{{customer.Phone}}</td>
+                    </tr>
+                </tbody>
+            </table>          
+        </div>
+
+        <form @submit.prevent="postCustomer">
+            <h2>New</h2>
+            <div>
+                <label>Last name</label>
+                <input type="text" v-model="newItem.LastName" required />
+            </div>
+            <div>
+                <label>First name</label>
+                <input type="text" v-model="newItem.FirstName" required />
+            </div>
+            <div>
+                <label>Email</label>
+                <input type="text" v-model="newItem.Email" />
+            </div>
+            <div>
+                <label>Phone</label>
+                <input type="text" v-model="newItem.Phone" />
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+    </form>
+
+    </div>
+
+    <!-- Vue JS and Axios -->
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>
+        var contactApp = new Vue({
+            el: '#customerApp',
+            data: {
+                appName: "Customer Barebone Webapp",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone'],
+                baseUrl: "http://bernardgabon.somee.com",
+                customers: [],                
+                searchKeyword: "",
+                newItem: {}                
+            },
+            methods: {
+                getCustomers: function () {
+                    axios.get(this.baseUrl + "/api/customer")
+                        .then((response) => {
+                            this.customers = response.data;
+                        });
+                },
+                searchCustomers: function () {
+                    if (this.searchKeyword !== '') {
+                        axios.get(this.baseUrl + "/api/customer?keyword=" + this.searchKeyword)
+                            .then((response) => {
+                                this.customers = response.data;
+                            });
+                    }
+                    else {
+                        this.getCustomers();
+                    }     
+                },                 
+                postCustomer: function () {
+                    axios.post(this.baseUrl + "/api/customer", this.newItem)
+                        .then((response) => {
+                            this.getCustomers();
+                            this.newItem = {};
+                        });
+                }                
+            },
+            mounted: function () {
+                this.getCustomers();
+            }
+        });
+
+    </script>
+
+</body>
+</html>

@@ -23,7 +23,7 @@ public static class EmailService
     #region EmailServiceMethods
     public static bool SendEmail(string mailTo, string subject, string body, EmailAttachment attachment = null, string attachmentFile = "", string mailCc = "", string mailBc = "", string mailReplyTo = "")
     {
-        SmtpClient smtp = new SmtpClient()
+        var smtp = new SmtpClient()
         {
             Host = SMTP_HOST,
             Port = SMTP_PORT,
@@ -33,9 +33,9 @@ public static class EmailService
             Credentials = new System.Net.NetworkCredential(ACCOUNT_EMAIL, ACCOUNT_PASSWORD)
         };
 
-        MailMessage mail = new MailMessage();
+        var mail = new MailMessage();
         mail.From = new MailAddress(ACCOUNT_EMAIL);
-        List<string> mailTos = mailTo.Split(MULTI_MAILTO_SEPARATOR).ToList();
+        string[] mailTos = mailTo.Split(MULTI_MAILTO_SEPARATOR).ToArray();
         foreach (var mailto in mailTos)
         {
             mail.To.Add(mailto);

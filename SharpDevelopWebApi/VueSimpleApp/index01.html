@@ -1,0 +1,34 @@
+<html>
+<head>
+    <title>Hello, VueJS!</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li><a href="tut/VueJS_1_basic.pdf" target="_blank">Vue Instance</a></li>
+            <li>Interpolation</li>
+            <li>Reactivity</li>
+        </ul>
+        <a href="index02.html">1 of 10 [ Next ]</a>
+        <hr />
+    </div>
+    <!-- =============================================================== -->
+    
+    <div id="customerApp">
+        <h1>{{appName}}</h1>
+
+    </div>
+
+    <script src="js/vue.js"></script> 
+    <script>
+        var contactApp = new Vue({
+            el: '#customerApp',
+            data: {
+                appName: "Customer Barebone Webapp"
+            }
+        });
+
+    </script>
+
+</body>
+</html>

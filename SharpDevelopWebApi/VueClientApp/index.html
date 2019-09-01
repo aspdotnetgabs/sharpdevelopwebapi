@@ -4,14 +4,18 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, VueJS!</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
-    <title>Hello, VueJS!</title>
+    <style>
+        [v-cloak] > * { display:none }
+        [v-cloak]::before { content: "loading…" }
+    </style>
 </head>
 <body>
-    <div class="container" id="customerApp">
+    <div id="customerApp" class="container" v-cloak>
         <div class="jumbotron">
             <h1><a href="https://vuejs.org/v2/guide/">Vue</a></h1>
             <p>Easier to learn than React or Angular 2+ while offering more or less the same capabilities.</p>
@@ -44,11 +48,11 @@
             <tbody>
                 <tr v-for="(customer,index) in customers">
                     <td>{{customer.Id}}</td>
-                    <td><a href="#" @click="getCustomer(index)">{{customer.FirstName}} {{customer.LastName}}</a></td>
+                    <td ><a href="#" @click="getCustomer(index)">{{ customer.FirstName}} {{customer.LastName}}</a></td>
                     <td>{{customer.Email}}</td>
                     <td>{{customer.Phone}}</td>
                     <td>
-                        <button @click="editCustomer(index)" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal">Edit</button>
+                        <button @click="editCustomer(index)" class="btn btn-warning btn-sm">Edit</button>
                         <button @click="deleteCustomer(index)" class="btn btn-danger btn-sm">Delete</button>
                     </td>
                 </tr>
@@ -64,7 +68,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <form @submit="postCustomer" class="form" role="form" autocomplete="off">
+                        <form @submit.prevent="postCustomer" class="form" role="form" autocomplete="off">
                             <div class="form-group">
                                 <label>Last name</label>
                                 <input type="text" v-model="newItem.LastName" class="form-control" required />
@@ -93,7 +97,7 @@
             </div>
         </div>
 
-        <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -101,7 +105,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <form @submit="updateCustomer" class="form" role="form" autocomplete="off">
+                        <form @submit.prevent="updateCustomer" class="form" role="form" autocomplete="off">
                             <div class="form-group">
                                 <label>Id</label>
                                 <input type="text" v-model="editItem.Id" class="form-control" readonly />
@@ -143,6 +147,7 @@
                     </div>
                     <div class="modal-body px-5">
                         <p>Customer Details</p>
+                        <!-- HTML <dd> Tag https://www.w3schools.com/tags/tag_dd.asp -->
                         <dl class="dl-horizontal">
                             <dt>Id</dt>
                             <dd>{{detailItem.Id}}</dd>
@@ -174,7 +179,7 @@
         var contactApp = new Vue({
             el: '#customerApp',
             data: {
-                baseUrl : "http://localhost:8080",
+                baseUrl : "http://bernardgabon.somee.com", //"http://localhost:8080",
                 columnHeader: ['Id', 'Name', 'Email', 'Phone', 'Action'],
                 customers: [],                
                 newItem: {},
@@ -191,7 +196,6 @@
                         });
                 },
                 postCustomer: function (e) {
-                    e.preventDefault();
                     axios.post(this.baseUrl + "/api/customer", this.newItem)
                         .then((response) => {
                             //alert('Successfully added. Data: ' + JSON.stringify(response.data));
@@ -202,9 +206,16 @@
                 },
                 editCustomer: function (index) {
                     this.editItem = this.customers[index];
+                    axios.get(this.baseUrl + "/api/customer/" + this.editItem.Id)
+                        .then((response) => {
+                            this.editItem = response.data;
+                            $("#editModal").modal('show');
+                        })  
+                        .catch((error) => {
+                            this.getCustomers();
+                        }); 
                 },
                 updateCustomer: function (e) {
-                    e.preventDefault();
                     axios.put(this.baseUrl + "/api/customer", this.editItem)
                         .then((response) => {
                             this.getCustomers();
@@ -229,7 +240,10 @@
                         .then((response) => {
                             this.detailItem = response.data;
                             $("#detailModal").modal('show');
-                        });
+                        })
+                        .catch((error) => {
+                            this.getCustomers();
+                        }); 
                 },
                 searchCustomers: function () {
                     if (this.searchKeyword) {

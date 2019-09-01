@@ -1,0 +1,207 @@
+﻿<!doctype html>
+<html>
+<head>
+    <title>Hello, VueJS!</title>
+    <style>
+        [v-cloak] > * { display:none }
+        [v-cloak]::before { content: "loading…" }
+    </style>
+</head>
+<body>
+    <div id="customerApp" v-cloak>
+        <h1>{{appName}} <a href="index01.html">Vue Tutorial</a></h1>
+
+        <div v-show="view === 'tablelist'">
+            <button type="button" @click="display('newform')">Add</button>
+            <hr />
+            <input type="text" v-model="searchKeyword" placeholder="Search">
+            <button @click="searchCustomers">Go</button>
+            <button v-show="searchKeyword !== ''" @click="getCustomers">All</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="column in columnHeader">
+                            {{column}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(customer,index) in customers">
+                        <td>{{customer.Id}}</td>
+                        <td><a href="#" @click="getCustomer(index)">{{customer.FirstName}} {{customer.LastName}}</a></td>
+                        <td>{{customer.Email}}</td>
+                        <td>{{customer.Phone}}</td>
+                        <td>
+                            <button @click="editCustomer(index)">Edit</button>
+                            <button @click="deleteCustomer(index)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>          
+        </div>
+          
+        <form v-show="view === 'newform'" @submit.prevent="postCustomer" autocomplete="off">
+                <h2>New</h2>
+                <div>
+                    <label>Last name</label>
+                    <input type="text" v-model="newItem.LastName" required />
+                </div>
+                <div>
+                    <label>First name</label>
+                    <input type="text" v-model="newItem.FirstName" required />
+                </div>
+                <div>
+                    <label>Email</label>
+                    <input type="text" v-model="newItem.Email" />
+                </div>
+                <div>
+                    <label>Phone</label>
+                    <input type="text" v-model="newItem.Phone" />
+                </div>
+                <div>
+                    <button type="button" @click="display('tablelist')">Cancel</button>
+                    <button type="submit">Submit</button>
+                </div>
+        </form>
+
+        <form v-show="view === 'editform'" @submit.prevent="updateCustomer" autocomplete="off">
+            <h2>Edit</h2>
+            <div>
+                <label>Id</label>
+                <input type="text" v-model="editItem.Id" readonly />
+            </div>
+            <div>
+                <label>Last name</label>
+                <input type="text" v-model="editItem.LastName" required />
+            </div>
+            <div>
+                <label>First name</label>
+                <input type="text" v-model="editItem.FirstName" required />
+            </div>
+            <div>
+                <label>Email</label>
+                <input type="text" v-model="editItem.Email" />
+            </div>
+            <div>
+                <label>Phone</label>
+                <input type="text" v-model="editItem.Phone" />
+            </div>
+            <div>
+                <button type="button" @click="display('tablelist')">Cancel</button>
+                <button type="submit">Save</button>
+            </div>
+        </form>
+
+        <div v-show="view === 'detailview'">
+            <h2>Details</h2>
+            <button @click="display('tablelist')">Back</button>
+            <dl>
+                <dt>Id</dt>
+                <dd>{{detailItem.Id}}</dd>
+                <dt>Last Name</dt>
+                <dd>{{detailItem.LastName}}</dd>
+                <dt>First Name</dt>
+                <dd>{{detailItem.FirstName}}</dd>
+                <dt>Email</dt>
+                <dd>{{detailItem.Email}}</dd>
+                <dt>Phone</dt>
+                <dd>{{detailItem.Phone}}</dd>
+                <dt>More Fields</dt>
+                <dd>More Data</dd>                
+            </dl>
+        </div>
+
+    </div>
+
+    <!-- Vue JS CDN https://unpkg.com/vue@2.6.10/dist/vue.min.js -->
+    <script src="js/vue.min.js"></script> 
+    <!-- Axios CDN https://unpkg.com/axios@0.19.0/dist/axios.min.js -->
+    <script src="js/axios.min.js"></script>
+    <script>
+        var contactApp = new Vue({
+            el: '#customerApp',
+            data: {
+                baseUrl: "http://bernardgabon.somee.com",
+                appName: "Customer Barebone Webapp",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone', 'Action'],
+                customers: [],                
+                newItem: {},
+                editItem: {},
+                detailItem: {},
+                searchKeyword: "",
+                view: "tablelist"
+            },
+            methods: {
+                display: function (v) {
+                    this.view = v;
+                },
+                getCustomers: function () {
+                    axios.get(this.baseUrl + "/api/customer")
+                        .then((response) => {
+                            this.customers = response.data;
+                            this.searchKeyword = '';
+                        });
+                },
+                postCustomer: function () {
+                    axios.post(this.baseUrl + "/api/customer", this.newItem)
+                        .then((response) => {
+                            //alert('Successfully added. Data: ' + JSON.stringify(response.data));
+                            this.getCustomers();
+                            this.view = "tablelist";
+                            this.newItem = {};
+                        });
+                },
+                editCustomer: function (index) {
+                    axios.get(this.baseUrl + "/api/customer/" + this.customers[index].Id)
+                        .then((response) => {
+                            this.editItem = response.data;
+                            this.view = 'editform';
+                        });
+                },
+                updateCustomer: function () {
+                    axios.put(this.baseUrl + "/api/customer", this.editItem)
+                        .then((response) => {
+                            this.getCustomers();
+                            this.view = "tablelist";
+                            this.editItem = {};
+                        });
+                },
+                deleteCustomer: function (index) {
+                    var yes = confirm('Are you sure?');
+                    if (yes) {
+                        axios.delete(this.baseUrl + "/api/customer/" + this.customers[index].Id)
+                            .then((response) => {
+                                this.getCustomers();
+                            });
+                    }
+                },
+                getCustomer: function (index) {
+                    this.detailItem = this.customers[index];
+                    axios.get(this.baseUrl + "/api/customer/" + this.detailItem.Id)
+                        .then((response) => {
+                            this.detailItem = response.data;
+                            this.customers[index] = response.data;
+                            this.view = "detailview";
+                        });
+                },
+                searchCustomers: function () {
+                    if (this.searchKeyword) {
+                        axios.get(this.baseUrl + "/api/customer?keyword=" + this.searchKeyword)
+                            .then((response) => {
+                                this.customers = response.data;
+                            });
+                    }
+                    else {
+                        this.getCustomers();
+                    }
+                }
+            },
+            mounted: function () {
+                this.getCustomers();
+            }
+        });
+
+    </script>
+
+</body>
+</html>

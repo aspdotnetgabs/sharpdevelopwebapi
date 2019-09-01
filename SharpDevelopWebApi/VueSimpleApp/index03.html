@@ -1,0 +1,70 @@
+<html>
+<head>
+    <title>Hello, VueJS!</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li><a href="https://vuejs.org/v2/cookbook/using-axios-to-consume-apis.html" target="_blank">Using Axios to Consume API</a></li>
+            <li><a href=""></a>JSON</li>
+            <li><a href=""></a>Getting Customer List</li>
+            <li><a href="tut/VueJS_2_event.pdf" target="_blank">@click event</a></li>
+        </ul>
+        <a href="index04.html">3 of 10 [ Next ]</a>
+        <hr />
+    </div>
+    <!-- =============================================================== -->
+                
+    <div id="customerApp">
+        <h1>{{appName}}</h1>
+
+        <button type="button" @click="getCustomers">Get Customers</button>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="column in columnHeader">
+                            {{column}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="customer in customers">
+                        <td>{{customer.Id}}</td>
+                        <td>{{customer.FirstName}} {{customer.LastName}}</td>
+                        <td>{{customer.Email}}</td>
+                        <td>{{customer.Phone}}</td>
+                    </tr>
+                </tbody>
+            </table>          
+        </div>
+
+    </div>
+
+    <!-- Vue JS and Axios -->
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>
+        var contactApp = new Vue({
+            el: '#customerApp',
+            data: {
+                appName: "Customer Barebone Webapp",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone'],
+                baseUrl: "http://bernardgabon.somee.com",
+                customers: [],                
+            },
+            methods: {
+                getCustomers: function () {
+                    alert("You've clicked me!");
+                    axios.get(this.baseUrl + "/api/customer")
+                        .then((response) => {
+                            this.customers = response.data;
+                        });
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>
