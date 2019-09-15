@@ -1,22 +1,38 @@
 ﻿<!doctype html>
 <html>
+
 <head>
     <title>Hello, VueJS!</title>
     <style>
-        [v-cloak] > * { display:none }
-        [v-cloak]::before { content: "loading…" }
+        [v-cloak]>* { display: none }
+        [v-cloak]::before { content: "Loading…" }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            padding: 5px;
+        }
     </style>
 </head>
+
 <body>
     <div id="customerApp" v-cloak>
-        <h1>{{appName}} <a href="index01.html">Vue Tutorial</a></h1>
+        <h1>{{appName}} <a href="index01.html">Vue Step by Step Code Tutorial</a></h1>
+        <p>Right click the page, then <strong>View Page Source</strong> to view the source code.</p>
 
         <div v-show="view === 'tablelist'">
             <button type="button" @click="display('newform')">Add</button>
             <hr />
-            <input type="text" v-model="searchKeyword" placeholder="Search">
-            <button @click="searchCustomers">Go</button>
-            <button v-show="searchKeyword !== ''" @click="getCustomers">All</button>
+            <p>
+                <input type="text" v-model="searchKeyword" placeholder="Search">
+                <button @click="searchCustomers">Go</button>
+                <button v-show="searchKeyword !== ''" @click="getCustomers">All</button>
+            </p>
             <table>
                 <thead>
                     <tr>
@@ -28,7 +44,8 @@
                 <tbody>
                     <tr v-for="(customer,index) in customers">
                         <td>{{customer.Id}}</td>
-                        <td><a href="#" @click="getCustomer(index)">{{customer.FirstName}} {{customer.LastName}}</a></td>
+                        <td><a href="#" @click="getCustomer(index)">{{customer.FirstName}} {{customer.LastName}}</a>
+                        </td>
                         <td>{{customer.Email}}</td>
                         <td>{{customer.Phone}}</td>
                         <td>
@@ -37,59 +54,59 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>          
+            </table>
         </div>
-          
+
         <form v-show="view === 'newform'" @submit.prevent="postCustomer" autocomplete="off">
-                <h2>New</h2>
-                <div>
-                    <label>Last name</label>
-                    <input type="text" v-model="newItem.LastName" required />
-                </div>
-                <div>
-                    <label>First name</label>
-                    <input type="text" v-model="newItem.FirstName" required />
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input type="text" v-model="newItem.Email" />
-                </div>
-                <div>
-                    <label>Phone</label>
-                    <input type="text" v-model="newItem.Phone" />
-                </div>
-                <div>
-                    <button type="button" @click="display('tablelist')">Cancel</button>
-                    <button type="submit">Submit</button>
-                </div>
+            <h2>New</h2>
+            <p>
+                <label>Last name</label>
+                <input type="text" v-model="newItem.LastName" required />
+            </p>
+            <p>
+                <label>First name</label>
+                <input type="text" v-model="newItem.FirstName" required />
+            </p>
+            <p>
+                <label>Email</label>
+                <input type="text" v-model="newItem.Email" />
+            </p>
+            <p>
+                <label>Phone</label>
+                <input type="text" v-model="newItem.Phone" />
+            </p>
+            <p>
+                <button type="button" @click="display('tablelist')">Cancel</button>
+                <button type="submit">Submit</button>
+            </p>
         </form>
 
         <form v-show="view === 'editform'" @submit.prevent="updateCustomer" autocomplete="off">
             <h2>Edit</h2>
-            <div>
+            <p>
                 <label>Id</label>
                 <input type="text" v-model="editItem.Id" readonly />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>Last name</label>
                 <input type="text" v-model="editItem.LastName" required />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>First name</label>
                 <input type="text" v-model="editItem.FirstName" required />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>Email</label>
                 <input type="text" v-model="editItem.Email" />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>Phone</label>
                 <input type="text" v-model="editItem.Phone" />
-            </div>
-            <div>
+            </p>
+            <p>
                 <button type="button" @click="display('tablelist')">Cancel</button>
                 <button type="submit">Save</button>
-            </div>
+            </p>
         </form>
 
         <div v-show="view === 'detailview'">
@@ -107,14 +124,14 @@
                 <dt>Phone</dt>
                 <dd>{{detailItem.Phone}}</dd>
                 <dt>More Fields</dt>
-                <dd>More Data</dd>                
+                <dd>More Data</dd>
             </dl>
         </div>
 
     </div>
 
     <!-- Vue JS CDN https://unpkg.com/vue@2.6.10/dist/vue.min.js -->
-    <script src="js/vue.min.js"></script> 
+    <script src="js/vue.min.js"></script>
     <!-- Axios CDN https://unpkg.com/axios@0.19.0/dist/axios.min.js -->
     <script src="js/axios.min.js"></script>
     <script>
@@ -124,7 +141,7 @@
                 baseUrl: "http://bernardgabon.somee.com",
                 appName: "Customer Barebone Webapp",
                 columnHeader: ['Id', 'Name', 'Email', 'Phone', 'Action'],
-                customers: [],                
+                customers: [],
                 newItem: {},
                 editItem: {},
                 detailItem: {},
@@ -204,4 +221,5 @@
     </script>
 
 </body>
+
 </html>

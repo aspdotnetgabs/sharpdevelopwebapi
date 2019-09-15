@@ -1,0 +1,242 @@
+<html>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <title>Hello, Vuetify!</title>
+
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css">
+
+    <style>
+        [v-cloak]>* {
+            display: none
+        }
+    
+        [v-cloak]::before {
+            content: "Loading…"
+        }
+    
+        .v-text-field {
+            max-width: 400px;
+        }
+
+        td {
+            white-space: nowrap;
+        }
+    
+        dt {
+            color: gray;
+            font-size: small;
+        }
+    
+        dd {
+            padding: 0 0 15px 15px;
+        }
+    </style>
+</head>
+<body>          
+    <div id="customerApp" v-cloak>
+        <v-app>
+            <v-content>
+                <v-container>
+                    <h1>{{appName}}</h1>
+                    <p>This webapp is powered by <a href="https://vuetifyjs.com/en/components/buttons" target="_blank">Vuetify.js</a></p>
+   
+                    <div v-show="view==='tablelist'">
+                        <p>
+                            <v-btn type="v-btn" color="primary" large @click="display('newform')" >Add</v-btn>
+                        </p>
+                        <v-divider></v-divider>
+                        <br>
+                        <p>
+                            <v-text-field  
+                                outlined
+                                clearable v-model="searchKeyword" 
+                                label="Search" 
+                                append-icon="search" 
+                                @click:append="searchCustomers" 
+                                @keyup.enter.native="searchCustomers"> 
+                            </v-text-field>                                                    
+                        </p>
+                        <v-simple-table>
+                            <template>
+                                <thead>
+                                    <tr>
+                                        <th v-for="column in columnHeader">
+                                            {{column}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(customer,index) in customers">
+                                        <td>{{customer.Id}}</td>
+                                        <td><a href="#" @click="getCustomer(index)">{{customer.FirstName}} {{customer.LastName}}</a></td>
+                                        <td>{{customer.Email}}</td>
+                                        <td>{{customer.Phone}}</td>
+                                        <td>
+                                            <v-btn small color="warning" @click="editCustomer(index)">Edit</v-btn>
+                                            <v-btn small color="danger" class="red white--text" @click="deleteCustomer(index)">Delete</v-btn>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
+                    </div>
+            
+                    <form v-show="view==='newform'" @submit.prevent="postCustomer">
+                        <h2>New</h2>
+                        <div>
+                            <v-text-field v-model="newItem.LastName" label="Last name" required />
+                        </div>
+                        <div>
+                            <v-text-field v-model="newItem.FirstName" label="First name" required />
+                        </div>
+                        <div>
+                            <v-text-field v-model="newItem.Email" label="Email" />
+                        </div>
+                        <div>
+                            <v-text-field v-model="newItem.Phone" label="Phone" />
+                        </div>
+                        <div>
+                            <v-btn @click="display('tablelist')">Cancel</v-btn>                
+                            <v-btn type="submit" color="primary">Submit</v-btn>
+                        </div>
+                    </form>
+            
+                    <form v-show="view==='editform'" @submit.prevent="updateCustomer" autocomplete="off">
+                        <h2>Edit</h2>
+                        <div>
+                            <v-text-field v-model="editItem.Id" label="Id" readonly />
+                        </div>
+                        <div>
+                            <v-text-field v-model="editItem.LastName" label="Last name" required />
+                        </div>
+                        <div>
+                            <v-text-field v-model="editItem.FirstName" label="First name" required />
+                        </div>
+                        <div>
+                            <v-text-field v-model="editItem.Email" label="Email" />
+                        </div>
+                        <div>
+                            <v-text-field v-model="editItem.Phone" label="Phone" />
+                        </div>
+                        <div>
+                            <v-btn @click="display('tablelist')">Cancel</v-btn>
+                            <v-btn type="submit" color="primary">Save</v-btn>
+                        </div>
+                    </form>                                             
+                    
+                    <div v-show="view === 'detailview'">
+                        <h2>Details</h2>
+                        <p>
+                            <v-btn @click="display('tablelist')" rounded><v-icon>mdi-arrow-left</v-icon></v-btn>
+                        </p>
+                        <dl>
+                            <dt>Id</dt>
+                            <dd>{{detailItem.Id}}</dd>
+                            <dt>Last Name</dt>
+                            <dd>{{detailItem.LastName}}</dd>
+                            <dt>First Name</dt>
+                            <dd>{{detailItem.FirstName}}</dd>
+                            <dt>Email</dt>
+                            <dd>{{detailItem.Email}}</dd>
+                            <dt>Phone</dt>
+                            <dd>{{detailItem.Phone}}</dd>
+                        </dl>
+                    </div>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+
+    <!-- VueJS, Axios and Vuetify -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
+    <script>
+        var contactApp = new Vue({
+            el: '#customerApp',
+            vuetify: new Vuetify(),
+            data: {
+                appName: "Customer Vuetify Webapp",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone', 'Action'],
+                baseUrl: "http://bernardgabon.somee.com",
+                customers: [],                
+                searchKeyword: "",
+                newItem: {},
+                view: "tablelist",
+                editItem: {},
+                detailItem: {}         
+            },
+            methods: {
+                getCustomers: function () {
+                    axios.get(this.baseUrl + "/api/customer")
+                        .then((response) => {
+                            this.customers = response.data;
+                        });
+                },
+                searchCustomers: function () {
+                    if (this.searchKeyword) {
+                        axios.get(this.baseUrl + "/api/customer?keyword=" + this.searchKeyword)
+                            .then((response) => {
+                                this.customers = response.data;
+                            });
+                    }
+                    else {
+                        this.getCustomers();
+                    }     
+                },                 
+                postCustomer: function () {
+                    axios.post(this.baseUrl + "/api/customer", this.newItem)
+                        .then((response) => {
+                            this.getCustomers();
+                            this.newItem = {};
+                        });
+                },
+                deleteCustomer: function (index) {
+                    var yes = confirm('Are you sure?');
+                    if (yes) {
+                        axios.delete(this.baseUrl + "/api/customer/" + this.customers[index].Id)
+                            .then((response) => {
+                                this.getCustomers();
+                            });
+                    }
+                },
+                display: function (v) {
+                    this.view = v;
+                },
+                editCustomer: function (index) {
+                    axios.get(this.baseUrl + "/api/customer/" + this.customers[index].Id)
+                        .then((response) => {
+                            this.editItem = response.data;
+                            this.view = 'editform';
+                        });
+                },
+                updateCustomer: function () {
+                    axios.put(this.baseUrl + "/api/customer", this.editItem)
+                        .then((response) => {
+                            this.getCustomers();
+                            this.view = "tablelist";
+                            this.editItem = {};
+                        });
+                },     
+                getCustomer: function (index) {
+                    this.detailItem = this.customers[index];
+                    axios.get(this.baseUrl + "/api/customer/" + this.detailItem.Id)
+                        .then((response) => {
+                            this.detailItem = response.data;
+                            //this.customers[index] = response.data;
+                            this.view = "detailview";
+                        });
+                }
+            },
+            mounted: function () {
+                this.getCustomers();
+            }
+        });
+
+    </script>
+
+</body>
+</html>

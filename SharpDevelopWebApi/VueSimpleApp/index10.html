@@ -1,13 +1,24 @@
 <html>
 <head>
     <title>Hello, VueJS!</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+    </style>    
 </head>
 <body>
     <div>
         <ul>
             <li><a href="">Viewing Item Detail</a></li>
+            <li><a href="https://www.w3schools.com/css/tryit.asp?filename=trycss_table_border-collapse" target="_blank">Styling the table</a></li>
         </ul>
-        <a href="index.html">10 of 10 [ Next ]</a>
+        <a href="index.html">10 of 10 [ Home ]</a>
         <hr />
     </div>
     <!-- =============================================================== -->                  
@@ -18,8 +29,10 @@
         <div v-show="view === 'tablelist'">
             <button type="button" @click="display('newform')">Add</button>
             <hr />
-            <input type="text" v-model="searchKeyword" placeholder="Search">
-            <button @click="searchCustomers">Go</button>                
+            <p>
+                <input type="text" v-model="searchKeyword" placeholder="Search">
+                <button @click="searchCustomers">Go</button>  
+            </p>
             <table>
                 <thead>
                     <tr>
@@ -45,54 +58,54 @@
 
         <form v-show="view === 'newform'" @submit.prevent="postCustomer">
             <h2>New</h2>
-            <div>
+            <p>
                 <label>Last name</label>
                 <input type="text" v-model="newItem.LastName" required />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>First name</label>
                 <input type="text" v-model="newItem.FirstName" required />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>Email</label>
                 <input type="text" v-model="newItem.Email" />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>Phone</label>
                 <input type="text" v-model="newItem.Phone" />
-            </div>
-            <div>
+            </p>
+            <p>
                 <button type="button" @click="display('tablelist')">Cancel</button>                
                 <button type="submit">Submit</button>
-            </div>
+            </p>
         </form>
 
         <form v-show="view === 'editform'" @submit.prevent="updateCustomer" autocomplete="off">
             <h2>Edit</h2>
-            <div>
+            <p>
                 <label>Id</label>
                 <input type="text" v-model="editItem.Id" readonly />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>Last name</label>
                 <input type="text" v-model="editItem.LastName" required />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>First name</label>
                 <input type="text" v-model="editItem.FirstName" required />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>Email</label>
                 <input type="text" v-model="editItem.Email" />
-            </div>
-            <div>
+            </p>
+            <p>
                 <label>Phone</label>
                 <input type="text" v-model="editItem.Phone" />
-            </div>
-            <div>
+            </p>
+            <p>
                 <button type="button" @click="display('tablelist')">Cancel</button>
                 <button type="submit">Save</button>
-            </div>
+            </p>
         </form>      
         
         <div v-show="view === 'detailview'">

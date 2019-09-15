@@ -287,7 +287,7 @@ namespace SharpDevelopWebApi
                     name = attr.Name,
                     @in = "formData",
                     required = true,
-                    type = "file",
+                    type = "file"
                 });
                 operation.consumes.Add("multipart/form-data");
             }

@@ -58,6 +58,17 @@ namespace SharpDevelopWebApi.Controllers
 
             return BadRequest();
         }
+        
+        [HttpPost]
+        [FileUpload.SwaggerForm()]
+        [Route("api/sample/uploadphoto")]
+        public IHttpActionResult UploadImage()
+        {
+        	var postedFile = HttpContext.Current.Request.Files[0];
+            var filePath = postedFile.SaveAsJpegFile();
+            return Ok(filePath);
+        }    
+
 
         [HttpPost]
         [Route("api/sample/sendmail")]

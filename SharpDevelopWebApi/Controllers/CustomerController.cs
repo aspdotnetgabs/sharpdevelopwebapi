@@ -11,7 +11,7 @@ namespace SharpDevelopWebApi.Controllers
     public class CustomerController : ApiController
     {
         SDWebApiDbContext _db = new SDWebApiDbContext();
-
+        
         [HttpGet]
         public IHttpActionResult GetAll(string keyword = "")
         {
@@ -24,7 +24,7 @@ namespace SharpDevelopWebApi.Controllers
                     .ToList();
             }
             else
-                customers = _db.Customers.ToList();
+            	customers = _db.Customers.ToList();
 
             return Ok(customers);
         }
