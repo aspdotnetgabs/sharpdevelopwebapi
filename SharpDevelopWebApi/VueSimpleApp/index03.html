@@ -50,14 +50,13 @@
             data: {
                 appName: "Customer Barebone Webapp",
                 columnHeader: ['Id', 'Name', 'Email', 'Phone'],
-                baseUrl: "http://bernardgabon.somee.com",
                 customers: [],                
             },
             methods: {
                 getCustomers: function () {
                     alert("You've clicked me!");
-                    axios.get(this.baseUrl + "/api/customer")
-                        .then((response) => {
+                    axios.get("http://bernardgabon.somee.com/api/customer")
+                        .then(response => {
                             this.customers = response.data;
                         });
                 }

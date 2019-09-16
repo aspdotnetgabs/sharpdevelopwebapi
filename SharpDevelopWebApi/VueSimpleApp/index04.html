@@ -53,7 +53,7 @@
             methods: {
                 getCustomers: function () {
                     axios.get(this.baseUrl + "/api/customer")
-                        .then((response) => {
+                        .then(response => {
                             this.customers = response.data;
                         });
                 }

@@ -83,14 +83,14 @@
             methods: {
                 getCustomers: function () {
                     axios.get(this.baseUrl + "/api/customer")
-                        .then((response) => {
+                        .then(response => {
                             this.customers = response.data;
                         });
                 },
                 searchCustomers: function () {
                     if (this.searchKeyword !== '') {
                         axios.get(this.baseUrl + "/api/customer?keyword=" + this.searchKeyword)
-                            .then((response) => {
+                            .then(response => {
                                 this.customers = response.data;
                             });
                     }
@@ -100,7 +100,7 @@
                 },                 
                 postCustomer: function () {
                     axios.post(this.baseUrl + "/api/customer", this.newItem)
-                        .then((response) => {
+                        .then(response => {
                             this.getCustomers();
                             this.newItem = {};
                         });
@@ -109,7 +109,7 @@
                     var yes = confirm('Are you sure?');
                     if (yes) {
                         axios.delete(this.baseUrl + "/api/customer/" + this.customers[index].Id)
-                            .then((response) => {
+                            .then(response => {
                                 this.getCustomers();
                             });
                     }

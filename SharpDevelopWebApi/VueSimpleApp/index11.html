@@ -15,10 +15,10 @@
 <body>
     <div>
         <ul>
-            <li><a href="">Viewing Item Detail</a></li>
-            <li><a href="https://www.w3schools.com/css/tryit.asp?filename=trycss_table_border-collapse" target="_blank">Styling the table</a></li>    
+            <li><a href="https://www.w3schools.com/tags/att_input_accept.asp">Input File</a></li>
+            <li><a href="https://www.academind.com/learn/vue-js/snippets/image-upload/" target="_blank">Upload image with Axios</a></li>
         </ul>
-        <a href="index11.html">10 of 11 [ Next ]</a>
+        <a href="index.html">11 of 11 [ Home ]</a>
         <hr />
     </div>
     <!-- =============================================================== -->                  
@@ -111,7 +111,7 @@
         <div v-show="view === 'detailview'">
             <h2>Details</h2>
             <button @click="display('tablelist')">Back</button>
-            <dl>
+            <dl style="width: 50%">
                 <dt>Id</dt>
                 <dd>{{detailItem.Id}}</dd>
                 <dt>Last Name</dt>
@@ -122,6 +122,21 @@
                 <dd>{{detailItem.Email}}</dd>
                 <dt>Phone</dt>
                 <dd>{{detailItem.Phone}}</dd>
+                <dt>Photo</dt>
+                <dd>
+                        <p  v-if="!pleaseWait">
+                            <input type="file" accept="image/*" @change="onFileChanged" >
+                            <button @click="onUpload">Upload</button>           
+                        </p>
+                        <p v-else="pleaseWait">Uploading file...</p> 
+                                            
+                        <p v-show="detailItem.PhotoUrl">
+                            <img :src="baseUrl + '/UploadedImages/' + detailItem.PhotoUrl" width="400" />
+                        </p>
+                        <p v-show="!detailItem.PhotoUrl">
+                            (No available photo)
+                        </p>
+                </dd>
             </dl>
         </div>
 
@@ -142,7 +157,9 @@
                 newItem: {},
                 view: "tablelist",
                 editItem: {},
-                detailItem: {}         
+                detailItem: {},
+                selectedFile: {},
+                pleaseWait: false         
             },
             methods: {
                 getCustomers: function () {
@@ -203,6 +220,23 @@
                             this.detailItem = response.data;
                             //this.customers[index] = response.data;
                             this.view = "detailview";
+                        });
+                },
+                onFileChanged: function (event) {
+                    this.selectedFile = event.target.files[0]
+                },
+                onUpload: function () {
+                    this.pleaseWait = true;
+                    var formData = new FormData()
+                    formData.append('myFile', this.selectedFile, this.selectedFile.name);
+                    axios.post(this.baseUrl + "/api/customer/" + this.detailItem.Id + "/uploadphoto", formData)
+                        .then(response => {
+                            this.detailItem = response.data;
+                            this.pleaseWait = false;
+                        })
+                        .catch(error => {
+                            alert('Photo upload failed.')
+                            this.pleaseWait = false;
                         });
                 }
             },

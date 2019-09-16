@@ -1,4 +1,5 @@
-﻿using SharpDevelopWebApi.Models;
+﻿using System.Web;
+using SharpDevelopWebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,6 +80,31 @@ namespace SharpDevelopWebApi.Controllers
             }
             else
                 return BadRequest("Customer not found");
+        }
+        
+        [HttpPost]
+        [FileUpload.SwaggerForm()]
+        [Route("api/customer/{Id}/uploadphoto")]
+        public IHttpActionResult UploadPhoto(int Id)
+        {            
+            var customer = _db.Customers.Find(Id);
+            if (customer != null)
+            {
+	        	var postedFile = HttpContext.Current.Request.Files[0];
+            	var filePath = postedFile.SaveAsJpegFile();
+            	if(!string.IsNullOrEmpty(filePath))
+            	{
+	            	customer.PhotoUrl = filePath;
+	
+	                _db.Entry(customer).State = System.Data.Entity.EntityState.Modified;
+	                _db.SaveChanges();
+	
+	                return Ok(customer);            		
+            	}
+            }
+            
+            
+            return BadRequest("Error on photo uploading...");
         }
     }
 }

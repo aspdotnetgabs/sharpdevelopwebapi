@@ -57,14 +57,14 @@
             methods: {
                 getCustomers: function () {
                     axios.get(this.baseUrl + "/api/customer")
-                        .then((response) => {
+                        .then(response => {
                             this.customers = response.data;
                         });
                 },
                 searchCustomers: function () {
                     if (this.searchKeyword !== '') {
                         axios.get(this.baseUrl + "/api/customer?keyword=" + this.searchKeyword)
-                            .then((response) => {
+                            .then(response => {
                                 this.customers = response.data;
                             });
                     }

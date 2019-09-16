@@ -154,14 +154,14 @@
                 },
                 getCustomers: function () {
                     axios.get(this.baseUrl + "/api/customer")
-                        .then((response) => {
+                        .then(response => {
                             this.customers = response.data;
                             this.searchKeyword = '';
                         });
                 },
                 postCustomer: function () {
                     axios.post(this.baseUrl + "/api/customer", this.newItem)
-                        .then((response) => {
+                        .then(response => {
                             //alert('Successfully added. Data: ' + JSON.stringify(response.data));
                             this.getCustomers();
                             this.view = "tablelist";
@@ -170,14 +170,14 @@
                 },
                 editCustomer: function (index) {
                     axios.get(this.baseUrl + "/api/customer/" + this.customers[index].Id)
-                        .then((response) => {
+                        .then(response => {
                             this.editItem = response.data;
                             this.view = 'editform';
                         });
                 },
                 updateCustomer: function () {
                     axios.put(this.baseUrl + "/api/customer", this.editItem)
-                        .then((response) => {
+                        .then(response => {
                             this.getCustomers();
                             this.view = "tablelist";
                             this.editItem = {};
@@ -187,7 +187,7 @@
                     var yes = confirm('Are you sure?');
                     if (yes) {
                         axios.delete(this.baseUrl + "/api/customer/" + this.customers[index].Id)
-                            .then((response) => {
+                            .then(response => {
                                 this.getCustomers();
                             });
                     }
@@ -195,7 +195,7 @@
                 getCustomer: function (index) {
                     this.detailItem = this.customers[index];
                     axios.get(this.baseUrl + "/api/customer/" + this.detailItem.Id)
-                        .then((response) => {
+                        .then(response => {
                             this.detailItem = response.data;
                             this.customers[index] = response.data;
                             this.view = "detailview";
@@ -204,7 +204,7 @@
                 searchCustomers: function () {
                     if (this.searchKeyword) {
                         axios.get(this.baseUrl + "/api/customer?keyword=" + this.searchKeyword)
-                            .then((response) => {
+                            .then(response => {
                                 this.customers = response.data;
                             });
                     }
