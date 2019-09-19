@@ -126,14 +126,14 @@
                 <dd>
                         <p  v-if="!pleaseWait">
                             <input type="file" accept="image/*" @change="onFileChanged" >
-                            <button @click="onUpload">Upload</button>           
+                            <button @click="onUpload" :disabled="!selectedFile">Upload</button>           
                         </p>
                         <p v-else="pleaseWait">Uploading file...</p> 
                                             
-                        <p v-show="detailItem.PhotoUrl">
+                        <p v-if="detailItem.PhotoUrl">
                             <img :src="baseUrl + '/UploadedImages/' + detailItem.PhotoUrl" width="400" />
                         </p>
-                        <p v-show="!detailItem.PhotoUrl">
+                        <p v-else>
                             (No available photo)
                         </p>
                 </dd>
@@ -158,7 +158,7 @@
                 view: "tablelist",
                 editItem: {},
                 detailItem: {},
-                selectedFile: {},
+                selectedFile: null,
                 pleaseWait: false         
             },
             methods: {
@@ -223,7 +223,8 @@
                         });
                 },
                 onFileChanged: function (event) {
-                    this.selectedFile = event.target.files[0]
+                    this.selectedFile = event.target.files[0];
+                    console.log(this.selectedFile);
                 },
                 onUpload: function () {
                     this.pleaseWait = true;
@@ -232,10 +233,12 @@
                     axios.post(this.baseUrl + "/api/customer/" + this.detailItem.Id + "/uploadphoto", formData)
                         .then(response => {
                             this.detailItem = response.data;
+                            this.selectedFile = null;
                             this.pleaseWait = false;
                         })
                         .catch(error => {
                             alert('Photo upload failed.')
+                            this.selectedFile = null;
                             this.pleaseWait = false;
                         });
                 }
