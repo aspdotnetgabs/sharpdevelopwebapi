@@ -134,11 +134,14 @@ public partial class UserAccount
                 user.PasswordSalt = hmac.Key;
                 user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(newPassword));
             }
+            
+	        _db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+	        _db.SaveChanges();
+	        return true;            
         }
+		else
+			return false;
 
-        _db.Entry(user).State = System.Data.Entity.EntityState.Modified;
-        _db.SaveChanges();
-        return true;
     }
 
     public static List<UserAccount> GetAll()

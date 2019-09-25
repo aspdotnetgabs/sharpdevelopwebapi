@@ -126,6 +126,8 @@
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\HantakController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SampleController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -141,6 +143,7 @@
     <Compile Include="Helpers\JWT\JwtManager.cs" />
     <Compile Include="Helpers\UserAccount.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\SDWebApiDbContext.cs" />

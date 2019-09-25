@@ -18,7 +18,7 @@ namespace SharpDevelopWebApi.Controllers
         public IHttpActionResult GetToken(string email, string password)
         {
             if (UserAccount.Authenticate(email, password))
-            {
+            {          	
                 var data = new { Token = JwtManager.GenerateToken(email) };
                 return Ok(data);
             }
@@ -65,11 +65,16 @@ namespace SharpDevelopWebApi.Controllers
 
         [HttpPost]
         [Route("api/account/changepassword")]
-        [ApiAuthorize]
-        public IHttpActionResult ChangePassword(string email, string newPassword, string currentPassword = "")
+        public IHttpActionResult ChangePassword(string email, string newPassword, string currentPassword)
         {
             var currentUser = !string.IsNullOrEmpty(User.Identity.Name) ? User.Identity.Name : (string)HttpContext.Current.Session["currentUser"];
-            var forceChangeIfAdmin = Array.IndexOf(UserAccount.GetUserRoles(currentUser), "admin") > -1;
+            var forceChangeIfAdmin = false;
+
+            try 
+            {
+             	forceChangeIfAdmin = Array.IndexOf(UserAccount.GetUserRoles(currentUser), "admin") > -1;           	
+            } 
+            catch {}
 
             var success = UserAccount.ChangePassword(email, currentPassword, newPassword, forceChangeIfAdmin);
             if (success)

@@ -16,10 +16,12 @@ namespace SharpDevelopWebApi.Helpers.JWT
 
         public async Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
         {
+        	// Remove this when going full JWT ==========
             if (HttpContext.Current.Session["currentUser"] != null)
             {
                 return;
             }
+            // =========
 
             var request = context.Request;
             var authorization = request.Headers.Authorization;
