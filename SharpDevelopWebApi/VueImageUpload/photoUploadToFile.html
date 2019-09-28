@@ -1,0 +1,136 @@
+<html>
+<head>
+    <title>Vue Image Upload</title>
+</head>
+<body>
+    <div id="customerApp">
+
+        <div v-show="view === 'tablelist'">
+            <h1>{{appName}}</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="column in columnHeader">
+                            {{column}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(customer,index) in customers">
+                        <td>{{index}}</td>
+                        <td>{{customer.Id}}</td>
+                        <td><a href="#" @click="getCustomerDetail(index)">{{customer.FirstName}} {{customer.LastName}}</a></td>
+                        <td>{{customer.Email}}</td>
+                        <td>{{customer.Phone}}</td>
+                    </tr>
+                </tbody>
+            </table>          
+        </div>
+    
+        <div v-if="view === 'detailview'">
+            <h2>Customer Details</h2>
+            <button @click="display('tablelist')">Back</button>
+            <dl>
+                <dt>Id</dt>
+                <dd>{{detailItem.Id}}</dd>
+                <dt>Last Name</dt>
+                <dd>{{detailItem.LastName}}</dd>
+                <dt>First Name</dt>
+                <dd>{{detailItem.FirstName}}</dd>
+                <dt>Email</dt>
+                <dd>{{detailItem.Email}}</dd>
+                <dt>Phone</dt>
+                <dd>{{detailItem.Phone}}</dd>
+                <dt>Photo</dt>
+                <dd>
+                    <p  v-if="!pleaseWait">
+                        <input type="file" accept="image/*" @change="onFileChanged" >
+                        <!-- Disable the Upload button if selectFile is empty -->
+                        <button @click="onUpload" :disabled="!selectedFile">Upload</button>           
+                    </p>
+                    <p v-else="pleaseWait">Uploading file...</p> 
+                                
+                    <!-- True if PhotoUrl is not empty -->
+                    <p v-if="detailItem.PhotoUrl"> 
+                        Thumbnail: {{baseUrl + '/uploadedimages/thumb/' + detailItem.PhotoUrl}} <br>
+                        <img :src="baseUrl + '/UploadedImages/thumb/' + detailItem.PhotoUrl" /> 
+                        <br>
+                        Normal Size:                      
+                        {{baseUrl + '/uploadedimages/' + detailItem.PhotoUrl}} <br>
+                        <img :src="baseUrl + '/UploadedImages/' + detailItem.PhotoUrl" width="600" />
+                    </p>
+                    <p v-else>
+                        (No available photo)
+                    </p>
+                </dd>
+            </dl>
+        </div> 
+
+    </div>
+    
+        <!-- Vue JS and Axios -->
+        <script src="js/vue.min.js"></script>
+        <script src="js/axios.min.js"></script>
+        <script>
+            var vueApp = new Vue({
+                el: '#customerApp',
+                data: {
+                    appName: "Customer Image Upload Demo [Save As File]",
+                    columnHeader: ['Index', 'Id', 'Name', 'Email', 'Phone'],
+                    baseUrl: "http://bernardgabon.somee.com",
+                    view: "tablelist",
+                    customers: [],
+                    detailItem: {},
+                    selectedFile: null,
+                    pleaseWait: false
+                },
+                methods: {
+                    display: function (v) {
+                        this.view = v;
+                        this.selectedFile = null; // clear selectedFile when switching view
+                    },
+                    getCustomers: function () {
+                        // GET http://bernardgabon.somee.com/api/Customer
+                        axios.get(this.baseUrl + "/api/customer")
+                            .then(response => {
+                                this.customers = response.data;
+                            });
+                    },
+                    getCustomerDetail: function (index) {
+                        // GET http://bernardgabon.somee.com/api/Customer/{Id}
+                        axios.get(this.baseUrl + "/api/customer/" + this.customers[index].Id)
+                            .then(response => {
+                                this.detailItem = response.data;
+                                this.view = "detailview";
+                            });
+                    },
+                    onFileChanged: function (event) {
+                        this.selectedFile = event.target.files[0];
+                    },
+                    onUpload: function () {
+                        this.pleaseWait = true;
+                        var formData = new FormData();
+                        // formData.append('imgfile', this.selectedFile, this.selectedFile.name); // Uses the original filename
+                        formData.append('imgfile', this.selectedFile, this.detailItem.LastName); // append(key, file, filename) 
+                        axios.post(this.baseUrl + "/api/customer/" + this.detailItem.Id + "/uploadphoto", formData)
+                            .then(response => {
+                                this.detailItem = response.data;
+                                this.selectedFile = null;
+                                this.pleaseWait = false;
+                            })
+                            .catch(error => {
+                                alert('Photo upload failed.')
+                                this.selectedFile = null;
+                                this.pleaseWait = false;
+                            });
+                    }
+                },
+                mounted: function () {
+                    this.getCustomers();
+                }
+            });
+    
+        </script>
+    
+</body>
+</html>

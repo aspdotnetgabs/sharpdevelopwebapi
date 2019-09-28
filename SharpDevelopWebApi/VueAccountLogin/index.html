@@ -206,20 +206,21 @@
                 },
                 register: function (regType) {
                     if(this.user.password === this.user.retypePassword) {                        
-                        axios.post(this.baseUrl + "/api/account/register?email=" + this.user.email + "&password=" + this.user.password + "&userType=" + regType)
-                        .then(response => {
-                            var data = response.data;
-                            if (data.UserId) {
-                                this.user.password = null;
-                                this.user.retypePassword = null;
-                                this.view = 'loginform';
-                            } else {
-                                alert(data.message);
-                            }
-                        })
-                        .catch(error => {
-                            alert(error.response.data.Message);
-                        });
+                        axios.post(this.baseUrl + "/api/account/register?email=" + this.user.email 
+                                    + "&password=" + this.user.password + "&userType=" + regType)
+                            .then(response => {
+                                var data = response.data;
+                                if (data.UserId) {
+                                    this.user.password = null;
+                                    this.user.retypePassword = null;
+                                    this.view = 'loginform';
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                alert(error.response.data.Message);
+                            });
                     } else {
                         alert("Password not the same.");
                     }                   

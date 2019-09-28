@@ -1,46 +1,60 @@
 <html>
 <head>
     <title>Vue Image Upload</title>
+
+    <style>
+        div.gallery {
+          margin: 5px;
+          border: 1px solid #ccc;
+          float: left;
+          width: 180px;
+        }
+        
+        div.gallery:hover {
+          border: 1px solid #777;
+        }
+        
+        div.gallery img {
+          width: 100%;
+          height: auto;
+        }
+        
+        div.desc {
+          padding: 15px;
+          text-align: center;
+        }
+    </style>
+
 </head>
 <body>
-    <div id="customerApp">
+    <div id="productApp">
 
-        <div v-show="view === 'tablelist'">
-            <h1>Customers</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th v-for="column in columnHeader">
-                            {{column}}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(customer,index) in customers">
-                        <td>{{index}}</td>
-                        <td>{{customer.Id}}</td>
-                        <td><a href="#" @click="getCustomerDetail(index)">{{customer.FirstName}} {{customer.LastName}}</a></td>
-                        <td>{{customer.Email}}</td>
-                        <td>{{customer.Phone}}</td>
-                    </tr>
-                </tbody>
-            </table>          
+        <div v-show="view === 'boxed-item'">
+            <h1>{{appName}}</h1>
+            <div class="gallery" v-for="(p,index) in products">
+                <a href="#" @click="getProductDetail(index)">
+                  <img :src="p.Photo" v-show="p.Photo" alt="p.Name">
+                  <div class="desc">
+                      {{p.Name}} {{p.Price | currency}}
+                      <br>
+                      {{p.Category.Name}}
+                    </div>
+                </a>
+            </div>         
         </div>
     
         <div v-if="view === 'detailview'">
-            <h2>Customer Details</h2>
-            <button @click="display('tablelist')">Back</button>
+            <h2>Upload Photo</h2>
+            <button @click="display('boxed-item')">Back</button>
             <dl>
                 <dt>Id</dt>
                 <dd>{{detailItem.Id}}</dd>
-                <dt>Last Name</dt>
-                <dd>{{detailItem.LastName}}</dd>
-                <dt>First Name</dt>
-                <dd>{{detailItem.FirstName}}</dd>
-                <dt>Email</dt>
-                <dd>{{detailItem.Email}}</dd>
-                <dt>Phone</dt>
-                <dd>{{detailItem.Phone}}</dd>
+                <dt>Name</dt>
+                <dd>{{detailItem.Name}}</dd>
+                <dt>Category</dt>
+                <dd>{{detailItem.Category.Name}}</dd>
+                <dt>Price</dt>
+                <dd>{{detailItem.Price}}</dd>
                 <dt>Photo</dt>
                 <dd>
                     <p  v-if="!pleaseWait">
@@ -50,10 +64,9 @@
                     </p>
                     <p v-else="pleaseWait">Uploading file...</p> 
                                 
-                    <!-- True if PhotoUrl is not empty -->
-                    <p v-if="detailItem.PhotoUrl"> 
-                        {{baseUrl + '/UploadedImages/' + detailItem.PhotoUrl}} <br>
-                        <img :src="baseUrl + '/UploadedImages/' + detailItem.PhotoUrl" width="600" />
+                    <!-- True if Photo is not empty -->
+                    <p v-if="detailItem.Photo"> 
+                        <img :src="detailItem.Photo" width="600" />
                     </p>
                     <p v-else>
                         (No available photo)
@@ -69,13 +82,12 @@
         <script src="js/axios.min.js"></script>
         <script>
             var vueApp = new Vue({
-                el: '#customerApp',
+                el: '#productApp',
                 data: {
-                    appName: "Customer Image Upload Demo",
-                    columnHeader: ['Index', 'Id', 'Name', 'Email', 'Phone'],
+                    appName: "Product Image Upload Demo [Save To Database]",
                     baseUrl: "http://bernardgabon.somee.com",
-                    view: "tablelist",
-                    customers: [],
+                    view: "boxed-item",
+                    products: [],
                     detailItem: {},
                     selectedFile: null,
                     pleaseWait: false
@@ -85,16 +97,16 @@
                         this.view = v;
                         this.selectedFile = null; // clear selectedFile when switching view
                     },
-                    getCustomers: function () {
-                        // GET http://bernardgabon.somee.com/api/Customer
-                        axios.get(this.baseUrl + "/api/customer")
+                    getProducts: function () {
+                        // GET http://bernardgabon.somee.com/api/product
+                        axios.get(this.baseUrl + "/api/product")
                             .then(response => {
-                                this.customers = response.data;
+                                this.products = response.data;
                             });
                     },
-                    getCustomerDetail: function (index) {
-                        // GET http://bernardgabon.somee.com/api/Customer/{Id}
-                        axios.get(this.baseUrl + "/api/customer/" + this.customers[index].Id)
+                    getProductDetail: function (index) {
+                        // GET http://bernardgabon.somee.com/api/product/{Id}
+                        axios.get(this.baseUrl + "/api/product/" + this.products[index].Id)
                             .then(response => {
                                 this.detailItem = response.data;
                                 this.view = "detailview";
@@ -106,11 +118,11 @@
                     onUpload: function () {
                         this.pleaseWait = true;
                         var formData = new FormData();
-                        // formData.append('imgfile', this.selectedFile, this.selectedFile.name); // Uses the original filename
-                        formData.append('imgfile', this.selectedFile, this.detailItem.LastName); // append(key, file, filename) 
-                        axios.post(this.baseUrl + "/api/customer/" + this.detailItem.Id + "/uploadphoto", formData)
+                        formData.append('imgfile', this.selectedFile, this.selectedFile.name); // append(key, file, filename) 
+                        axios.post(this.baseUrl + "/api/product/" + this.detailItem.Id + "/uploadphoto", formData)
                             .then(response => {
                                 this.detailItem = response.data;
+                                this.getProducts();
                                 this.selectedFile = null;
                                 this.pleaseWait = false;
                             })
@@ -122,7 +134,12 @@
                     }
                 },
                 mounted: function () {
-                    this.getCustomers();
+                    this.getProducts();
+                },
+                filters: {
+                    currency: function (value) {
+                        return '₱' + parseFloat(value).toFixed(2);
+                    }
                 }
             });
     

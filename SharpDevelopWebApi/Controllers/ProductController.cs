@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using SharpDevelopWebApi.Models;
@@ -18,9 +20,9 @@ namespace SharpDevelopWebApi.Controllers
 			foreach(var p in products)
 			{
 				p.Category = _db.Categories.Find(p.CategoryId) ?? new Category();
+				p.Photo = p.PhotoData.ResizeToThumbnail().ToBase64StringHTMLImgJpgSrc();
 			}
-			
-			
+						
 			return Ok(products);
 		}
 		
@@ -31,6 +33,7 @@ namespace SharpDevelopWebApi.Controllers
 			if(product !=null)
 			{
 				product.Category = _db.Categories.Find(product.CategoryId) ?? new Category();
+                product.Photo = product.PhotoData.ToBase64StringHTMLImgJpgSrc();
 				return Ok(product);
 			}				
 			else
@@ -48,15 +51,15 @@ namespace SharpDevelopWebApi.Controllers
 		[HttpPut]
 		public IHttpActionResult Update(Product updatedProduct)
 		{
-			var product = _db.Products.Find(updatedProduct.Id);
+			var product = _db.Products.Find(updatedProduct.Id);			
 			product.Name = updatedProduct.Name;
 			product.Price = updatedProduct.Price;
-			product.CategoryId = updatedProduct.CategoryId;
-			product.Category = _db.Categories.Find(updatedProduct.CategoryId) ?? new Category();
-			
-			_db.Entry(product).State = System.Data.Entity.EntityState.Modified;
+			product.CategoryId = updatedProduct.CategoryId;			
+			_db.Entry(product).State = EntityState.Modified;
 			_db.SaveChanges();
 			
+			product.Category = _db.Categories.Find(updatedProduct.CategoryId) ?? new Category();
+            product.Photo = product.PhotoData.ToBase64StringHTMLImgJpgSrc();						
 			return Ok(product);			
 		}
 		
@@ -72,6 +75,27 @@ namespace SharpDevelopWebApi.Controllers
 			}
 			else
 				return BadRequest("Product not found");
+		}
+		
+		[HttpPost]
+        [FileUpload.SwaggerForm()]		
+		[Route("api/product/{Id}/uploadphoto")]
+		public IHttpActionResult UploadPhoto(int Id)
+		{
+            var product = _db.Products.Find(Id);
+            if (product != null)
+            {
+	        	var postedFile = HttpContext.Current.Request.Files[0];
+            	product.PhotoData = postedFile.ToImageByteArray();
+                _db.Entry(product).State = EntityState.Modified;
+                _db.SaveChanges();
+               
+                product.Category = _db.Categories.Find(product.CategoryId) ?? new Category();
+                product.Photo = product.PhotoData.ToBase64StringHTMLImgJpgSrc();
+                return Ok(product); 
+            }
+                       
+            return BadRequest("Error on photo uploading...");			
 		}
 
 		[HttpGet]

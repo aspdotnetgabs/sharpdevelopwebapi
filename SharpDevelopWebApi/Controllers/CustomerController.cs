@@ -32,7 +32,6 @@ namespace SharpDevelopWebApi.Controllers
         }
 
         [HttpGet]
-        [ApiAuthorize]
         public IHttpActionResult Get(int Id)
         {       
             var customer = _db.Customers.Find(Id);
@@ -105,8 +104,7 @@ namespace SharpDevelopWebApi.Controllers
 	                return Ok(customer);            		
             	}
             }
-            
-            
+                       
             return BadRequest("Error on photo uploading...");
         }
     }
