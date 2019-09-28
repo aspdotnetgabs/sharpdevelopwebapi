@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using SharpDevelopWebApi.Helpers.JWT;
 using SharpDevelopWebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -31,8 +32,9 @@ namespace SharpDevelopWebApi.Controllers
         }
 
         [HttpGet]
+        [ApiAuthorize]
         public IHttpActionResult Get(int Id)
-        {
+        {       
             var customer = _db.Customers.Find(Id);
             if (customer != null)
                 return Ok(customer);
@@ -40,6 +42,7 @@ namespace SharpDevelopWebApi.Controllers
                 return BadRequest("Customer not found");
         }
 
+        [ApiAuthorize]
         [HttpPost]
         public IHttpActionResult Create(Customer newCustomer)
         {

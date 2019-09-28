@@ -9,7 +9,7 @@ using System.Linq;
 public partial class UserAccount
 {
     // Change this to your desired default admin login and password
-    private const string DEFAULT_ADMIN_LOGIN = "admin";
+    public const string DEFAULT_ADMIN_LOGIN = "admin";
     // Change this to your DbContext class
     private static SDWebApiDbContext _db = new SDWebApiDbContext();
 
@@ -164,7 +164,7 @@ public partial class UserAccount
 
     public static UserAccount GetUserByEmail(string userEmail)
     {
-        var user = _db.Users.Where(x => x.Email == userEmail).FirstOrDefault();
+    	var user = _db.Users.Where(x => x.Email.ToLower() == userEmail.ToLower()).FirstOrDefault();
         return user;
     }
 

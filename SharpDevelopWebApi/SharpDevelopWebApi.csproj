@@ -46,9 +46,6 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml">
-      <HintPath>packages\DocumentFormat.OpenXml.2.9.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>packages\EntityFramework.SharpDevelop.6.0.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -144,6 +141,9 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Doctor.cs" />
+    <Compile Include="Models\Patient.cs" />
+    <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\SDWebApiDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
