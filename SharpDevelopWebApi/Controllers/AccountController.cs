@@ -56,7 +56,7 @@ namespace SharpDevelopWebApi.Controllers
         [Route("api/account/register")]
         public IHttpActionResult RegisterUser(string email, string password, string userType) // You can add more parameter here ex LastName, FirstName etc
         {
-        	if(userType == UserAccount.DEFAULT_ADMIN_LOGIN)
+        	if(userType.Split(',').Contains(UserAccount.DEFAULT_ADMIN_LOGIN))
         		return BadRequest("Creating an admin account is forbidden.");
         	
             var user = UserAccount.GetUserByEmail(email);
