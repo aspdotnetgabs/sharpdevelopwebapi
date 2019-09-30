@@ -44,7 +44,9 @@ namespace SharpDevelopWebApi
             
 			// Configure Hangfire www.hangfire.io            
 			Hangfire.GlobalConfiguration.Configuration.UseMemoryStorage();
-			_backgroundJobServer = new Hangfire.BackgroundJobServer();            
+			_backgroundJobServer = new Hangfire.BackgroundJobServer();         
+
+			SimpleLogger.Init();
         }
         
         protected void Application_End(object sender, EventArgs e)

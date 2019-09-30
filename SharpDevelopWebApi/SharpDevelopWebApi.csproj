@@ -143,6 +143,7 @@
     <Compile Include="Helpers\JWT\HttpAuthenticationChallengeContextExtensions.cs" />
     <Compile Include="Helpers\JWT\JwtAuthenticationAttribute.cs" />
     <Compile Include="Helpers\JWT\JwtManager.cs" />
+    <Compile Include="Helpers\SimpleLogger.cs" />
     <Compile Include="Helpers\UserAccount.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
@@ -158,9 +159,6 @@
     <None Include="Global.asax" />
     <None Include="packages.config" />
     <None Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UploadedFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
