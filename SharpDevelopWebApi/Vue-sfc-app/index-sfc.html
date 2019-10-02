@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Account Login Demo</title>
+
+    <style>
+            [v-cloak]>* { display: none }
+            [v-cloak]::before { content: "Loading…" }
+    
+            table {
+                border-collapse: collapse;
+            }
+    
+            table,
+            th,
+            td {
+                border: 1px solid black;
+                padding: 5px;
+            }
+        </style>
+</head>
+
+<body>
+
+    <div id="customerApp" v-cloak>
+        <h1>
+            {{appName}}
+            <br>
+            <small>                                
+                user.email: <a href="#" v-show="loggedIn" @click="display('changePasswordForm')">[{{user.email}}]</a>
+                <button type="button" v-show="loggedIn" @click="logout">Logout</button>
+            </small>
+        </h1>
+    
+        <div v-show="view === 'tablelist'">
+            <button type="button" @click="display('newform')">Add</button>
+            <hr />
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="column in columnHeader">
+                            {{column}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="customer in customers">
+                        <td>{{customer.Id}}</td>
+                        <td>{{customer.FirstName}} {{customer.LastName}}</td>
+                        <td>{{customer.Email}}</td>
+                        <td>{{customer.Phone}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    
+        <form v-show="view === 'newform'" @submit.prevent="postCustomer">
+            <h2>New</h2>
+            <p>
+                <label>Last name</label>
+                <input type="text" v-model="newItem.LastName" required />
+            </p>
+            <p>
+                <label>First name</label>
+                <input type="text" v-model="newItem.FirstName" required />
+            </p>
+            <p>
+                <label>Email</label>
+                <input type="text" v-model="newItem.Email" />
+            </p>
+            <p>
+                <label>Phone</label>
+                <input type="text" v-model="newItem.Phone" />
+            </p>
+            <p>
+                <button type="button" @click="display('tablelist')">Cancel</button>
+                <button type="submit" :disabled="disabledBtn === 'btnPostCustomer'">Submit</button>
+            </p>
+        </form>
+
+        <account-login v-show="view === 'loginform'" :baseurl="baseUrl" @data-child="getCurrentUser"></account-login>
+
+        <form v-show="view === 'registerform'" @submit.prevent="register('TYPE_OF_USER')" autocomplete="off">
+            <h2>Register</h2>
+            <p>
+                <label>Email</label>
+                <input type="text" v-model="user.email" required />
+            </p>
+            <p>
+                <label>Password</label>
+                <input type="password" v-model="user.password" required />
+            </p>
+            <p>
+                <label>Re-type Password</label>
+                <input type="password" v-model="user.retypePassword" required />
+            </p>            
+            <p>
+                <button type="submit">Register</button>
+                <a href="#" @click="display('loginform')">Login</a>
+            </p>
+        </form>
+
+        <form v-show="view === 'changePasswordForm'" @submit.prevent="changePassword" autocomplete="off">
+            <h2>Change Password</h2>
+            <p>
+                <label>Current Password</label>
+                <input type="password" v-model="user.currentPassword" required />
+            </p>
+            <p>
+                <label>New Password</label>
+                <input type="password" v-model="user.newPassword" required />
+            </p>
+            <p>
+                <label>Retype Password</label>
+                <input type="password" v-model="user.retypePassword" required />
+            </p>
+            <p>
+                <button type="submit">Submit</button>
+                <button type="button" @click="display('tablelist')">Cancel</button>
+            </p>
+        </form>
+    </div>
+
+    <!-- Vue JS and Axios -->
+    <script src="js/vue.js"></script>
+    <script src="js/httpVueLoader.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>    
+        var vueApp = new Vue({
+            el: '#customerApp',
+            components: {
+                'account-login': httpVueLoader('js/components/accountLogin.vue')
+            },
+            data: {
+                appUserStorageId: 'customerAppUser123',
+                appName: "Vue Account Login Demo",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone'],
+                baseUrl: "http://bernardgabon.somee.com",
+                customers: [],
+                newItem: {},
+                view: "loginform",
+                user: {},
+                loggedIn: false,
+                disabledBtn: ""
+            },
+            methods: {
+                getCustomers: function () {
+                    axios.get(this.baseUrl + "/api/customer")
+                        .then(response => {
+                            this.customers = response.data;
+                        });
+                },
+                postCustomer: function () { 
+                    this.disabledBtn = "btnPostCustomer";
+                    // this.authorizationHeader attaches Authorization Header data for [AUTHORIZE] requests
+                    // Computed property does not need open close parenthesis ()
+                    axios.post(this.baseUrl + "/api/customer", this.newItem, this.authorizationHeader)
+                        .then(response => {
+                            this.getCustomers();
+                            this.newItem = {};
+                            this.disabledBtn = "";
+                        }).catch(error => {
+                            this.disabledBtn = "";
+                        });
+                },
+                display: function (v) {
+                    this.view = v;
+                },
+                logout: function () {
+                    // remove user from local storage to log user out
+                    localStorage.removeItem(this.appUserStorageId);
+                    this.user = {};
+                    this.loggedIn = false;
+                    this.view = 'loginform';
+                },
+                register: function (regType) {
+                    if(this.user.password === this.user.retypePassword) {                        
+                        axios.post(this.baseUrl + "/api/account/register?email=" + this.user.email 
+                                    + "&password=" + this.user.password + "&userType=" + regType)
+                            .then(response => {
+                                var data = response.data;
+                                if (data.UserId) {
+                                    this.user.password = null;
+                                    this.user.retypePassword = null;
+                                    this.view = 'loginform';
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                alert(error.response.data.Message);
+                            });
+                    } else {
+                        alert("Password not the same.");
+                    }                   
+                },
+                changePassword: function () {
+                    if (this.user.newPassword === this.user.retypePassword) {
+                        axios.post(this.baseUrl + "/api/account/changepassword?email=" + this.user.email + "&newPassword=" + this.user.newPassword + "&currentPassword=" + this.user.currentPassword)
+                            .then(response => {
+                                // Password change success, logout.
+                                alert(response.data);
+                                this.logout();
+                            })
+                            .catch(error => {
+                                alert(error.response.data.Message);
+                            });
+                    } else {
+                        alert('Password mismatch.');
+                    }
+                },
+                getCurrentUser: function (u) {
+                    // Our event handler gets the event, as well as any
+                    // arguments the child passes to the event
+                    console.log('From the child:', JSON.stringify(u));
+                    this.user = u;
+                    this.loggedIn = true;
+                    this.getCustomers();
+                    this.view = 'tablelist';                    
+                }                
+            },
+            mounted: function () {
+                var user = JSON.parse(localStorage.getItem(this.appUserStorageId)); // If user is null then false
+                if (user) {
+                    this.loggedIn = true;
+                    this.user = user;
+                    this.getCustomers();
+                    this.view = 'tablelist';
+                } else {    
+                    alert('You need to login first.')                
+                    this.view = 'loginform';
+                }
+            },
+            computed: {
+                authorizationHeader: function () {
+                    var user = JSON.parse(localStorage.getItem(this.appUserStorageId));
+                    if (user) {
+                        var header = { headers: {} };
+                        header.headers.Authorization = "Bearer " + user.Token;
+                        return header;
+                    } else {
+                        this.logout();
+                    }
+                }
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Net;
 using System.Net.Http;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using SharpDevelopWebApi.Helpers.JWT;
@@ -14,20 +16,18 @@ namespace SharpDevelopWebApi.Controllers
 	/// Description of ValuesController.
 	/// </summary>
 	public class SampleController : ApiController
-	{
-        [ApiAuthorize]
+	{					
 		[HttpGet]
 		[Route("api/sample")]
-        public IHttpActionResult Get()
+        public IHttpActionResult Get(string url = "")
 		{
-            var products = new List<Product>()
-	        {                 
-	            new Product { Id = 1, Name = "Tomato Soup",Price = 1 }, 
-	            new Product { Id = 2, Name = "Yo-yo", Price = 3.75M }, 
-	            new Product { Id = 3, Name = "Hammer", Price = 16.99M } 
-	        };
-			
-			return Ok(products);
+        	 var data = System.IO.File.ReadAllText(HostingEnvironment.MapPath("~/Templates/bootstrap.html"));
+            
+        	 var result = TuesPechkinPdf.ToPdf(data);
+        	
+			System.IO.File.WriteAllBytes(@"C:\Users\DRIVE_D\My Documents\_GIT_VCS\AspDotNetGabs\sharpdevelopwebapi\SharpDevelopWebApi\Templates\testpdf.pdf", result);
+						
+			return Ok(result.ToBase64String());
 		}
 
         [HttpPost]

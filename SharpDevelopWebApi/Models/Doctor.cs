@@ -2,5 +2,5 @@
 public class Doctor : Person
 {
 	public string Specialization { get; set; }
-	public string Email { get; set; }
+	public int UserId { get; set; }
 }

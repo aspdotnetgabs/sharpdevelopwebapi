@@ -3,28 +3,27 @@
  * User: Gabs
  * Date: 19/07/2019
  * Time: 2:03 am
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+ 
 using System;
-using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using System.Web.Mvc;
-using System.Web.Routing;
 using System.Web.SessionState;
+using Newtonsoft.Json.Serialization;
 using Swashbuckle.Application;
+using Hangfire.MemoryStorage;
 
 namespace SharpDevelopWebApi
 {
 	public class MvcApplication : HttpApplication
 	{
-        string apiRoutePrefix = "api";
+        const string API_Route_Prefix = "api";
+        Hangfire.BackgroundJobServer _backgroundJobServer;
 
         protected void Application_Start()
 		{
-			var config = GlobalConfiguration.Configuration;
+			var config = System.Web.Http.GlobalConfiguration.Configuration;
 			
 			config.EnableCors(new EnableCorsAttribute("*","*","*"));		
 			
@@ -38,12 +37,25 @@ namespace SharpDevelopWebApi
                 handler: new RedirectHandler(SwaggerDocsConfig.DefaultRootUrlResolver, "swagger"));
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: apiRoutePrefix + "/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional });
-
+                routeTemplate: API_Route_Prefix + "/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }); 
+                
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+		    config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+		    config.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;            
             config.EnsureInitialized();
+            
+			// Configure Hangfire www.hangfire.io            
+			Hangfire.GlobalConfiguration.Configuration.UseMemoryStorage();
+			_backgroundJobServer = new Hangfire.BackgroundJobServer();         
+
+			SimpleLogger.Init();
         }
+        
+        protected void Application_End(object sender, EventArgs e)
+        {
+            _backgroundJobServer.Dispose();
+        }        
 
         #region SessionInWebAPI
         // Avoid Session at all cost!!!
@@ -56,7 +68,7 @@ namespace SharpDevelopWebApi
 
         void MvcApplication_PostAuthenticateRequest(object sender, EventArgs e)
         {
-            bool IsWebApiRequest = HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/" + apiRoutePrefix);
+            bool IsWebApiRequest = HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/" + API_Route_Prefix);
             if (IsWebApiRequest)
             {
                 HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);

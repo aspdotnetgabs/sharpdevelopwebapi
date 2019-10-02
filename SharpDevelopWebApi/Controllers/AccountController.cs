@@ -56,7 +56,7 @@ namespace SharpDevelopWebApi.Controllers
         [Route("api/account/register")]
         public IHttpActionResult RegisterUser(string email, string password, string userType) // You can add more parameter here ex LastName, FirstName etc
         {
-        	if(userType == UserAccount.DEFAULT_ADMIN_LOGIN)
+        	if(userType.Split(',').Contains(UserAccount.DEFAULT_ADMIN_LOGIN))
         		return BadRequest("Creating an admin account is forbidden.");
         	
             var user = UserAccount.GetUserByEmail(email);
@@ -66,20 +66,22 @@ namespace SharpDevelopWebApi.Controllers
             var userId = UserAccount.Create(email, password, userType);
             if (userId != null)
             {
+            	// Link User Account to Entities e.g. Student, Employee, Customer
             	if(userType == "doctor")
             	{
             		var doctor = new Doctor();
-            		doctor.Email = email;            		
+            		doctor.UserId = userId.Value;            		
             		_db.Doctors.Add(doctor);
             		_db.SaveChanges();
             	}
             	else if(userType == "patient")
             	{
             		var p = new Patient();
-            		p.Email = email;
+            		p.UserId = userId.Value;
             		_db.Patients.Add(p);
             		_db.SaveChanges();
             	}
+            	// Feel free to remove the ABOVE code if not needed.
                 
             	return Ok(new { UserId = userId, Message = "Account successfully created" });
             }
