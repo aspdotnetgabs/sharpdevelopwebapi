@@ -4,6 +4,7 @@ using System.Drawing.Printing;
 using System.Net;
 using System.Net.Http;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using SharpDevelopWebApi.Helpers.JWT;
@@ -18,11 +19,13 @@ namespace SharpDevelopWebApi.Controllers
 	{					
 		[HttpGet]
 		[Route("api/sample")]
-        public IHttpActionResult Get(string url)
+        public IHttpActionResult Get(string url = "")
 		{
-        	var result = TuesPechkinPdf.ToPdf(url);
+        	 var data = System.IO.File.ReadAllText(HostingEnvironment.MapPath("~/Templates/bootstrap.html"));
+            
+        	 var result = TuesPechkinPdf.ToPdf(data);
         	
-			System.IO.File.WriteAllBytes(@"C:\Users\DRIVE_D\My Documents\_GIT_VCS\AspDotNetGabs\testpdf.pdf", result);
+			System.IO.File.WriteAllBytes(@"C:\Users\DRIVE_D\My Documents\_GIT_VCS\AspDotNetGabs\sharpdevelopwebapi\SharpDevelopWebApi\Templates\testpdf.pdf", result);
 						
 			return Ok(result.ToBase64String());
 		}

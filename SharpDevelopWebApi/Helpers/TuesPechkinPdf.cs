@@ -19,12 +19,14 @@ public static class TuesPechkinPdf
 	    }
 	}
 	
-	public static byte[] ToPdf(string pageUrl)
+	public static byte[] ToPdf(string htmlText)
 	{
+		// https://github.com/tuespetre/TuesPechkin/blob/develop/TuesPechkin/Document/GlobalSettings.cs
 		var document = new HtmlToPdfDocument
 		{
 		    GlobalSettings =
-		    {
+		    {		 
+				DPI = 300,	    	
 		        ProduceOutline = true,
 		        DocumentTitle = "Pretty Websites",
 		        PaperSize = PaperKind.A4, // Implicit conversion to PechkinPaperSize
@@ -32,11 +34,20 @@ public static class TuesPechkinPdf
 		        {
 		            All = 1.375,
 		            Unit = Unit.Centimeters
-				}
+				}	        
 			},
 		    Objects = {
-		        //new ObjectSettings { HtmlText = "<h1>Pretty Websites</h1><p>This might take a bit to convert!</p>" },
-				new ObjectSettings { PageUrl = pageUrl }
+		        new ObjectSettings 
+		        { 
+		        	HtmlText = htmlText,
+                    WebSettings = new WebSettings()
+                    {
+                        EnableJavascript = false,
+                        PrintMediaType =  true,
+                        EnableIntelligentShrinking = true
+                    }
+		        },
+				//new ObjectSettings { PageUrl = pageUrl }
 		    }
 		};
 		

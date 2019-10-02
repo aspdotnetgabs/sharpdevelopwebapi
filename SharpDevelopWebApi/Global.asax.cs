@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.SessionState;
+using Newtonsoft.Json.Serialization;
 using Swashbuckle.Application;
 using Hangfire.MemoryStorage;
 
@@ -40,6 +41,8 @@ namespace SharpDevelopWebApi
                 defaults: new { id = RouteParameter.Optional }); 
                 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+		    config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+		    config.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;            
             config.EnsureInitialized();
             
 			// Configure Hangfire www.hangfire.io            
