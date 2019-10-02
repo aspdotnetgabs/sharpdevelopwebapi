@@ -28,8 +28,11 @@
             {{appName}}
             <br>
             <small>                                
-                user.email: <a href="#" v-show="loggedIn" @click="display('changePasswordForm')">[{{user.email}}]</a>
-                <button type="button" v-show="loggedIn" @click="logout">Logout</button>
+                user.userName: <a href="#" v-show="loggedIn" @click="display('changePasswordForm')">[{{user.userName}}]</a> 
+                <button type="button" v-show="loggedIn" @click="logout">Logout</button> <br>
+                user.id: {{user.userId}} <br>
+                user.userRoles: <span v-for="role in user.userRoles">{{role}}, </span>
+
             </small>
         </h1>
     
@@ -46,10 +49,10 @@
                 </thead>
                 <tbody>
                     <tr v-for="customer in customers">
-                        <td>{{customer.Id}}</td>
-                        <td>{{customer.FirstName}} {{customer.LastName}}</td>
-                        <td>{{customer.Email}}</td>
-                        <td>{{customer.Phone}}</td>
+                        <td>{{customer.id}}</td>
+                        <td>{{customer.firstName}} {{customer.lastName}}</td>
+                        <td>{{customer.email}}</td>
+                        <td>{{customer.phone}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -59,19 +62,19 @@
             <h2>New</h2>
             <p>
                 <label>Last name</label>
-                <input type="text" v-model="newItem.LastName" required />
+                <input type="text" v-model="newItem.lastName" required />
             </p>
             <p>
                 <label>First name</label>
-                <input type="text" v-model="newItem.FirstName" required />
+                <input type="text" v-model="newItem.firstName" required />
             </p>
             <p>
                 <label>Email</label>
-                <input type="text" v-model="newItem.Email" />
+                <input type="text" v-model="newItem.email" />
             </p>
             <p>
                 <label>Phone</label>
-                <input type="text" v-model="newItem.Phone" />
+                <input type="text" v-model="newItem.phone" />
             </p>
             <p>
                 <button type="button" @click="display('tablelist')">Cancel</button>
@@ -83,7 +86,7 @@
             <h2>Login</h2>
             <p>
                 <label>Email</label>
-                <input type="text" v-model="user.email" required />
+                <input type="text" v-model="user.userName" required />
             </p>
             <p>
                 <label>Password</label>
@@ -99,7 +102,7 @@
             <h2>Register</h2>
             <p>
                 <label>Email</label>
-                <input type="text" v-model="user.email" required />
+                <input type="text" v-model="user.userName" required />
             </p>
             <p>
                 <label>Password</label>
@@ -179,12 +182,13 @@
                 },
                 login: function () {
                     this.disabledBtn = "btnLogin";
-                    axios.post(this.baseUrl + "/TOKEN?email=" + this.user.email + "&password=" + this.user.password)
+                    axios.post(this.baseUrl + "/TOKEN?username=" + this.user.userName + "&password=" + this.user.password)
                         .then(response => {
                             var user = response.data;
                             // If response has user token...
-                            if (user.Token) {
-                                user.email = this.user.email;
+                            if (user.token) {
+                                this.user = user;
+                                alert(JSON.stringify(this.user));
                                 localStorage.setItem(this.appUserStorageId, JSON.stringify(user)); // store User data in localStorage
                                 this.loggedIn = true;
                                 this.getCustomers();
@@ -206,8 +210,8 @@
                 },
                 register: function (regType) {
                     if(this.user.password === this.user.retypePassword) {                        
-                        axios.post(this.baseUrl + "/api/account/register?email=" + this.user.email 
-                                    + "&password=" + this.user.password + "&userType=" + regType)
+                        axios.post(this.baseUrl + "/api/account/register?username=" + this.user.userName 
+                                    + "&password=" + this.user.password + "&role=" + regType)
                             .then(response => {
                                 var data = response.data;
                                 if (data.UserId) {
@@ -227,7 +231,7 @@
                 },
                 changePassword: function () {
                     if (this.user.newPassword === this.user.retypePassword) {
-                        axios.post(this.baseUrl + "/api/account/changepassword?email=" + this.user.email + "&newPassword=" + this.user.newPassword + "&currentPassword=" + this.user.currentPassword)
+                        axios.post(this.baseUrl + "/api/account/changepassword?username=" + this.user.userName + "&newPassword=" + this.user.newPassword + "&currentPassword=" + this.user.currentPassword)
                             .then(response => {
                                 // Password change success, logout.
                                 alert(response.data);
@@ -258,7 +262,7 @@
                     var user = JSON.parse(localStorage.getItem(this.appUserStorageId));
                     if (user) {
                         var header = { headers: {} };
-                        header.headers.Authorization = "Bearer " + user.Token;
+                        header.headers.Authorization = "Bearer " + user.token;
                         return header;
                     } else {
                         this.logout();

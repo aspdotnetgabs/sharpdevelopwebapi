@@ -1,40 +1,44 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Hello, VueJS!</title>
-    <style>
-        table {
-            border-collapse: collapse;
-        }
+    <meta charset="UTF-8">
+    <title>Vue Account Login Demo</title>
 
-        th, td {
-            border: 1px solid black;
-            padding: 5px;
-        }
-    </style>    
+    <style>
+            [v-cloak]>* { display: none }
+            [v-cloak]::before { content: "Loading…" }
+    
+            table {
+                border-collapse: collapse;
+            }
+    
+            table,
+            th,
+            td {
+                border: 1px solid black;
+                padding: 5px;
+            }
+        </style>
 </head>
+
 <body>
-    <div>
-        <a href="index.html">12 of 12 [ Home ]</a>
-        <hr />
-    </div>
-    <!-- =============================================================== -->                  
-                     
-    <div id="customerApp">
+
+    <div id="customerApp" v-cloak>
         <h1>
-            {{appName}} 
-            <small>
-                <button type="button" v-show="loggedIn" @click="logout">Logout</button>
-                <a href="#" v-show="loggedIn" @click="display('changePasswordForm')">[{{user.email}}]</a>
+            {{appName}}
+            <br>
+            <small>                                
+                user.userName: <a href="#" v-show="loggedIn" @click="display('changePasswordForm')">[{{user.userName}}]</a> 
+                <button type="button" v-show="loggedIn" @click="logout">Logout</button> <br>
+                user.id: {{user.userId}} <br>
+                user.userRoles: <span v-for="role in user.userRoles">{{role}}, </span>
+
             </small>
         </h1>
-        
+    
         <div v-show="view === 'tablelist'">
             <button type="button" @click="display('newform')">Add</button>
             <hr />
-            <p>
-                <input type="text" v-model="searchKeyword" placeholder="Search">
-                <button @click="searchCustomers">Go</button>  
-            </p>
             <table>
                 <thead>
                     <tr>
@@ -44,136 +48,76 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(customer,index) in customers">
-                        <td>{{customer.Id}}</td>
-                        <td><a href="#" @click="getCustomer(index)">{{customer.FirstName}} {{customer.LastName}}</a></td>
-                        <td>{{customer.Email}}</td>
-                        <td>{{customer.Phone}}</td>
-                        <td>
-                            <button @click="editCustomer(index)">Edit</button>
-                            <button @click="deleteCustomer(index)">Delete</button>
-                        </td>
+                    <tr v-for="customer in customers">
+                        <td>{{customer.id}}</td>
+                        <td>{{customer.firstName}} {{customer.lastName}}</td>
+                        <td>{{customer.email}}</td>
+                        <td>{{customer.phone}}</td>
                     </tr>
                 </tbody>
-            </table>          
+            </table>
         </div>
-
+    
         <form v-show="view === 'newform'" @submit.prevent="postCustomer">
             <h2>New</h2>
             <p>
                 <label>Last name</label>
-                <input type="text" v-model="newItem.LastName" required />
+                <input type="text" v-model="newItem.lastName" required />
             </p>
             <p>
                 <label>First name</label>
-                <input type="text" v-model="newItem.FirstName" required />
+                <input type="text" v-model="newItem.firstName" required />
             </p>
             <p>
                 <label>Email</label>
-                <input type="text" v-model="newItem.Email" />
+                <input type="text" v-model="newItem.email" />
             </p>
             <p>
                 <label>Phone</label>
-                <input type="text" v-model="newItem.Phone" />
-            </p>
-            <p>
-                <button type="button" @click="display('tablelist')">Cancel</button>                
-                <button type="submit">Submit</button>
-            </p>
-        </form>
-
-        <form v-show="view === 'editform'" @submit.prevent="updateCustomer" autocomplete="off">
-            <h2>Edit</h2>
-            <p>
-                <label>Id</label>
-                <input type="text" v-model="editItem.Id" readonly />
-            </p>
-            <p>
-                <label>Last name</label>
-                <input type="text" v-model="editItem.LastName" required />
-            </p>
-            <p>
-                <label>First name</label>
-                <input type="text" v-model="editItem.FirstName" required />
-            </p>
-            <p>
-                <label>Email</label>
-                <input type="text" v-model="editItem.Email" />
-            </p>
-            <p>
-                <label>Phone</label>
-                <input type="text" v-model="editItem.Phone" />
+                <input type="text" v-model="newItem.phone" />
             </p>
             <p>
                 <button type="button" @click="display('tablelist')">Cancel</button>
-                <button type="submit">Save</button>
+                <button type="submit" :disabled="disabledBtn === 'btnPostCustomer'">Submit</button>
             </p>
-        </form>      
-        
-        <div v-show="view === 'detailview'">
-            <h2>Details</h2>
-            <button @click="display('tablelist')">Back</button>
-            <dl style="width: 50%">
-                <dt>Id</dt>
-                <dd>{{detailItem.Id}}</dd>
-                <dt>Last Name</dt>
-                <dd>{{detailItem.LastName}}</dd>
-                <dt>First Name</dt>
-                <dd>{{detailItem.FirstName}}</dd>
-                <dt>Email</dt>
-                <dd>{{detailItem.Email}}</dd>
-                <dt>Phone</dt>
-                <dd>{{detailItem.Phone}}</dd>
-                <dt>Photo</dt>
-                <dd>
-                        <p  v-if="!pleaseWait">
-                            <input type="file" accept="image/*" @change="onFileChanged" >
-                            <button @click="onUpload" :disabled="!selectedFile">Upload</button>           
-                        </p>
-                        <p v-else="pleaseWait">Uploading file...</p> 
-                                            
-                        <p v-if="detailItem.PhotoUrl">
-                            <img :src="baseUrl + '/UploadedImages/' + detailItem.PhotoUrl" width="400" />
-                        </p>
-                        <p v-else>
-                            (No available photo)
-                        </p>
-                </dd>
-            </dl>
-        </div>
+        </form>
 
         <form v-show="view === 'loginform'" @submit.prevent="login" autocomplete="off">
             <h2>Login</h2>
             <p>
                 <label>Email</label>
-                <input type="text" v-model="user.email" required />
+                <input type="text" v-model="user.userName" required />
             </p>
             <p>
                 <label>Password</label>
                 <input type="password" v-model="user.password" required />
             </p>
-            <p>                
-                <button type="submit">Login</button>
+            <p>
+                <button type="submit" :disabled="disabledBtn === 'btnLogin'" >Login</button>
                 <a href="#" @click="display('registerform')">Register</a>
             </p>
-        </form>  
-        
-        <form v-show="view === 'registerform'" @submit.prevent="register" autocomplete="off">
+        </form>
+
+        <form v-show="view === 'registerform'" @submit.prevent="register('TYPE_OF_USER')" autocomplete="off">
             <h2>Register</h2>
             <p>
                 <label>Email</label>
-                <input type="text" v-model="user.email" required />
+                <input type="text" v-model="user.userName" required />
             </p>
             <p>
                 <label>Password</label>
                 <input type="password" v-model="user.password" required />
             </p>
-            <p>                
+            <p>
+                <label>Re-type Password</label>
+                <input type="password" v-model="user.retypePassword" required />
+            </p>            
+            <p>
                 <button type="submit">Register</button>
                 <a href="#" @click="display('loginform')">Login</a>
             </p>
-        </form>    
-        
+        </form>
+
         <form v-show="view === 'changePasswordForm'" @submit.prevent="changePassword" autocomplete="off">
             <h2>Change Password</h2>
             <p>
@@ -187,35 +131,31 @@
             <p>
                 <label>Retype Password</label>
                 <input type="password" v-model="user.retypePassword" required />
-            </p>                        
-            <p>                
+            </p>
+            <p>
                 <button type="submit">Submit</button>
                 <button type="button" @click="display('tablelist')">Cancel</button>
             </p>
-        </form>          
-
+        </form>
     </div>
 
     <!-- Vue JS and Axios -->
     <script src="js/vue.min.js"></script>
     <script src="js/axios.min.js"></script>
     <script>
-        var contactApp = new Vue({
+        var vueApp = new Vue({
             el: '#customerApp',
             data: {
-                appName: "Customer Barebone Webapp with Login",
-                columnHeader: ['Id', 'Name', 'Email', 'Phone', 'Action'],
+                appUserStorageId: 'customerAppUser123',
+                appName: "Vue Account Login Demo",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone'],
                 baseUrl: "http://bernardgabon.somee.com",
-                customers: [],                
-                searchKeyword: "",
+                customers: [],
                 newItem: {},
                 view: "loginform",
-                editItem: {},
-                detailItem: {},
-                selectedFile: null,
-                pleaseWait: false,
                 user: {},
-                loggedIn: false         
+                loggedIn: false,
+                disabledBtn: ""
             },
             methods: {
                 getCustomers: function () {
@@ -224,155 +164,109 @@
                             this.customers = response.data;
                         });
                 },
-                searchCustomers: function () {
-                    if (this.searchKeyword !== '') {
-                        axios.get(this.baseUrl + "/api/customer?keyword=" + this.searchKeyword)
-                            .then(response => {
-                                this.customers = response.data;
-                            });
-                    }
-                    else {
-                        this.getCustomers();
-                    }     
-                },                 
-                postCustomer: function () {
+                postCustomer: function () { 
+                    this.disabledBtn = "btnPostCustomer";
+                    // this.authorizationHeader attaches Authorization Header data for [AUTHORIZE] requests
+                    // Computed property does not need open close parenthesis ()
                     axios.post(this.baseUrl + "/api/customer", this.newItem, this.authorizationHeader)
                         .then(response => {
                             this.getCustomers();
                             this.newItem = {};
+                            this.disabledBtn = "";
+                        }).catch(error => {
+                            this.disabledBtn = "";
                         });
-                },
-                deleteCustomer: function (index) {
-                    var yes = confirm('Are you sure?');
-                    if (yes) {
-                        axios.delete(this.baseUrl + "/api/customer/" + this.customers[index].Id)
-                            .then(response => {
-                                this.getCustomers();
-                            });
-                    }
                 },
                 display: function (v) {
                     this.view = v;
                 },
-                editCustomer: function (index) {
-                    axios.get(this.baseUrl + "/api/customer/" + this.customers[index].Id)
-                        .then(response => {
-                            this.editItem = response.data;
-                            this.view = 'editform';
-                        });
-                },
-                updateCustomer: function () {
-                    axios.put(this.baseUrl + "/api/customer", this.editItem)
-                        .then(response => {
-                            this.getCustomers();
-                            this.view = "tablelist";
-                            this.editItem = {};
-                        });
-                },     
-                getCustomer: function (index) {
-                    this.detailItem = this.customers[index];
-                    axios.get(this.baseUrl + "/api/customer/" + this.detailItem.Id)
-                        .then(response => {
-                            this.detailItem = response.data;
-                            //this.customers[index] = response.data;
-                            this.view = "detailview";
-                        });
-                },
-                onFileChanged: function (event) {
-                    this.selectedFile = event.target.files[0];
-                    console.log(this.selectedFile);
-                },
-                onUpload: function () {
-                    this.pleaseWait = true;
-                    var formData = new FormData()
-                    formData.append('myFile', this.selectedFile, this.selectedFile.name);
-                    axios.post(this.baseUrl + "/api/customer/" + this.detailItem.Id + "/uploadphoto", formData)
-                        .then(response => {
-                            this.detailItem = response.data;
-                            this.selectedFile = null;
-                            this.pleaseWait = false;
-                        })
-                        .catch(error => {
-                            alert('Photo upload failed.')
-                            this.selectedFile = null;
-                            this.pleaseWait = false;
-                        });
-                },
                 login: function () {
-                    axios.post(this.baseUrl + "/TOKEN?email=" + this.user.email + "&password=" + this.user.password)
+                    this.disabledBtn = "btnLogin";
+                    axios.post(this.baseUrl + "/TOKEN?username=" + this.user.userName + "&password=" + this.user.password)
                         .then(response => {
                             var user = response.data;
-                            if(user.Token) {
-                                user.email = this.user.email;
-                                localStorage.setItem('user', JSON.stringify(user));
+                            // If response has user token...
+                            if (user.token) {
+                                this.user = user;
+                                alert(JSON.stringify(this.user));
+                                localStorage.setItem(this.appUserStorageId, JSON.stringify(user)); // store User data in localStorage
                                 this.loggedIn = true;
                                 this.getCustomers();
-                                this.view = 'tablelist';
+                                this.disabledBtn = "";
+                                this.view = 'tablelist';                                
                             }
                         })
                         .catch(error => {
                             alert(error.response.data.Message);
-                        });                                           
+                            this.disabledBtn = "";
+                        });
                 },
                 logout: function () {
                     // remove user from local storage to log user out
-                    localStorage.removeItem('user'); 
+                    localStorage.removeItem(this.appUserStorageId);
                     this.user = {};
                     this.loggedIn = false;
-                    this.view = 'loginform';                  
+                    this.view = 'loginform';
                 },
-                register: function () {
-                    axios.post(this.baseUrl + "/api/account/register?email=" + this.user.email + "&password=" + this.user.password)
-                        .then(response => {
-                            var data = response.data;
-                            if(data.UserId) {
-                                this.user.password = null;
-                                this.view = 'loginform'; 
-                            } else {
-                                alert(data.message);
-                            }
-                        })
-                        .catch(error => {
-                            alert(error.response.data.Message);
-                        });                                           
+                register: function (regType) {
+                    if(this.user.password === this.user.retypePassword) {                        
+                        axios.post(this.baseUrl + "/api/account/register?username=" + this.user.userName 
+                                    + "&password=" + this.user.password + "&role=" + regType)
+                            .then(response => {
+                                var data = response.data;
+                                if (data.UserId) {
+                                    this.user.password = null;
+                                    this.user.retypePassword = null;
+                                    this.view = 'loginform';
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                alert(error.response.data.Message);
+                            });
+                    } else {
+                        alert("Password not the same.");
+                    }                   
                 },
                 changePassword: function () {
-                    if(this.user.newPassword === this.user.retypePassword) {
-                        axios.post(this.baseUrl + "/api/account/changepassword?email=" + this.user.email + "&newPassword=" + this.user.newPassword + "&currentPassword=" + this.user.currentPassword)
-                        .then(response => {
-                            alert(response.data);
-                            this.logout();
-                        })
-                        .catch(error => {
-                            alert(error.response.data.Message);
-                        });  
+                    if (this.user.newPassword === this.user.retypePassword) {
+                        axios.post(this.baseUrl + "/api/account/changepassword?username=" + this.user.userName + "&newPassword=" + this.user.newPassword + "&currentPassword=" + this.user.currentPassword)
+                            .then(response => {
+                                // Password change success, logout.
+                                alert(response.data);
+                                this.logout();
+                            })
+                            .catch(error => {
+                                alert(error.response.data.Message);
+                            });
                     } else {
                         alert('Password mismatch.');
-                    }                   
-                }              
+                    }
+                }
             },
             mounted: function () {
-                var user = JSON.parse(localStorage.getItem('user')); // If null then false
-                if(user) {    
+                var user = JSON.parse(localStorage.getItem(this.appUserStorageId)); // If user is null then false
+                if (user) {
                     this.loggedIn = true;
-                    this.user = user;                
+                    this.user = user;
                     this.getCustomers();
                     this.view = 'tablelist';
-                } else {
+                } else {    
+                    alert('You need to login first.')                
                     this.view = 'loginform';
-                }                
+                }
             },
             computed: {
                 authorizationHeader: function () {
-                    var user = JSON.parse(localStorage.getItem('user'));
-                    if(user) {
-                        var header = {headers: {}};
-                        header.headers.Authorization = "Bearer " + user.Token;
+                    var user = JSON.parse(localStorage.getItem(this.appUserStorageId));
+                    if (user) {
+                        var header = { headers: {} };
+                        header.headers.Authorization = "Bearer " + user.token;
                         return header;
                     } else {
                         this.logout();
                     }
-
                 }
             }
         });
@@ -380,4 +274,5 @@
     </script>
 
 </body>
+
 </html>

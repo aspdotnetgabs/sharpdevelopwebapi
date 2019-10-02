@@ -19,7 +19,7 @@ public partial class UserAccount
     //Login info
     [Required]
     [StringLength(254)]
-    public string Email { get; set; }
+    public string UserName { get; set; }
     public byte[] PasswordHash { get; set; }
     public byte[] PasswordSalt { get; set; }
     public DateTime CreatedOn { get; set; }
@@ -30,14 +30,14 @@ public partial class UserAccount
 
     private static UserAccount CurrentUser = null;
 
-    public static bool Authenticate(string userEmail, string userPassword)
+    public static bool Authenticate(string userName, string userPassword)
     {
         CreateAdmin(); // Comment out this line if you already have admin account
 
-        if (string.IsNullOrWhiteSpace(userEmail) || string.IsNullOrWhiteSpace(userPassword))
+        if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(userPassword))
             return false;
 
-        var user = _db.Users.Where(x => x.Email == userEmail.Trim().ToLower()).FirstOrDefault();
+        var user = _db.Users.Where(x => x.UserName == userName.Trim().ToLower()).FirstOrDefault();
         if (user == null)
             return false;
         if (!user.IsActive)
@@ -72,17 +72,17 @@ public partial class UserAccount
         return true;
     }
 
-    public static int? Create(string userEmail, string userPassword, string userRoles = "", bool requiresActivation = false)
+    public static int? Create(string userName, string userPassword, string userRoles = "", bool requiresActivation = false)
     {
         if (string.IsNullOrWhiteSpace(userPassword))
             return null;
-        if (string.IsNullOrWhiteSpace(userEmail))
+        if (string.IsNullOrWhiteSpace(userName))
             return null;
 
         var user = new UserAccount();
-        user.Email = userEmail.Trim().ToLower();
+        user.UserName = userName.Trim().ToLower();
 
-        var userExists = _db.Users.Where(x => x.Email == user.Email).Count() > 0;
+        var userExists = _db.Users.Where(x => x.UserName == user.UserName).Count() > 0;
         if (userExists)
             return null;
 
@@ -112,7 +112,7 @@ public partial class UserAccount
         }
     }
 
-    public static bool ChangePassword(string email, string userPassword = "", string newPassword = "", bool forceChange = false)
+    public static bool ChangePassword(string userName, string userPassword = "", string newPassword = "", bool forceChange = false)
     {
         if (string.IsNullOrWhiteSpace(newPassword))
             return false;
@@ -120,7 +120,7 @@ public partial class UserAccount
         if (forceChange == false && string.IsNullOrWhiteSpace(userPassword))
             return false;
 
-        var user = _db.Users.Where(x => x.Email == email.Trim()).FirstOrDefault();
+        var user = _db.Users.Where(x => x.UserName == userName.Trim()).FirstOrDefault();
         if (user == null)
             return false;
 
@@ -162,9 +162,9 @@ public partial class UserAccount
         return user;
     }
 
-    public static UserAccount GetUserByEmail(string userEmail)
+    public static UserAccount GetUserByUserName(string userName)
     {
-    	var user = _db.Users.Where(x => x.Email.ToLower() == userEmail.ToLower()).FirstOrDefault();
+    	var user = _db.Users.Where(x => x.UserName.ToLower() == userName.ToLower()).FirstOrDefault();
         return user;
     }
 
@@ -182,15 +182,15 @@ public partial class UserAccount
             return new string[] { string.Empty };
     }
 
-    public static string[] GetUserRoles(string userEmail)
+    public static string[] GetUserRoles(string userName)
     {
-        var user = GetUserByEmail(userEmail);
+        var user = GetUserByUserName(userName);
         return GetUserRoles(user.Id);
     }
 
-    public static UserAccount Deactivate(string userEmail)
+    public static UserAccount Deactivate(string userName)
     {
-        var user = _db.Users.Where(x => x.Email == userEmail).FirstOrDefault();
+        var user = _db.Users.Where(x => x.UserName == userName).FirstOrDefault();
         if (user != null)
         {
             user.IsActive = false;
@@ -203,9 +203,9 @@ public partial class UserAccount
 
     }
 
-    public static UserAccount Activate(string userEmail)
+    public static UserAccount Activate(string userName)
     {
-        var user = _db.Users.Where(x => x.Email == userEmail).FirstOrDefault();
+        var user = _db.Users.Where(x => x.UserName == userName).FirstOrDefault();
         if (user != null)
         {
             user.IsActive = true;

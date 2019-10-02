@@ -19,11 +19,18 @@ namespace SharpDevelopWebApi.Controllers
     	
         [HttpPost]
         [Route("TOKEN")]
-        public IHttpActionResult GetToken(string email, string password)
+        public IHttpActionResult GetToken(string username, string password)
         {
-            if (UserAccount.Authenticate(email, password))
-            {          	
-                var data = new { Token = JwtManager.GenerateToken(email) };
+            if (UserAccount.Authenticate(username, password))
+            {     
+            	var user = UserAccount.GetUserByUserName(username);
+                var data = new 
+                { 
+                	userId = user.Id,
+                	userName = user.UserName,
+                	userRoles = user.Roles.Split(','),
+                	token = JwtManager.GenerateToken(username)
+                };
                 return Ok(data);
             }
 
@@ -32,12 +39,12 @@ namespace SharpDevelopWebApi.Controllers
 
         [HttpGet]
         [Route("api/account/login")]
-        public IHttpActionResult Login(string email, string password)
+        public IHttpActionResult Login(string username, string password)
         {
-            var success = UserAccount.Authenticate(email, password);
+            var success = UserAccount.Authenticate(username, password);
             if (success)
             {
-                HttpContext.Current.Session.Add("currentUser", email);
+                HttpContext.Current.Session.Add("currentUser", username);
                 return Ok("Login successful");
             }
             else
@@ -54,27 +61,27 @@ namespace SharpDevelopWebApi.Controllers
 
         [HttpPost]
         [Route("api/account/register")]
-        public IHttpActionResult RegisterUser(string email, string password, string userType) // You can add more parameter here ex LastName, FirstName etc
+        public IHttpActionResult RegisterUser(string username, string password, string role = "") // You can add more parameter here ex LastName, FirstName etc
         {
-        	if(userType.Split(',').Contains(UserAccount.DEFAULT_ADMIN_LOGIN))
+        	if(role.Split(',').Contains(UserAccount.DEFAULT_ADMIN_LOGIN))
         		return BadRequest("Creating an admin account is forbidden.");
         	
-            var user = UserAccount.GetUserByEmail(email);
+            var user = UserAccount.GetUserByUserName(username);
             if(user != null)
                 return BadRequest("Account already exists");
 
-            var userId = UserAccount.Create(email, password, userType);
+            var userId = UserAccount.Create(username, password, role);
             if (userId != null)
             {
             	// Link User Account to Entities e.g. Student, Employee, Customer
-            	if(userType == "doctor")
+            	if(role == "doctor")
             	{
             		var doctor = new Doctor();
             		doctor.UserId = userId.Value;            		
             		_db.Doctors.Add(doctor);
             		_db.SaveChanges();
             	}
-            	else if(userType == "patient")
+            	else if(role == "patient")
             	{
             		var p = new Patient();
             		p.UserId = userId.Value;
@@ -92,18 +99,18 @@ namespace SharpDevelopWebApi.Controllers
         [ApiAuthorize]
         [HttpPost]
         [Route("api/account/registerbyadmin")]
-        public IHttpActionResult RegisterWithRole(string email, string password, string comma_separated_roles)
+        public IHttpActionResult RegisterWithRole(string username, string password, string comma_separated_roles = "")
         {
         	var userRoles = UserAccount.GetUserRoles(User.Identity.Name);
         	var isAdmin = userRoles.Contains(UserAccount.DEFAULT_ADMIN_LOGIN);
         	if(!isAdmin)
         		return BadRequest("Access forbidden. For administrator only.");
         	
-            var user = UserAccount.GetUserByEmail(email);
+            var user = UserAccount.GetUserByUserName(username);
             if(user != null)
                 return BadRequest("Account already exists");
 
-            var userId = UserAccount.Create(email, password, comma_separated_roles);
+            var userId = UserAccount.Create(username, password, comma_separated_roles);
             if (userId != null)
                 return Ok(new { UserId = userId, Message = "Account successfully created" });
             else
@@ -112,7 +119,7 @@ namespace SharpDevelopWebApi.Controllers
 
         [HttpPost]
         [Route("api/account/changepassword")]
-        public IHttpActionResult ChangePassword(string email, string newPassword, string currentPassword)
+        public IHttpActionResult ChangePassword(string username, string newPassword, string currentPassword = "")
         {
             var currentUser = !string.IsNullOrEmpty(User.Identity.Name) ? User.Identity.Name : (string)HttpContext.Current.Session["currentUser"];
             var forceChangeIfAdmin = false;
@@ -123,7 +130,7 @@ namespace SharpDevelopWebApi.Controllers
             } 
             catch {}
 
-            var success = UserAccount.ChangePassword(email, currentPassword, newPassword, forceChangeIfAdmin);
+            var success = UserAccount.ChangePassword(username, currentPassword, newPassword, forceChangeIfAdmin);
             if (success)
             {
                 HttpContext.Current.Session.Clear();
