@@ -31,10 +31,10 @@
                 </thead>
                 <tbody>
                     <tr v-for="(customer,index) in customers">
-                        <td>{{customer.Id}}</td>
-                        <td>{{customer.FirstName}} {{customer.LastName}}</td>
-                        <td>{{customer.Email}}</td>
-                        <td>{{customer.Phone}}</td>
+                        <td>{{customer.id}}</td>
+                        <td>{{customer.firstName}} {{customer.lastName}}</td>
+                        <td>{{customer.email}}</td>
+                        <td>{{customer.phone}}</td>
                         <td>
                             <button @click="deleteCustomer(index)">Delete</button>
                         </td>
@@ -47,19 +47,19 @@
             <h2>New</h2>
             <div>
                 <label>Last name</label>
-                <input type="text" v-model="newItem.LastName" required />
+                <input type="text" v-model="newItem.lastName" required />
             </div>
             <div>
                 <label>First name</label>
-                <input type="text" v-model="newItem.FirstName" required />
+                <input type="text" v-model="newItem.firstName" required />
             </div>
             <div>
                 <label>Email</label>
-                <input type="text" v-model="newItem.Email" />
+                <input type="text" v-model="newItem.email" />
             </div>
             <div>
                 <label>Phone</label>
-                <input type="text" v-model="newItem.Phone" />
+                <input type="text" v-model="newItem.phone" />
             </div>
             <div>
                 <button type="button" @click="display('tablelist')">Cancel</button>                
@@ -112,7 +112,7 @@
                 deleteCustomer: function (index) {
                     var yes = confirm('Are you sure?');
                     if (yes) {
-                        axios.delete(this.baseUrl + "/api/customer/" + this.customers[index].Id)
+                        axios.delete(this.baseUrl + "/api/customer/" + this.customers[index].id)
                             .then(response => {
                                 this.getCustomers();
                             });

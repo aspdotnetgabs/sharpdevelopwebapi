@@ -41,7 +41,7 @@ namespace SharpDevelopWebApi.Controllers
                 return BadRequest("Customer not found");
         }
 
-        [ApiAuthorize]
+        //[ApiAuthorize]
         [HttpPost]
         public IHttpActionResult Create(Customer newCustomer)
         {

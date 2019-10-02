@@ -43,10 +43,10 @@
                 </thead>
                 <tbody>
                     <tr v-for="(customer,index) in customers">
-                        <td>{{customer.Id}}</td>
-                        <td><a href="#" @click="getCustomer(index)">{{customer.FirstName}} {{customer.LastName}}</a></td>
-                        <td>{{customer.Email}}</td>
-                        <td>{{customer.Phone}}</td>
+                        <td>{{customer.id}}</td>
+                        <td><a href="#" @click="getCustomer(index)">{{customer.firstName}} {{customer.lastName}}</a></td>
+                        <td>{{customer.email}}</td>
+                        <td>{{customer.phone}}</td>
                         <td>
                             <button @click="editCustomer(index)">Edit</button>
                             <button @click="deleteCustomer(index)">Delete</button>
@@ -60,19 +60,19 @@
             <h2>New</h2>
             <p>
                 <label>Last name</label>
-                <input type="text" v-model="newItem.LastName" required />
+                <input type="text" v-model="newItem.lastName" required />
             </p>
             <p>
                 <label>First name</label>
-                <input type="text" v-model="newItem.FirstName" required />
+                <input type="text" v-model="newItem.firstName" required />
             </p>
             <p>
                 <label>Email</label>
-                <input type="text" v-model="newItem.Email" />
+                <input type="text" v-model="newItem.email" />
             </p>
             <p>
                 <label>Phone</label>
-                <input type="text" v-model="newItem.Phone" />
+                <input type="text" v-model="newItem.phone" />
             </p>
             <p>
                 <button type="button" @click="display('tablelist')">Cancel</button>                
@@ -84,23 +84,23 @@
             <h2>Edit</h2>
             <p>
                 <label>Id</label>
-                <input type="text" v-model="editItem.Id" readonly />
+                <input type="text" v-model="editItem.id" readonly />
             </p>
             <p>
                 <label>Last name</label>
-                <input type="text" v-model="editItem.LastName" required />
+                <input type="text" v-model="editItem.lastName" required />
             </p>
             <p>
                 <label>First name</label>
-                <input type="text" v-model="editItem.FirstName" required />
+                <input type="text" v-model="editItem.firstName" required />
             </p>
             <p>
                 <label>Email</label>
-                <input type="text" v-model="editItem.Email" />
+                <input type="text" v-model="editItem.email" />
             </p>
             <p>
                 <label>Phone</label>
-                <input type="text" v-model="editItem.Phone" />
+                <input type="text" v-model="editItem.phone" />
             </p>
             <p>
                 <button type="button" @click="display('tablelist')">Cancel</button>
@@ -113,15 +113,15 @@
             <button @click="display('tablelist')">Back</button>
             <dl style="width: 50%">
                 <dt>Id</dt>
-                <dd>{{detailItem.Id}}</dd>
+                <dd>{{detailItem.id}}</dd>
                 <dt>Last Name</dt>
-                <dd>{{detailItem.LastName}}</dd>
+                <dd>{{detailItem.lastName}}</dd>
                 <dt>First Name</dt>
-                <dd>{{detailItem.FirstName}}</dd>
+                <dd>{{detailItem.firstName}}</dd>
                 <dt>Email</dt>
-                <dd>{{detailItem.Email}}</dd>
+                <dd>{{detailItem.email}}</dd>
                 <dt>Phone</dt>
-                <dd>{{detailItem.Phone}}</dd>
+                <dd>{{detailItem.phone}}</dd>
                 <dt>Photo</dt>
                 <dd>
                         <p  v-if="!pleaseWait">
@@ -189,7 +189,7 @@
                 deleteCustomer: function (index) {
                     var yes = confirm('Are you sure?');
                     if (yes) {
-                        axios.delete(this.baseUrl + "/api/customer/" + this.customers[index].Id)
+                        axios.delete(this.baseUrl + "/api/customer/" + this.customers[index].id)
                             .then(response => {
                                 this.getCustomers();
                             });
@@ -199,7 +199,7 @@
                     this.view = v;
                 },
                 editCustomer: function (index) {
-                    axios.get(this.baseUrl + "/api/customer/" + this.customers[index].Id)
+                    axios.get(this.baseUrl + "/api/customer/" + this.customers[index].id)
                         .then(response => {
                             this.editItem = response.data;
                             this.view = 'editform';
@@ -215,7 +215,7 @@
                 },     
                 getCustomer: function (index) {
                     this.detailItem = this.customers[index];
-                    axios.get(this.baseUrl + "/api/customer/" + this.detailItem.Id)
+                    axios.get(this.baseUrl + "/api/customer/" + this.detailItem.id)
                         .then(response => {
                             this.detailItem = response.data;
                             //this.customers[index] = response.data;
@@ -230,7 +230,7 @@
                     this.pleaseWait = true;
                     var formData = new FormData()
                     formData.append('myFile', this.selectedFile, this.selectedFile.name);
-                    axios.post(this.baseUrl + "/api/customer/" + this.detailItem.Id + "/uploadphoto", formData)
+                    axios.post(this.baseUrl + "/api/customer/" + this.detailItem.id + "/uploadphoto", formData)
                         .then(response => {
                             this.detailItem = response.data;
                             this.selectedFile = null;
