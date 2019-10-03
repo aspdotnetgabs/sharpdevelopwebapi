@@ -47,10 +47,10 @@
             </thead>
             <tbody>
                 <tr v-for="(customer,index) in customers">
-                    <td>{{customer.Id}}</td>
-                    <td ><a href="#" @click="getCustomer(index)">{{ customer.FirstName}} {{customer.LastName}}</a></td>
-                    <td>{{customer.Email}}</td>
-                    <td>{{customer.Phone}}</td>
+                    <td>{{customer.id}}</td>
+                    <td ><a href="#" @click="getCustomer(index)">{{ customer.firstName}} {{customer.lastName}}</a></td>
+                    <td>{{customer.email}}</td>
+                    <td>{{customer.phone}}</td>
                     <td>
                         <button @click="editCustomer(index)" class="btn btn-warning btn-sm">Edit</button>
                         <button @click="deleteCustomer(index)" class="btn btn-danger btn-sm">Delete</button>
@@ -71,21 +71,21 @@
                         <form @submit.prevent="postCustomer" class="form" role="form" autocomplete="off">
                             <div class="form-group">
                                 <label>Last name</label>
-                                <input type="text" v-model="newItem.LastName" class="form-control" required />
+                                <input type="text" v-model="newItem.lastName" class="form-control" required />
                                 <div class="invalid-feedback">Oops, you missed this one.</div>
                             </div>
                             <div class="form-group">
                                 <label>First name</label>
-                                <input type="text" v-model="newItem.FirstName" class="form-control" required />
+                                <input type="text" v-model="newItem.firstName" class="form-control" required />
                                 <div class="invalid-feedback">Enter your first name too.</div>
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="text" v-model="newItem.Email" class="form-control" />
+                                <input type="text" v-model="newItem.email" class="form-control" />
                             </div>
                             <div class="form-group">
                                 <label>Phone</label>
-                                <input type="text" v-model="newItem.Phone" class="form-control" />
+                                <input type="text" v-model="newItem.phone" class="form-control" />
                             </div>
                             <div class="form-group pt-3">
                                 <button class="btn btn-outline-secondary" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -108,25 +108,25 @@
                         <form @submit.prevent="updateCustomer" class="form" role="form" autocomplete="off">
                             <div class="form-group">
                                 <label>Id</label>
-                                <input type="text" v-model="editItem.Id" class="form-control" readonly />
+                                <input type="text" v-model="editItem.id" class="form-control" readonly />
                             </div>
                             <div class="form-group">
                                 <label>Last name</label>
-                                <input type="text" v-model="editItem.LastName" class="form-control" required />
+                                <input type="text" v-model="editItem.lastName" class="form-control" required />
                                 <div class="invalid-feedback">Oops, you missed this one.</div>
                             </div>
                             <div class="form-group">
                                 <label>First name</label>
-                                <input type="text" v-model="editItem.FirstName" class="form-control" required />
+                                <input type="text" v-model="editItem.firstName" class="form-control" required />
                                 <div class="invalid-feedback">Enter your first name too.</div>
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="text" v-model="editItem.Email" class="form-control" />
+                                <input type="text" v-model="editItem.email" class="form-control" />
                             </div>
                             <div class="form-group">
                                 <label>Phone</label>
-                                <input type="text" v-model="editItem.Phone" class="form-control" />
+                                <input type="text" v-model="editItem.phone" class="form-control" />
                             </div>
                             <div class="form-group pt-3">
                                 <button class="btn btn-outline-secondary" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -142,7 +142,7 @@
             <div class="modal-dialog" style="min-width: 100%;margin: 0;" role="document">
                 <div class="modal-content" style="min-height: 100vh;border-radius: 0px">
                     <div class="modal-header pl-5">
-                        <h3>{{detailItem.FirstName}} {{detailItem.LastName}}</h3>
+                        <h3>{{detailItem.firstName}} {{detailItem.lastName}}</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body px-5">
@@ -150,15 +150,15 @@
                         <!-- HTML <dd> Tag https://www.w3schools.com/tags/tag_dd.asp -->
                         <dl class="dl-horizontal">
                             <dt>Id</dt>
-                            <dd>{{detailItem.Id}}</dd>
+                            <dd>{{detailItem.id}}</dd>
                             <dt>Last Name</dt>
-                            <dd>{{detailItem.LastName}}</dd>
+                            <dd>{{detailItem.lastName}}</dd>
                             <dt>First Name</dt>
-                            <dd>{{detailItem.FirstName}}</dd>
+                            <dd>{{detailItem.firstName}}</dd>
                             <dt>Email</dt>
-                            <dd>{{detailItem.Email}}</dd>
+                            <dd>{{detailItem.email}}</dd>
                             <dt>Phone</dt>
-                            <dd>{{detailItem.Phone}}</dd>
+                            <dd>{{detailItem.phone}}</dd>
                         </dl>
                     </div>
                 </div>
@@ -173,7 +173,7 @@
     <script src="js/bootstrap.bundle.min.js"></script>
 
     <!-- Vue JS and Axios -->
-    <script src="js/vue.min.js"></script>
+    <script src="js/vue.js"></script>
     <script src="js/axios.min.js"></script>
     <script>
         var contactApp = new Vue({
@@ -206,7 +206,7 @@
                 },
                 editCustomer: function (index) {
                     this.editItem = this.customers[index];
-                    axios.get(this.baseUrl + "/api/customer/" + this.editItem.Id)
+                    axios.get(this.baseUrl + "/api/customer/" + this.editItem.id)
                         .then((response) => {
                             this.editItem = response.data;
                             $("#editModal").modal('show');
@@ -227,7 +227,7 @@
                     var yes = confirm('Are you sure?');
                     if (yes) {
                         this.deleteItem = this.customers[index];
-                        axios.delete(this.baseUrl + "/api/customer/" + this.deleteItem.Id)
+                        axios.delete(this.baseUrl + "/api/customer/" + this.deleteItem.id)
                         .then((response) => {
                             this.getCustomers();
                             this.deleteItem = {};
@@ -236,7 +236,7 @@
                 },
                 getCustomer: function (index) {
                     this.detailItem = this.customers[index];
-                    axios.get(this.baseUrl + "/api/customer/" + this.detailItem.Id)
+                    axios.get(this.baseUrl + "/api/customer/" + this.detailItem.id)
                         .then((response) => {
                             this.detailItem = response.data;
                             $("#detailModal").modal('show');
