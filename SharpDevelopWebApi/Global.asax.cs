@@ -23,6 +23,8 @@ namespace SharpDevelopWebApi
 
         protected void Application_Start()
 		{
+        	AutoMapperConfig.Initialize();
+        	
 			var config = System.Web.Http.GlobalConfiguration.Configuration;
 			
 			config.EnableCors(new EnableCorsAttribute("*","*","*"));		
