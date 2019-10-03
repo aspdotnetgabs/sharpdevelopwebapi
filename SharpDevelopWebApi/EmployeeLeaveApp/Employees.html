@@ -1,0 +1,177 @@
+<html>
+        
+<head>
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;border-color:#bbb;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-top-width:1px;border-bottom-width:1px;border-color:#bbb;color:#594F4F;background-color:#E0FFEB;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-top-width:1px;border-bottom-width:1px;border-color:#bbb;color:#493F3F;background-color:#9DE0AD;}
+.tg .tg-oxv0{font-size:24px;border-color:#34cdf9;text-align:left;vertical-align:top}
+.tg .tg-8g34{font-size:28px;border-color:#34cdf9;text-align:left;vertical-align:top}
+.tg .tg-jgo1{border-color:#34cdf9;text-align:left;vertical-align:top}
+.tg .tg-0lax{text-align:left;vertical-align:top}
+
+.button {
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  float: right;
+  margin-right: 100px;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+</style>
+
+</head>
+
+<body>
+        <div id="LeaveApp">
+                <h2>Employees</h2>
+                <div>
+                <input type="text" v-model="searchKeyword" placeholder="Search">
+                <button @click="searchCustomers" class="btn btn-success">Go</button>
+                </div>
+        <div>
+                <p>
+                <button type="button" class = "button">Add</button>
+                </p>
+                </div>
+                <div>
+                <table class="tg">
+                        <thead>
+                            <tr>
+                                <th class="tg-0lax" v-for="column in columnHeader">
+                                    {{column}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(employee,index) in employees">
+                                    
+                                <td class="tg-0lax">{{employee.Id}}</td>
+                                <td class="tg-0lax" ><a href="#" @click="getEmployees(index)">{{ employee.FirstName}} {{employee.LastName}}</a></td>
+                                <td class="tg-0lax">{{employee.Phone}}</td>
+                                <td class="tg-0lax">{{employee.Address}}</td>
+                                <td class="tg-0lax">{{employee.Deparment}}</td>
+                                <td class="tg-0lax">{{employee.Position}}</td>
+                            
+                                <td>
+                                    <button @click="editEmployee(index)" class="btn btn-warning btn-sm">Edit</button>
+                                    <button @click="deleteEmployee(index)" class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+</body>
+
+
+
+<script src="../js/vue.js"></script>
+<script src="../js/axios.min.js"></script>
+<script>
+    var LeaveApp = new Vue({
+        el: '#LeaveApp',
+        data: {
+            baseUrl : "http://employeeleavemanagement.somee.com",
+            columnHeader: ['Id', 'Name', 'Phone', 'Address', 'Department','Position'],
+            employees: [],                
+            newEm: {},
+            editEm: {},
+            deleteEm: {},
+            detailIEm: {},
+            searchKeyword: "",
+        },
+        methods: {
+            getEmployees: function () {
+                axios.get(this.baseUrl + "/api/Employee")
+                    .then((response) => {
+                        this.customers = response.data;
+                    });
+            },
+            postEmployee: function (e) {
+                axios.post(this.baseUrl + "/api/Employee", this.newEm)
+                    .then((response) => {
+                        //alert('Successfully added. Data: ' + JSON.stringify(response.data));
+                        this.getEmployees();
+                        $("#addModal").modal('hide');
+                        this.newEm = {};
+                    });
+            },
+            editCustomer: function (index) {
+                this.editEm = this.employees[index];
+                axios.get(this.baseUrl + "/api/Employee/" + this.editEm.Id)
+                    .then((response) => {
+                        this.editEm = response.data;
+                        $("#editModal").modal('show');
+                    })  
+                    .catch((error) => {
+                        this.getEmployees();
+                    }); 
+            },
+            updateCustomer: function (e) {
+                axios.put(this.baseUrl + "/api/Employee", this.editEm)
+                    .then((response) => {
+                        this.getEmployees();
+                        $("#editModal").modal('hide');
+                        this.editEm = {};
+                    });
+            },
+            deleteEmployee: function (index) {
+                var yes = confirm('Are you sure?');
+                if (yes) {
+                    this.detailIEm = this.employees[index];
+                    axios.delete(this.baseUrl + "/api/Employee/" + this.detailIEm.Id)
+                    .then((response) => {
+                        this.getEmployees();
+                        this.detailIEm = {};
+                    });
+                }
+            },
+            getEmployee: function (index) {
+                this.detailItem = this.employees[index];
+                axios.get(this.baseUrl + "/api/Employee/" + this.detailItem.Id)
+                    .then((response) => {
+                        this.detailItem = response.data;
+                        $("#detailModal").modal('show');
+                    })
+                    .catch((error) => {
+                        this.getEmployees();
+                    }); 
+            },
+            searchEmployees: function () {
+                if (this.searchKeyword) {
+                    axios.get(this.baseUrl + "/api/Employee?keyword=" + this.searchKeyword)
+                        .then((response) => {
+                            this.employees = response.data;
+                        });
+                }
+                else {
+                    this.getEmployees();
+                }
+            },
+        },
+        mounted: function () {
+            this.getEmployees();
+        }
+    });
+
+</script>
+
+</html>

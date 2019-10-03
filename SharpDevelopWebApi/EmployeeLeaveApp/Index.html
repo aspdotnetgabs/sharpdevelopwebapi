@@ -1,0 +1,149 @@
+<html>
+        
+<head>
+     <title>Employee Leave Management App</title>  
+<style> 
+.center {
+display: block;
+margin-left: auto;
+margin-right: auto;
+margin-top: 40px;
+width: 70%;
+}
+
+body, html {
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  
+}
+
+.bg-img {
+  
+  background-image: url("../images/bg.jpg");
+
+  min-height: 400px;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size:auto;
+  position: relative;
+}
+
+
+.container {
+  position:absolute;
+  top: 10px;
+  left: 360px;
+  margin: 20px;
+  max-width: 280px;
+  padding: 16px;
+  background-color:rgb(51, 116, 14);
+  opacity: 0.9;
+  
+}
+
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+
+.btn {
+  background-color: rgba(33, 110, 146, 0.973);
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  
+}
+
+.btn:hover {
+  opacity: 1;
+}
+                
+</style>
+
+  <img src="../images/logo.png" style="width:40%" class="center">
+  
+<h1 style = "text-align: center; font-family: sans-serif; font-size: 30px; color:rgb(82, 79, 79); "> Employee Leave Management App</h1>
+
+</head>
+<body>
+  <div id="LeaveApp">
+        <div class="bg-img">
+                <form class="container">
+                  <h1>Login</h1>
+              
+                  <label for="email"><b>Email</b></label>
+                  <input type="text" placeholder="Enter Email" v-model ="user.email" required>
+              
+                  <label for="psw"><b>Password</b></label>
+                  <input type="password" placeholder="Enter Password" v-model="user.password" required>
+              
+                  <button type="submit" class="btn" :disabled="disabledBtn === 'btnLogin'" >LOGIN</button>
+                 
+                </form>
+              </div>
+            </div>
+
+<script src="../js/vue.js"></script>
+<script src="../js/axios.min.js"></script>
+<script>
+var vueApp = new Vue({
+    el: '#LeaveApp',
+    data: {
+        appUserStorageId: 'leaveApp123',
+        baseUrl: "http://employeeleavemanagement.somee.com",
+        employees: [],
+        newItem: {},
+        view: "loginform",
+        user: {},
+        loggedIn: false,
+        disabledBtn: "",
+    },
+    methods: {
+      login: function () {
+                    this.disabledBtn = "btnLogin";
+                    axios.post(this.baseUrl + "/TOKEN?email=" + this.user.email + "&password=" + this.user.password)
+                        .then(response => {
+                            var user = response.data;
+                            // If response has user token...
+                            if (user.Token) {
+                                user.email = this.user.email;
+                                localStorage.setItem(this.appUserStorageId, JSON.stringify(user)); // store User data in localStorage
+                                this.loggedIn = true;
+                                this.getCustomers();
+                                this.disabledBtn = "";
+                                this.view = 'tablelist';                                
+                            }
+                        })
+                        .catch(error => {
+                            alert(error.response.data.Message);
+                            this.disabledBtn = "";
+                        });
+
+      }
+    }
+});
+
+</script>
+
+
+</body>
+</html>
