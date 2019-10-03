@@ -21,5 +21,6 @@ namespace SharpDevelopWebApi.Models
         public string Photo { get; set; }        
         [JsonIgnore]
         public byte[] PhotoData { get; set; }
+        
     }
 }
