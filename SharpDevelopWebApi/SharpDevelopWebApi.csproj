@@ -156,11 +156,12 @@
   <ItemGroup>
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\DepartmentController.cs" />
-    <Compile Include="Controllers\EmployeeController.cs" />
-    <Compile Include="Controllers\LeaveController.cs" />
-    <Compile Include="Controllers\ReasonController.cs" />
-    <Compile Include="Controllers\StatusController.cs" />
+    <Compile Include="Controllers\AccountWalletController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\TransactionCodeController.cs" />
+    <Compile Include="Controllers\TransactionController.cs" />
+    <Compile Include="Controllers\TransactionTypeController.cs" />
+    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -178,15 +179,16 @@
     <Compile Include="Helpers\TuesPechkinPdf.cs" />
     <Compile Include="Helpers\UserAccount.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\AccountWallet.cs" />
     <Compile Include="Models\Contact.cs" />
-    <Compile Include="Models\Department.cs" />
-    <Compile Include="Models\Employee.cs" />
-    <Compile Include="Models\Leave.cs" />
-    <Compile Include="Models\Person.cs" />
-    <Compile Include="Models\Reason.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\SDWebApiDbContext.cs" />
-    <Compile Include="Models\Status.cs" />
-    <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Models\TransactionCode.cs" />
+    <Compile Include="Models\TransactionType.cs" />
+    <Compile Include="Models\UserWallet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
