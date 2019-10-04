@@ -31,12 +31,23 @@ namespace SharpDevelopWebApi.Controllers
 
             return Ok(accounts);
         }
-
-        [HttpGet]
-        [Route("api/SearchAccountProfile")]
+        
+		[HttpGet]
+        [Route("api/getAccountProfile/{Id}")]
         public IHttpActionResult Get(int Id)
         {
-            var accounts = _db.Accounts.Find(Id);
+        	var accounts = _db.Accounts.Find(Id);
+            if (accounts != null)
+                return Ok(accounts);
+            else
+                return BadRequest("Account profile not found");
+        }        
+
+        [HttpGet]
+        [Route("api/getAccountProfileByUserId")]
+        public IHttpActionResult GetByUserId(int userId)
+        {
+        	var accounts = _db.Accounts.Where(x => x.UserId == userId).FirstOrDefault();
             if (accounts != null)
                 return Ok(accounts);
             else
@@ -87,7 +98,7 @@ namespace SharpDevelopWebApi.Controllers
         //public string Address { get; set; }
         //public string Email { get; set; }
         [HttpDelete]
-        [Route("api/DeleteAccountProfile")]
+        [Route("api/DeleteAccountProfile/{Id}")]
 
         public IHttpActionResult Delete(int Id)
         {

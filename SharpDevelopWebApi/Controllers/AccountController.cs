@@ -61,7 +61,7 @@ namespace SharpDevelopWebApi.Controllers
 
         [HttpPost]
         [Route("api/account/register")]
-        public IHttpActionResult RegisterUser(string username, string password, string role = "") // You can add more parameter here ex LastName, FirstName etc
+        public IHttpActionResult RegisterUser(string username, string password, string role = "", string firstname ="",string lastname ="") // You can add more parameter here ex LastName, FirstName etc
         {
         	if(role.Split(',').Contains(UserAccount.DEFAULT_ADMIN_LOGIN))
         		return BadRequest("Creating an admin account is forbidden.");
@@ -77,7 +77,9 @@ namespace SharpDevelopWebApi.Controllers
             	if(role == "account")
             	{
             		var acc = new Account();
-            		acc.UserId = userId.Value;            		
+            		acc.UserId = userId.Value;  
+            		acc.Firstname = firstname;
+            		acc.Lastname = lastname;
             		_db.Accounts.Add(acc);
             		_db.SaveChanges();
             	}

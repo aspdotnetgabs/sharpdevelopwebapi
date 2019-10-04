@@ -6,11 +6,15 @@ namespace SharpDevelopWebApi.Models
 	{
 		public int Id { get; set; }
 		public string AccountNumber { get; set; }
-		public int TransactionCodeId { get; set; }
-		
+
+		public int TransactionTypeId { get; set; }		
 		[NotMapped]
-		public int TransactionCode { get; set; }
+		public TransactionType TransactionType { get; set; }
+		
+		
+		public string ToAccount { get; set; }
 		public int Amount { get; set; }
 		public DateTime? Date { get; set; }
+		public string Notes {get;set;}
 	}
 }

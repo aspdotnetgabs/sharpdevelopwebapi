@@ -158,7 +158,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccountWalletController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
-    <Compile Include="Controllers\TransactionCodeController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Controllers\TransactionTypeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -186,7 +185,6 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\SDWebApiDbContext.cs" />
     <Compile Include="Models\Transaction.cs" />
-    <Compile Include="Models\TransactionCode.cs" />
     <Compile Include="Models\TransactionType.cs" />
     <Compile Include="Models\UserWallet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
