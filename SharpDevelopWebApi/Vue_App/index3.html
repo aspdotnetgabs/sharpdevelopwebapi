@@ -1,0 +1,147 @@
+<html>
+    <head>
+        <style>
+            .box-body{
+                background-color: rgba(43, 42, 42, 0.986);
+                width: 700px;
+                height: 500px;
+                margin-top: 50px;
+                margin-right: 300px;
+                border-radius: 30px;
+                padding: 15px 15px 15px 15px;
+                font-family: monospace;
+                color: white;
+                float: right;
+            }
+
+            .box-item{
+                background-color:rgba(58, 56, 56, 0.548);
+                height: 300px;
+                padding : 15px;
+                font-size: 20px;          
+            }
+            div .box-item:hover{
+                background-color: rgba(102, 99, 99, 0.945);
+            }
+
+            body{
+                background-color: rgba(7, 7, 7, 0.89);
+            }
+
+            h1{
+                color: rgb(20, 184, 14);
+                margin-top: 5px;
+                font-family: monospace;               
+            }
+            button{
+                border-radius: 20px;
+                padding: 10px; 
+                width: 90px;
+                background-color: rgb(129, 42, 42);
+                color: rgba(10, 10, 10, 0.918);
+                font-family: monospace;
+            }
+            button:hover{
+                background-color: rgb(243, 67, 67);
+                color: rgb(250, 248, 248);
+            }
+            
+            .sidenav{
+               float: left;
+               margin-left: 198px;
+               margin-top: 100px;
+               border-radius: 10px;
+            }
+            .sidenav button{           
+                background-color: rgba(0, 128, 0, 0.945);
+
+            }
+            .sidenav button:hover{
+                background-color: rgb(71, 230, 71);
+            }
+        </style>
+        <title>
+            Online Exam App
+        </title>
+
+    </head>
+    <body>
+        <div class="sidenav">
+         <a   href="#home"><button>Home</button></a><br><br>
+         <a   href="#score"><button>Score</button></a><br><br>
+         <a   href="#score"><button>Ranking</button></a><br><br>
+         <a   href="#contact"><button>Contact</button></a>
+         </div>
+        <div class="box-body" id="OnlineExamApp">
+            <h1>{{appTitle}}</h1>
+            <div class = "box-item" >
+                    {{ques.Questions}}
+                    <p>
+                        <input type="radio" id="rd1" name="choices" > {{ques.ChoicesA}} <br>
+                        <input type="radio" id="rd2" name="choices" > {{ques.ChoicesB}} <br>
+                        <input type="radio" id="rd3" name="choices" > {{ques.ChoicesC}}
+                    </p>
+            </div>
+            <br>
+            <div>
+                <button type="button" @click="displayQuesPrev">PREVIOUS</button>
+                <button type="button"  Style = "float: right" @click="displayQuesFor" >NEXT</button>                
+            </div>
+            <br>            
+            <button style="width: 250px; margin-left: 230px">SUBMIT</button>     
+        </div>
+        <script src="js/vue.js"></script>
+        <script src="js/axios.min.js"></script>	
+        
+        <script>         
+            var ctr = 0 ;
+            var prev = null;
+             var App = new Vue({
+                    el: "#OnlineExamApp",
+                    data: {
+                       
+                        appTitle : "Online Exam App",	
+                        baseUrl: "http://localhost:8082/api/question/all",
+                        Questionnaire:[],              
+                        newItem: {},
+                        ques: {},
+                        
+                    },
+                    methods: {
+                        getQuestions: function(){
+							axios.get(this.baseUrl)
+							.then(response => {
+							this.Questionnaire = response.data;
+						})
+					 },
+                     postExam : function(){
+                        axios.post(this.baseUrl + "/api/Exam", this.newItem)
+                        .then(response => {
+                            
+                            this.newItem = {};
+							alert('Successfully Added!');
+                        });
+                     },
+
+                     displayQuesFor : function(){
+                        getQuestions();
+                        ctr++;                                            
+                        this.ques = Questionnaire[ctr];
+                     },
+
+                     displayQuesPrev : function(){ 
+                         if(ctr > 0) {
+                            ctr -= 1;                   
+                            this.ques = Questionnaire[ctr];                           
+                         }                        
+                     }
+                },
+                mounted : function(){   
+                    getQuestions();          
+                    this.ques = Questionnaire[ctr];
+                }
+                
+                });
+        </script>
+    </body>
+</html>

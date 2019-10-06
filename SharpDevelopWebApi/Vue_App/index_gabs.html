@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Online Exam App</title>
+
+    <style>
+            [v-cloak]>* { display: none }
+            [v-cloak]::before { content: "Loading…" }
+    
+            table {
+                border-collapse: collapse;
+            }
+    
+            table,
+            th,
+            td {
+                border: 1px solid black;
+                padding: 5px;
+            }
+        </style>
+</head>
+
+<body>
+
+    <div id="onlineExamApp" v-cloak>
+        <h1>
+            {{appName}}
+            <br>
+            <small>                                
+                user.userName: <a href="#" v-show="loggedIn" @click="display('changePasswordForm')">[{{user.userName}}]</a> 
+                <button type="button" v-show="loggedIn" @click="logout">Logout</button> <br>
+                user.id: {{user.userId}} <br>
+                user.userRoles: <span v-for="role in user.userRoles">{{role}}, </span>
+            </small>
+        </h1>
+    
+
+
+        <div v-show="view === 'ExamineeProfileView'">
+            <h2>Examinee</h2>
+            <dl style="width: 50%">
+                <dt>Id</dt>
+                <dd>{{examinee.id}}</dd>
+                <dt>Last Name</dt>
+                <dd>{{examinee.lastName}}</dd>
+                <dt>First Name</dt>
+                <dd>{{examinee.firstName}}</dd>
+                <dt>Email</dt>
+                <dd>{{examinee.email}}</dd>
+                <dt>Exam</dt>
+                <dd>
+                    <button @click="GetAllQuestions">Take Exam</button>
+                </dd>
+            </dl>
+        </div>
+
+
+        <div v-show="view === 'ExamView'">
+            <p>{{currQIndex + 1}}. {{currentQuestion.questionText}}<BR>
+                <input type="radio" id="choiceA" name="choices" value="a"><label for="choiceA">{{currentQuestion.choiceA}}</label>
+                <input type="radio" id="choiceB" name="choices" value="b"><label for="choiceB">{{currentQuestion.choiceB}}</label>
+                <input type="radio" id="choiceC" name="choices" value="c"><label for="choiceC">{{currentQuestion.choiceC}}</label>
+            </p>
+            <button @click="submitAnswer" :disabled="this.currQIndex == this.questions.length">Next {{questions.length}}</button>
+        </div>
+    
+
+
+        <form v-show="view === 'loginform'" @submit.prevent="login" autocomplete="off">
+            <h2>Login</h2>
+            <p>
+                <label>Email</label>
+                <input type="text" v-model="user.userName" required />
+            </p>
+            <p>
+                <label>Password</label>
+                <input type="password" v-model="user.password" required />
+            </p>
+            <p>
+                <button type="submit" :disabled="disabledBtn === 'btnLogin'" >Login</button>
+                <a href="#" @click="display('registerform')">Register</a>
+            </p>
+        </form>
+
+        <form v-show="view === 'registerform'" @submit.prevent="registerExaminee()" autocomplete="off">
+            <h2>Register</h2>
+            <p>
+                <label>Email</label>
+                <input type="text" v-model="user.userName" required />
+            </p>
+            <p>
+                <label>Password</label>
+                <input type="password" v-model="user.password" required />
+            </p>
+            <p>
+                <label>Re-type Password</label>
+                <input type="password" v-model="user.retypePassword" required />
+            </p>   
+            <p>
+                <label>Firstname</label>
+                <input type="text" v-model="user.firstName" required />
+            </p>
+            <p>
+                <label>Lastname</label>
+                <input type="text" v-model="user.lastName" required />
+            </p>                                 
+            <p>
+                <button type="submit">Register</button>
+                <a href="#" @click="display('loginform')">Login</a>
+            </p>
+        </form>
+
+        <form v-show="view === 'changePasswordForm'" @submit.prevent="changePassword" autocomplete="off">
+            <h2>Change Password</h2>
+            <p>
+                <label>Current Password</label>
+                <input type="password" v-model="user.currentPassword" required />
+            </p>
+            <p>
+                <label>New Password</label>
+                <input type="password" v-model="user.newPassword" required />
+            </p>
+            <p>
+                <label>Retype Password</label>
+                <input type="password" v-model="user.retypePassword" required />
+            </p>
+            <p>
+                <button type="submit">Submit</button>
+                <button type="button" @click="display('tablelist')">Cancel</button>
+            </p>
+        </form>
+    </div>
+
+    <!-- Vue JS and Axios -->
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>
+        const vueApp = new Vue({
+            el: '#onlineExamApp',
+            data: {
+                appUserStorageId: 'onlineQuiz123xyz',
+                appName: "Online Exam App",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone'],
+                baseUrl: "http://localhost:8082",
+                view: "loginform",
+                user: {},
+                examinee: {},
+                loggedIn: false,
+                disabledBtn: "",
+                questions: [],                
+                currentQuestion: {},
+                currQIndex: 0,
+            },
+            methods: {
+                display: function (v) {
+                    this.view = v;
+                },
+                login: function () {
+                    this.disabledBtn = "btnLogin";
+                    axios.post(this.baseUrl + "/TOKEN?username=" + this.user.userName + "&password=" + this.user.password)
+                        .then(response => {
+                            var user = response.data;
+                            // If response has user token...
+                            if (user.token) {
+                                this.user = user;
+                                localStorage.setItem(this.appUserStorageId, JSON.stringify(user)); // store User data in localStorage
+                                this.loggedIn = true;
+                                this.GetExaminee();
+                                this.disabledBtn = "";
+                                this.view = 'ExamineeProfileView';                                
+                            }
+                        })
+                        .catch(error => {
+                            alert(error.response.data.Message);
+                            this.disabledBtn = "";
+                        });
+                },
+                logout: function () {
+                    // remove user from local storage to log user out
+                    localStorage.removeItem(this.appUserStorageId);
+                    this.user = {};
+                    this.loggedIn = false;
+                    this.view = 'loginform';
+                },
+                registerExaminee: function () {
+                    if(this.user.password === this.user.retypePassword) {     
+                        this.user.role = "examinee";                   
+                        axios.post(this.baseUrl + "/api/account/register", this.user)
+                            .then(response => {
+                                var data = response.data;
+                                if (data.userId) {
+                                    this.user.password = null;
+                                    this.user.retypePassword = null;
+                                    this.view = 'loginform';
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                alert(error.response.data.Message);
+                            });
+                    } else {
+                        alert("Password not the same.");
+                    }                   
+                },
+                changePassword: function () {
+                    if (this.user.newPassword === this.user.retypePassword) {
+                        axios.post(this.baseUrl + "/api/account/changepassword?username=" + this.user.userName + "&newPassword=" + this.user.newPassword + "&currentPassword=" + this.user.currentPassword)
+                            .then(response => {
+                                // Password change success, logout.
+                                alert(response.data);
+                                this.logout();
+                            })
+                            .catch(error => {
+                                alert(error.response.data.Message);
+                            });
+                    } else {
+                        alert('Password mismatch.');
+                    }
+                },
+                GetExaminee: function () {
+                    axios.get(this.baseUrl + "/api/examinee/getexamineebyid?UserId=" + this.user.userId)
+                        .then(response => {
+                            this.examinee = response.data[0]; // Get the first item in array response
+                        });
+                },
+                GetAllQuestions: function() {
+                    axios.get(this.baseUrl + "/api/question/allwithoutanswer")
+                        .then(response => {
+                            this.questions = response.data;
+                            alert('Questions has been loaded.');
+                            this.currentQuestion = this.questions[this.currQIndex];
+                            this.view = "ExamView";
+                        });
+                },
+                submitAnswer: function() {
+                    // axios post to submit the answer to api/Exam Post
+                    // ...
+                    // ...
+
+                    this.currQIndex++; // Move to the next question
+                    if(this.currQIndex < this.questions.length) {
+                        this.currentQuestion = this.questions[this.currQIndex];
+                    }
+                }
+            },
+            mounted: function () {
+                var user = JSON.parse(localStorage.getItem(this.appUserStorageId)); // If user is null then false
+                if (user) {
+                    this.loggedIn = true;
+                    this.user = user;
+                    this.GetExaminee();
+                    this.view = 'ExamineeProfileView';
+                } else {    
+                    alert('You need to login first.')                
+                    this.view = 'loginform';
+                }
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

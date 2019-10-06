@@ -1,0 +1,381 @@
+<html>
+	<head>
+	<style>
+		table {
+			margin-left: 80px;
+            border-collapse: collapse;
+			background-color: rgba(92, 94, 93, 0.788);
+			border-radius: 5px;
+		}
+		th,td {		
+			text-align: left;
+            padding-left: 10px;	
+            padding-right: 10px;
+            padding-top: 8px;
+            padding-bottom: 8px;	
+        }   
+		th:hover{
+			background-color:rgb(92, 94, 93);
+		}
+        body{
+            background-color: rgba(7, 7, 7, 0.89);
+			font-family: monospace;
+        }
+		h1 {
+			float: center;
+			background-color: rgba(54, 54, 53, 0.959);
+			margin: 20px;
+			border-radius: 20px;
+			margin-left: 150px;
+			margin-right: 150px;
+            color: rgb(196, 194, 194);
+            padding-left: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+		}
+		
+		input{
+			padding: 6px 8px 6px 8px;
+			border-style: none;
+			border-radius: 40px;
+		}
+		.btnsearch{
+			border-style: none;
+			border-radius: 3px;
+			padding: 6px 8px  6px 8px;
+			background-color: rgb(209, 34, 34);
+			color: white;
+
+		}
+		.btnsearch:hover{
+			background-color: rgb(223, 83, 83);
+		}
+		.FormNew{
+			padding: 20px;
+            background-color: rgba(58, 56, 56, 0.548);
+            width: 300px;
+            margin-left:500px;
+            margin-top: 30px;
+			border-radius: 10px;
+			color: white;
+		}
+		.FormNew button{
+			width: 250px;
+			border-style: none;
+			padding: 10px;
+			border-radius: 8px;
+			margin-left:27px;
+			margin-bottom: 10px;
+			background-color: rgba(97, 95, 95, 0.945);
+			color: white;
+		}
+		.FormNew button:hover{
+			background-color:rgb(170, 170, 170);
+		}
+		.FormNew input{
+			padding: 4px 4px 4px 4px;
+			border-style: none;
+			border-radius: 3px;
+			width: 200px;
+			margin-left: 45px;
+		}
+		.FormNew label{
+			margin-left: 45px;
+		}
+		td button{
+			border-style: ridge;
+			border-radius: 5px;
+			padding: 3px;
+			background-color: red;
+			color: white;
+		}
+		td button :hover{
+			background-color: rgb(226, 109, 109);
+			color: black;
+		}
+
+	</style>
+	
+		<title>
+			Online Exam App
+		</title>
+	</head>
+	<body>	
+	<div id="OnlineExamApp">
+		<div  v-show="view === 'tablelist'">
+			<h1>{{viewTitle}}</h1>
+			<p style="margin-left: 80px">
+				<input type="text" v-model="searchKeyword" placeholder="Search">
+				<button @click="searchExaminees" class="btnsearch">Go</button> 
+			</p>				
+			<table>
+			<thead>
+				<tr>
+					<th v-for="column in columnHeader">
+						{{column}}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(Examinee,index) in columnBody">
+					<td>
+						{{Examinee.Id}}
+					</td>
+					<td>
+						{{Examinee.Lastname}} {{Examinee.Firstname}}
+					</td>			
+					<td>
+						{{Examinee.Gender}}
+					</td>
+					<td>
+						{{Examinee.Birthdate}}
+					</td>
+					<td>
+						{{Examinee.Email}}
+					</td>
+					<td>
+						{{Examinee.Score}}
+					</td>
+					<td>
+						<button @click="editExaminee(index)">Edit</button>
+						<button @click="deleteExaminee(index)">Delete</button>
+					</td>									
+				</tr>
+			</tbody>
+			</table>
+		</div>
+		<br><br><br>
+		<div v-show = "view === 'tablelist'">
+				<h1>{{viewTitle2}}</h1>
+				<button type="button" @click="display('addQuestions')" class="btnsearch" style="margin: 5px 0px 5px 80px">Add Questions</button>
+			<table>
+				<thead>
+					<tr>
+						<th v-for="question in QuestionnaireHeader">
+							{{question}}
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(question,index) in Questionnaire">
+						<td>
+							{{question.Id}}
+						</td>
+						<td>
+							{{question.Questions}}
+						</td>			
+						<td>
+							{{question.ChoicesA}}
+						</td>
+						<td>
+							{{question.ChoicesB}}
+						</td>
+						<td>
+							{{question.ChoicesC}}
+						</td>
+						<td>
+							{{question.CorrectAnswer}}
+						</td>
+						<td>
+							<button @click="editQuestion(index)">Edit</button>
+							<button @click="deleteQuestion(index)">Delete</button>
+						</td>									
+					</tr>
+				</tbody>
+				</table>
+		</div>
+		<form v-show="view ==='addQuestions'" @submit.prevent = "postQuestions" class="FormNew" autocomplete="off">
+			<h2>New</h2>
+			<p>
+				<label>Question</label>
+				<input type="text"v-model="newItem.Question">
+			</p>
+			<p>
+					<label>Choice A</label>
+					<input type="text"v-model="newItem.ChoicesA">
+			</p>
+			<p>
+					<label>Choice B</label>
+					<input type="text"v-model="newItem.ChoicesB">
+			</p>
+			<p>
+					<label>Choice C</label>
+					<input type="text"v-model="newItem.ChoicesC">
+			</p>
+			<p>
+					<label>Correct Answer</label>
+					<input type="text"v-model="newItem.CorrectAnswer">
+			</p>
+			<button type="submit"> Save </button>
+		</form>
+		<form v-show="view==='editQuestion'" @submit.prevent = "" autocomplete="off">
+			<h2>Edit</h2>
+			<p>
+				<label>Id</label>
+				<input type="text" v-model="editItem.Id" readonly />
+			</p>
+			<p>
+				<label>Question</label>
+				<input type="text" v-model="editItem.Question" required />
+			</p>
+		</form>
+
+		<form v-show="view === 'editform'" @submit.prevent="updateExaminee" autocomplete="off">
+				<h2>Edit</h2>
+				<p>
+					<label>Id</label>
+					<input type="text" v-model="editItem.Id" readonly />
+				</p>
+				<p>
+					<label>Last name</label>
+					<input type="text" v-model="editItem.LastName" required />
+				</p>
+				<p>
+					<label>First name</label>
+					<input type="text" v-model="editItem.FirstName" required />
+				</p>
+				<p>
+					<label>Email</label>
+					<input type="text" v-model="editItem.Email" />
+				</p>
+				<p>
+					<label>Gender</label>
+					<input type="text" v-model="editItem.Gender" />
+				</p>
+				<p>
+					<label>Birthdate</label>
+					<input type="text" v-model="editItem.Birthdate" />
+				</p>
+				<p>
+					<label >Score</label>
+					<input type="text" v-model="editItem.Score" />
+				</p>
+				<p>
+					<button type="button" @click="display('tablelist')">Cancel</button>
+					<button type="submit">Save</button>
+				</p>
+		</form> 
+			<div v-show="view === 'detailview'">
+					<h2>Details</h2>
+					<button @click="display('tablelist')">Back</button>
+					<dl>
+						<dt>Id</dt>
+						<dd>{{detailItem.Id}}</dd>
+						<dt>Last Name</dt>
+						<dd>{{detailItem.LastName}}</dd>
+						<dt>First Name</dt>
+						<dd>{{detailItem.FirstName}}</dd>
+						<dt>Gender</dt>
+						<dd>{{detailItem.Gender}]</dd>
+						<dt>Email</dt>
+						<dd>{{detailItem.Email}}</dd>
+						<dt>Birthdate</dt>
+						<dd>{{detailItem.Birthdate}}</dd>
+						<dt>Score</dt>
+						<dd>{{detailItem.Score}}</dd>
+					</dl>
+			</div>     
+		
+	</div>
+	
+	<script src="js/vue.js"></script>
+	<script src="js/axios.min.js"></script>
+	
+	<script>
+			var app = new Vue({
+				el: "#OnlineExamApp",
+				data: {
+					viewTitle : "Examinee's Data",
+					viewTitle2: "Question's Data",
+					baseUrl: "http://localhost:8082",
+					columnHeader : ['ID', 'Name','Gender','Birthdate', 'Email', 'Score'],	
+					columnBody: [],
+					searchKeyword: "",
+					newItem: {},
+					editItem:{},
+					detailItem:{},
+					view:"Tablelist",
+					Questionnaire:[],	
+					QuestionnaireHeader:['ID','Questions','ChoicesA','ChoicesB','ChoicesC','Correct Answer'],			
+				},
+				methods: {
+				getExaminees: function () {
+                axios.get(this.baseUrl + "/api/Examinee")
+                    .then(response => {
+                         this.columnBody = response.data;
+                     })
+				},
+				searchExaminees: function () {
+                    if (this.searchKeyword !== '') {
+                        axios.get(this.baseUrl + "/api/Examinee?keyword=" + this.searchKeyword)
+                            .then(response => {
+                                this.columnBody = response.data;
+                            });
+                    }
+                    else {
+                        this.getExaminees();
+                    }     
+                },
+				postQuestions: function () {
+                    axios.post(this.baseUrl + "/api/Question", this.newItem)
+                        .then(response => {
+                            this.getQuestions();
+                            this.newItem = {};
+							alert('Successfully Added!');
+							this.view ='tablelistQuestions';
+                        });
+                },
+				deleteExaminee: function (index) {
+                    var yes = confirm('Are you sure?');
+                    if (yes) {
+                        axios.delete(this.baseUrl + "/api/Examinee/" + this.columnBody[index].Id)
+                            .then(response => {
+                                this.getExaminees();
+                            });
+                    }
+                }, 
+				display: function (v) {
+                    this.view = v;                
+				},
+				editExaminee: function (index) {
+                    axios.get(this.baseUrl + "/api/Examinee/" + this.columnBody[index].Id)
+                        .then(response => {
+                            this.editItem = response.data;
+                            this.view = 'editform';
+                        });
+                },
+				updateExaminee: function () {
+                    axios.put(this.baseUrl + "/api/Examinee", this.editItem)
+                        .then(response => {
+                            this.getCustomers();
+                            this.view = "tablelist";
+                            this.editItem = {};
+                        });
+                },
+				getExaminee: function (index) {
+                    this.detailItem = this.columnBody[index];
+                    axios.get(this.baseUrl + "/api/Examinee/" + this.detailItem.Id)
+                        .then(response => {
+                            this.detailItem = response.data;
+                            //this.customers[index] = response.data;
+                            this.view = "detailview";
+                        });
+           		    },
+					   getQuestions: function(){
+							axios.get(this.baseUrl + "/api/Question/all" )
+							.then(response => {
+							this.Questionnaire = response.data;
+							this.view = 'tablelistQuestions';
+							display(this.view);
+						})
+					 }
+		     	} ,
+				 
+			mounted: function(){
+				this.getExaminees();
+				this.view="tablelist";
+			}
+		});
+	</script>	
+	</body>
+</html>

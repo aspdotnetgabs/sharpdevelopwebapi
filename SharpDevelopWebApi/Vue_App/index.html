@@ -1,0 +1,103 @@
+<html>
+    <head>
+        <title>Online Exam App</title>
+        <style>
+            .box-body{
+                background-color: rgba(43, 42, 42, 0.986);
+                width: 400px;
+                height: 500px;
+                margin-top: 50px;
+                margin-right: 300px;
+                border-radius: 30px;
+                padding: 15px 15px 15px 15px;
+                font-family: monospace;
+                color: white;
+                margin-left: 450px;
+               
+            }
+
+            body{
+                background-color: rgba(7, 7, 7, 0.89);
+                
+            }
+        
+            .box-body input{
+                border-radius: 15px;
+                padding: 9px 9px 9px 9px;
+                border-style: none;
+                background-color: rgba(163, 159, 159, 0.986);
+            }
+
+            .box-item{
+                padding: 20px;
+                background-color: rgba(58, 56, 56, 0.548);
+                width: 300px;
+                margin-left:28px;
+                margin-top: 30px;
+            }
+            .box-item p, h1{
+                margin-left: 54px;
+            
+            } 
+            button{
+                width: 250px;
+                margin-left: 74px;
+                border-style: none;
+                padding: 10px;
+                border-radius: 8px;
+                background-color: rgba(80, 78, 78, 0.945);
+                color: white;
+            }  
+            button:hover{
+                background-color: rgba(124, 247, 108, 0.938);
+                color: black;
+            }
+        </style>
+    </head>
+
+    <body>
+    <div id="OnlineExamApp">
+        <div class="box-body">
+            <div class = "box-item">
+                <h1>{{appTitle}}</h1>
+                <p> Firstname <br> <input type="text" v-model="newItem.Firstname" required/></p>
+                <p>Lastname <br> <input type="text" v-model="newItem.Lastname" required/></p>
+                <p>Gender <br> <input type="text" v-model = "newItem.Gender" required/></p>
+                <p> Birthdate <br> <input type="text" v-model="newItem.Birthdate" required/></p>
+                <p>Email <br> <input type="text" v-model = "newItem.Email" required/></p>   
+             </div>
+             <br>
+
+             <button type="button" @click="postExaminee">SUBMIT</button>                             
+        </div>
+    </div>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>	
+    
+    <script>
+        var app = new Vue({
+				el: "#OnlineExamApp",
+				data: {
+					appTitle : "Examinee",
+					baseUrl: "http://localhost:8082",				
+					newItem: {},
+                    message: "Please fill all fields!",	
+				},
+				methods: {
+
+                postExaminee: function () {
+                    if(newItem == null){
+                        alert(this.message);
+                    }
+                    axios.post(this.baseUrl + "/api/Examinee", this.newItem)
+                        .then(response => {
+                            this.newItem = {}; 
+                            alert('Successfully submitted!');                    
+                        });
+                },
+             }
+             
+        });              
+    </script>
+    </body>
+</html>

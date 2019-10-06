@@ -11,6 +11,24 @@ using System.Web.Http.Description;
 using SharpDevelopWebApi;
 using SharpDevelopWebApi.Helpers.JWT;
 using SharpDevelopWebApi.Models;
+
+
+// DO NOT MAPPED in DbContext
+public class RegisterViewModel
+{
+	[Required]
+	public string UserName { get; set; }
+	[Required]
+	public string Password { get; set; }
+	public string Role { get; set; }
+	
+	// Add you Registration fields here...
+	public string LastName { get; set; }
+	public string FirstName { get; set; }
+	
+	
+}
+
 	
 namespace SharpDevelopWebApi.Controllers
 {
@@ -36,20 +54,23 @@ namespace SharpDevelopWebApi.Controllers
             if (userId != null)
             {
             	// Link User Account to Entities e.g. Student, Employee, Customer
-            	if(newUser.Role == "doctor")
+            	if(newUser.Role == "examinee")
             	{
-            		var doctor = new Doctor();
-            		doctor.UserId = userId.Value;            		
-            		_db.Doctors.Add(doctor);
+            		var examinee = new Examinee();
+            		examinee.UserId = userId.Value; // link the user account to Examinee
+            		examinee.FirstName = newUser.FirstName;
+            		examinee.LastName = newUser.LastName;
+            		_db.Examinees.Add(examinee);
             		_db.SaveChanges();
             	}
-            	else if(newUser.Role == "patient")
-            	{
-            		var p = new Patient();
-            		p.UserId = userId.Value;
-            		_db.Patients.Add(p);
-            		_db.SaveChanges();
-            	}
+//            	else if(newUser.Role == "patient")
+//            	{
+//            		var p = new Patient();
+//            		p.UserId = userId.Value;
+//                    p.LastName = newUser.LastName;
+//            		_db.Patients.Add(p);
+//            		_db.SaveChanges();
+//            	}
             	// Feel free to remove the ABOVE code if not needed.
                 
             	return Ok(new { UserId = userId, Message = "Account successfully created" });
