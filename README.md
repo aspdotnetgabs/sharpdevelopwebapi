@@ -28,6 +28,17 @@ A light-weight solid starting point for developing ASP.NET Web API application i
  - Single File Component with httpVueLoader
  - Vuetify
 
+### Running in IIS Express
+ 1. Click Project Menu > Project Options 
+2. In Web tab, choose **[Use IIS Express Web Server]**
+3. Enter a port number higher than `8001` 
+4. Click **[Create application/virtual directory]** button 
+
+> *** Error indicating duplicate entry of type 'site' with unique key attributes...
+5. Goto `Documents\IISExpress\config` folder
+6. In `applicationhost.config`, delete `<sites>...</sites>` 
+7. Repeat step 1.
+
 ### Portable Asp.Net Web Server
 Run the project without SharpDevelop in this tiny web server! 
 
