@@ -35,8 +35,8 @@ You can browse the database using SQL Server Management Studio (SSMS) or portabl
 
 ### Free ASP.NET Hosting 
 
- - [Somee.com]([https://somee.com/FreeAspNetHosting.aspx](https://somee.com/FreeAspNetHosting.aspx))
- - [Smarterasp.net]([https://www.smarterasp.net/secured_signup?plantype=FREE](https://www.smarterasp.net/secured_signup?plantype=FREE))
+ - [Somee.com](https://somee.com/FreeAspNetHosting.aspx)
+ - [Smarterasp.net](https://www.smarterasp.net/secured_signup?plantype=FREE)
  - [myasp.net](https://www.myasp.net/freeaspnethosting)
 
 ### Learning Slides
