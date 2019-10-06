@@ -1,3 +1,4 @@
+
 # SharpDevelopWebApi Boilerplate + Vue JS
 A light-weight solid starting point for developing ASP.NET Web API application in portable [SharpDevelop](https://portable.info.pl/sharpdevelop-portable/). Great for student learning and small projects!
 
@@ -44,6 +45,11 @@ You can browse the database using SQL Server Management Studio (SSMS) or portabl
   - JSON 
   -  ASP.NET Web API 
  - [Entity Framework 6 Code-First Tutorial](https://bernardgabon.com/blog/entity-framework-tutorial/) 
+
+### Warning
+
+ - Do not load the project in Visual Studio
+ - Do not add Nuget packages which supports .NET Standard
 
 ## Contributors
 
