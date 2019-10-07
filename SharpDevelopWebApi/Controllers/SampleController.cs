@@ -7,8 +7,10 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using Microsoft.AspNet.SignalR;
 using SharpDevelopWebApi.Helpers.JWT;
 using SharpDevelopWebApi.Models;
+using SignalRChat;
 
 namespace SharpDevelopWebApi.Controllers
 {
@@ -16,7 +18,18 @@ namespace SharpDevelopWebApi.Controllers
 	/// Description of ValuesController.
 	/// </summary>
 	public class SampleController : ApiController
-	{					
+	{
+		[HttpGet]
+		[Route("api/sample/signalrtest")]		
+        public IHttpActionResult SignalR(string name, string message)
+        {
+			var _hubContext = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+			
+			  //This broadcasts the message to all the clients 
+			 _hubContext.Clients.All.sendMessage(name, message);
+			 return Ok("Sent");
+        }
+        
 		[HttpGet]
 		[Route("api/sample")]
         public IHttpActionResult Get(string url = "")

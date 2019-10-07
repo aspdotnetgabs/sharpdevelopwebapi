@@ -13,6 +13,8 @@ using System.Web.SessionState;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.Application;
 using Hangfire.MemoryStorage;
+using System.Web.Routing;
+using Microsoft.AspNet.SignalR;
 
 namespace SharpDevelopWebApi
 {
@@ -28,8 +30,13 @@ namespace SharpDevelopWebApi
 			var config = System.Web.Http.GlobalConfiguration.Configuration;
 			
 			config.EnableCors(new EnableCorsAttribute("*","*","*"));		
-			
-			config.MapHttpAttributeRoutes();
+
+            RouteTable.Routes.MapHubs(new HubConfiguration
+            {
+                EnableCrossDomain = true
+            });
+
+            config.MapHttpAttributeRoutes();
             // Redirect root to Swagger UI
             config.Routes.MapHttpRoute(
                 name: "Swagger UI",

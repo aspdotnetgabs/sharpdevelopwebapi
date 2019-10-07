@@ -1,0 +1,68 @@
+<html>
+<head>
+    <title></title>
+</head>
+
+<body>
+    <div id="signalVue">
+        <h2>Vue SignalR Demo</h2>
+
+        <input type="text" v-model="msg.message" />
+        <button @click="send">Send</button>
+        <input type="hidden" id="displayname" />
+
+        <ul>
+            <li v-for="msg in messages">
+                <strong>{{msg.name}}</strong>: {{msg.message}}
+            </li>
+        </ul>
+    </div>
+
+
+
+    <script src="Scripts/jquery-1.12.4.min.js"></script>
+    <script src="Scripts/jquery.signalR-1.2.2.min.js"></script>
+    <script src="http://localhost:8082/signalr/hubs"></script>
+    
+    <script src="Scripts/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: "#signalVue",
+            data: {
+                hub: null,
+                baseUrl: "http://localhost:8082",
+                msg: {},
+                messages: []
+            },
+            methods: {
+                send: function () {
+                    this.hub.server.send(this.msg.name, this.msg.message);
+                },
+                sendMessage: function (name, message) {
+                    var msg = {};
+                    msg.name = name;
+                    msg.message = message;
+                    this.messages.push(msg);
+                }                
+            },
+            mounted: function () {
+                $.connection.hub.url = this.baseUrl + "/signalr";
+                // // Proxy created on the fly          
+                this.hub = $.connection.chatHub;
+
+                // Get the user name and store it to prepend to messages.
+                this.msg.name = prompt('Enter your name:', '')
+
+                // Declare a function on the chat hub so the server can invoke it          
+                this.hub.client.sendMessage = this.sendMessage;
+
+                // Start the connection
+                $.connection.hub.start().done(this.send);
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
