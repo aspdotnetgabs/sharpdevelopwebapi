@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-// DO NOT MAPPED in DbContext
+// DO NOT MAPPED in DbContext!!!
 public class RegisterViewModel
 {
 	[Required]
@@ -10,7 +10,7 @@ public class RegisterViewModel
 	public string Password { get; set; }
 	public string Role { get; set; }
 	
-	// Add you Registration fields here...
+	// Add you Registration fields here... then in AccountController.. public IHttpActionResult RegisterUser(RegisterViewModel newUser)
 	public string LastName { get; set; }
 	public string FirstName { get; set; }
 	

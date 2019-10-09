@@ -40,6 +40,8 @@ namespace SharpDevelopWebApi.Controllers
             	{
             		var doctor = new Doctor();
             		doctor.UserId = userId.Value;            		
+            		doctor.LastName = newUser.LastName;
+            		doctor.FirstName = newUser.FirstName;
             		_db.Doctors.Add(doctor);
             		_db.SaveChanges();
             	}
@@ -47,6 +49,8 @@ namespace SharpDevelopWebApi.Controllers
             	{
             		var p = new Patient();
             		p.UserId = userId.Value;
+            		p.LastName = newUser.LastName;
+            		p.FirstName = newUser.FirstName;            		
             		_db.Patients.Add(p);
             		_db.SaveChanges();
             	}
