@@ -171,10 +171,7 @@
   <ItemGroup>
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AppointmentController.cs" />
-    <Compile Include="Controllers\DocAvailTimesController.cs" />
-    <Compile Include="Controllers\DoctorController.cs" />
-    <Compile Include="Controllers\PatientController.cs" />
+    <Compile Include="Controllers\MailController.cs" />
     <Compile Include="Controllers\SampleController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -193,11 +190,8 @@
     <Compile Include="Helpers\TuesPechkinPdf.cs" />
     <Compile Include="Helpers\UserAccount.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Appointment.cs" />
-    <Compile Include="Models\Doctor.cs" />
-    <Compile Include="Models\DoctorAvailableTimes.cs" />
-    <Compile Include="Models\Patient.cs" />
-    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\Mail.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\SDWebApiDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
