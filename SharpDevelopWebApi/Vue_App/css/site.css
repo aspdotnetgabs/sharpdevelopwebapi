@@ -1,0 +1,92 @@
+table {
+    margin-left: 80px;
+    border-collapse: collapse;
+    background-color: rgba(92, 94, 93, 0.788);
+    border-radius: 5px;
+}
+th,td {		
+    text-align: left;
+    padding-left: 10px;	
+    padding-right: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;	
+}   
+th:hover{
+    background-color:rgb(92, 94, 93);
+}
+body{
+    background-color: rgba(7, 7, 7, 0.89);
+    font-family: monospace;
+}
+h1 {
+    float: center;
+    background-color: rgba(54, 54, 53, 0.959);
+    margin: 20px;
+    border-radius: 20px;
+    margin-left: 150px;
+    margin-right: 150px;
+    color: rgb(196, 194, 194);
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+input{
+    padding: 6px 8px 6px 8px;
+    border-style: none;
+    border-radius: 40px;
+}
+.btnsearch{
+    border-style: none;
+    border-radius: 3px;
+    padding: 6px 8px  6px 8px;
+    background-color: rgb(209, 34, 34);
+    color: white;
+
+}
+.btnsearch:hover{
+    background-color: rgb(223, 83, 83);
+}
+.FormNew{
+    padding: 20px;
+    background-color: rgba(58, 56, 56, 0.548);
+    width: 300px;
+    margin-left:500px;
+    margin-top: 30px;
+    border-radius: 10px;
+    color: white;
+}
+.FormNew button{
+    width: 250px;
+    border-style: none;
+    padding: 10px;
+    border-radius: 8px;
+    margin-left:27px;
+    margin-bottom: 10px;
+    background-color: rgba(97, 95, 95, 0.945);
+    color: white;
+}
+.FormNew button:hover{
+    background-color:rgb(170, 170, 170);
+}
+.FormNew input{
+    padding: 4px 4px 4px 4px;
+    border-style: none;
+    border-radius: 3px;
+    width: 200px;
+    margin-left: 45px;
+}
+.FormNew label{
+    margin-left: 45px;
+}
+td button{
+    border-style: ridge;
+    border-radius: 5px;
+    padding: 3px;
+    background-color: red;
+    color: white;
+}
+td button :hover{
+    background-color: rgb(226, 109, 109);
+    color: black;
+}

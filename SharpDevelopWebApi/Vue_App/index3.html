@@ -1,0 +1,159 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta charset="UTF-8">
+        <style>
+            .box-body{
+                background-color: rgba(43, 42, 42, 0.986);
+                width: 700px;
+                height: 500px;
+                margin-top: 50px;
+                margin-left:100px;
+                border-radius: 30px;
+                padding: 15px 15px 15px 15px;
+                font-family: monospace;
+                color: white;
+               
+            }
+            .box-item{
+                background-color:rgba(58, 56, 56, 0.548);
+                height: 300px;
+                padding : 15px;
+                font-size: 20px;         
+            }
+            div .box-item:hover{
+                background-color: rgba(102, 99, 99, 0.945);
+            }
+
+            body{
+                background-color: rgba(7, 7, 7, 0.89);
+            }
+
+            h1{
+                color: rgb(20, 184, 14);
+                margin-top: 5px;
+                font-family: monospace;               
+            }
+            button{
+                border-radius: 20px;
+                padding: 10px; 
+                width: 90px;
+                background-color: rgb(129, 42, 42);
+                color: rgba(10, 10, 10, 0.918);
+                font-family: monospace;
+            }
+            button:hover{
+                background-color: rgb(243, 67, 67);
+                color: rgb(250, 248, 248);
+            }
+            
+            .sidenav{
+               float: left;             
+               margin-top: 100px;
+               border-radius: 10px;
+               height: 100%;
+               width: 0;
+               position: fixed;
+            }
+            .sidenav button{           
+                background-color: rgba(0, 128, 0, 0.945);
+
+            }
+            .sidenav button:hover{
+                background-color: rgb(71, 230, 71);
+            }
+        </style>
+        <title>
+            Online Exam App
+        </title>
+
+    </head>
+    <body>
+        <div>
+                <div class="sidenav">
+                        <a   href="#home"><button>Home</button></a><br><br>
+                        <a   href="#score"><button>Score</button></a><br><br>
+                        <a   href="#score"><button>Ranking</button></a><br><br>
+                        <a   href="#contact"><button>Contact</button></a>
+                 </div>
+
+                <div class="box-body" id="OnlineExamApp">
+
+                 <h1>{{appTitle}}</h1>
+
+                <div class = "box-item" >
+                     {{ques.Questions}}
+                        <p>
+                         <input type="radio" id="rd1" name="choices" value="" > {{ques.ChoicesA}} <br>
+                         <input type="radio" id="rd2" name="choices" value="" > {{ques.ChoicesB}} <br>
+                        <input type="radio" id="rd3" name="choices" value="" > {{ques.ChoicesC}}
+                         </p>
+                </div>
+
+                        <br>
+                        
+                         <button type="button" @click="displayQuesPrev">  PREVIOUS  </button>
+                         <button type="button"  Style = "float: right" @click="displayQuesFor" >  NEXT  </button>                
+                        <br>            
+                           <button style="width: 250px; margin-left: 230px">SUBMIT</button> 
+                </div>    
+        </div>
+               
+        <script src="js/vue.js"></script>
+        <script src="js/axios.min.js"></script>	
+        
+        <script>         
+                var ctr = 0 ;
+                var MyArray=[];
+                var prev = null;
+                var App = new Vue({
+                    el: "#OnlineExamApp",
+                    data: {
+                       
+                        appTitle : "Online Exam App",	
+                        baseUrl: "",
+                        Questionnaire:[],              
+                        newItem: {},
+                        ques: {},
+                        Storage: [],
+                        
+                    },
+                    methods: {
+                        getQuestions: function(){
+							axios.get(this.baseUrl + "api/question/all")
+							.then(response => {
+							MyArray = response.data;
+						})
+					 },
+                     postExam : function(){
+                        axios.post(this.baseUrl + "/api/Exam", this.newItem)
+                        .then(response => {
+                            
+                            this.newItem = {};
+							alert('Successfully Added!');
+                        });
+                     },
+
+                     displayQuesFor : function(){   
+                        this.ques = {};               
+                        ctr++;  
+                        this.ques = MyArray[ctr]
+                     },
+
+                     displayQuesPrev : function(){ 
+                         if(ctr > 0) {
+                            this.ques = {};
+                            ctr -= 1;                   
+                            this.ques = MyArray[ctr];                           
+                         }                        
+                     },
+                },
+                 mounted : function(){   
+                    getQuestions();          
+                    this.ques = MyArray[ctr];
+                 }
+                
+                });
+        </script>
+    </body>
+</html>

@@ -36,15 +36,15 @@ namespace SharpDevelopWebApi.Controllers
             if (userId != null)
             {
             	// Link User Account to Entities e.g. Student, Employee, Customer
-            	if(newUser.Role == "employee")
+            	if(newUser.Role == "examinee")
             	{
-            		var emp = new Employee();
-            		emp.UserId = userId.Value;
-            		emp.FirstName = newUser.FirstName;
-            		emp.LastName = newUser.LastName;
-            		emp.DepartmentId = newUser.DepartmentId;
-            		emp.Position = newUser.Position;
-            		_db.Employees.Add(emp);
+            		var examinee = new Examinee();
+            		examinee.UserId = userId.Value; // link the user account to Examinee
+            		examinee.Firstname = newUser.Firstname;
+            		examinee.Lastname = newUser.Lastname;
+            		examinee.Gender = newUser.Gender;
+            
+            		_db.Examinees.Add(examinee);
             		_db.SaveChanges();
             	}
             	else  if(newUser.Role == "other role")

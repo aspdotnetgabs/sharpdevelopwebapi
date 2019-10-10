@@ -1,0 +1,129 @@
+<html>
+    <head>
+        <title>Online Exam App</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">       
+
+        <style>
+            .box-body{
+                background-color: rgba(43, 42, 42, 0.986);
+                width: 400px;
+                margin-top: 50px;
+                margin-right: 300px;
+                border-radius: 30px;
+                padding: 15px 15px 15px 15px;
+                font-family: monospace;
+                color: white;
+                margin-left: 460px;             
+            }
+            
+            label{
+                margin-left: 26px;
+                font-size: 15px;
+            }
+            body h1{
+                text-align: center;
+            }
+            h1{
+                background-color: rgba(58, 57, 57, 0.822);
+                border-radius: 3px;
+                color: rgb(13, 209, 13);
+            }
+
+            body{
+                background-color: rgba(7, 7, 7, 0.89);
+                font-family: monospace;
+            }
+            
+        
+            .box-body input{
+                border-radius: 15px;
+                padding: 9px 9px 9px 9px;
+                border-style: none;
+                width: 250px;
+                background-color: rgba(163, 159, 159, 0.986);
+                margin-left: 26px;
+                text-align: center;
+                font-family: monospace;
+            }
+
+            .box-item{
+                padding: 20px;
+                background-color: rgba(58, 56, 56, 0.548);
+                width: 300px;
+                margin-left:28px;
+                margin-top: 30px;
+            } 
+            button{
+                width: 250px;
+                margin-left: 26px;
+                margin-top: 15px;
+                border-style: none;
+                padding: 10px;
+                border-radius: 8px;
+                background-color: rgba(80, 78, 78, 0.945);
+                color: white;
+            }  
+            button:hover{
+                background-color: rgba(124, 247, 108, 0.938);
+                color: black;
+            }
+            .login{
+                color: aqua;
+            }
+            .login:hover{
+                color: aquamarine;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+    <div id= "OnlineExamApp" >
+        
+        <div class="box-body"  @submit.prevent="Register" v-show="view==='regform'">
+                <h1>{{appTitle}}</h1>
+                <div class="box-item">
+                <label>Last Name </label>  <br> <input type="text" name="ln" id="theFieldID" autofocus="autofocus"><br>
+                <label>First Name</label>  <br> <input type="text" >
+                <label>Gender</label> <br> <input type="text"> <br>
+                <label>User Name </label>  <br> <input type="text"><br>
+                <label>Password  </label>  <br> <input type="text" ><br><b>
+                <button type="submit">REGISTER</button><br>
+                <label>Already have an account? <a href="" class="login">Login</a></label>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/axios.min.js"></script>	
+    
+    <script>
+        var app = new Vue({
+				el: "#OnlineExamApp",
+				data: {
+					appTitle : "Online Exam App",
+					baseUrl: "http://www.onlineexamapp.somee.com",				
+					newItem: {},
+                    view:"regform",
+				},
+                methods:{
+                    Register: function(){
+                    axios.post(this.baseUrl + "/api/account/register", this.newUser)
+                    .then(response => {
+                            this.newUser = {};
+							alert('Successfully Registered!');
+                    })
+                },
+                display: function(v){
+                    this.view = v;
+                }
+            },
+            mounted: function(){
+            }
+        });             
+    </script>
+    </body>
+</html>

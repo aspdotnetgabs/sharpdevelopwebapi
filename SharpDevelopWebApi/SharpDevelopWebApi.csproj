@@ -171,10 +171,9 @@
   <ItemGroup>
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\DepartmentController.cs" />
-    <Compile Include="Controllers\EmployeeController.cs" />
-    <Compile Include="Controllers\LeaveController.cs" />
-    <Compile Include="Controllers\ReasonController.cs" />
+    <Compile Include="Controllers\ExamController.cs" />
+    <Compile Include="Controllers\ExamineeController.cs" />
+    <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\SampleController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -193,10 +192,11 @@
     <Compile Include="Helpers\TuesPechkinPdf.cs" />
     <Compile Include="Helpers\UserAccount.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Department.cs" />
-    <Compile Include="Models\Employee.cs" />
-    <Compile Include="Models\Leave.cs" />
-    <Compile Include="Models\Reason.cs" />
+    <Compile Include="Models\Choice.cs" />
+    <Compile Include="Models\Exam.cs" />
+    <Compile Include="Models\Examinee.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Question.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\SDWebApiDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -205,6 +205,11 @@
     <None Include="Global.asax" />
     <None Include="packages.config" />
     <None Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers" />
+    <Folder Include="Models" />
+    <Folder Include="Properties\Models" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
