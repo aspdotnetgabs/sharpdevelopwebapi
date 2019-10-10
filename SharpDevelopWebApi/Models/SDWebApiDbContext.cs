@@ -14,11 +14,12 @@ namespace SharpDevelopWebApi.Models
 
         // Map model classes to database tables
         public DbSet<UserAccount> Users { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Doctor> Doctors { get; set; }
+
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Leave> Leaves { get; set; }
+        public DbSet<Reason> Reasons { get; set; }
+     
     }
 
 

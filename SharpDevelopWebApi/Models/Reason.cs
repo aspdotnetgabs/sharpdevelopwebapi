@@ -1,8 +1,8 @@
 ﻿/*
  * Created by SharpDevelop.
- * User: Gabs
- * Date: 29/07/2019
- * Time: 3:29 pm
+ * User: Elle
+ * Date: 10/2/2019
+ * Time: 10:12 PM
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
@@ -11,13 +11,12 @@ using System;
 namespace SharpDevelopWebApi.Models
 {
 	/// <summary>
-	/// Description of Contact.
+	/// Description of Reason.
 	/// </summary>
-	public class Contact
+	public class Reason
 	{
 		public int Id { get; set; }
-		public string Name { get; set; }
-		public string Email { get; set; }
-		public string Phone { get; set; }
+		public string ReasonText { get; set; }
+		public string Description { get; set; }
 	}
 }
