@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Account Login Demo</title>
+
+    <link rel="stylesheet" href="css/site.css">
+    <style>
+            [v-cloak]>* { display: none }
+            [v-cloak]::before { content: "Loading…" }
+    
+            table {
+                border-collapse: collapse;
+            }
+    
+            table,
+            th,
+            td {
+                border: 1px solid black;
+                padding: 5px;
+            }
+        </style>
+</head>
+
+<body>
+
+    <div id="examApp" v-cloak>
+        <h1>
+            {{appName}}
+            <br>
+            <small>                                
+                user.userName: <a href="#" v-show="loggedIn" @click="display('changePasswordForm')">[{{user.userName}}]</a> 
+                <button type="button" v-show="loggedIn" @click="logout">Logout</button> <br>
+                user.id: {{user.userId}} <br>
+                user.userRoles: <span v-for="role in user.userRoles">{{role}}, </span>
+
+            </small>
+        </h1>
+    
+		<div v-show = "view === 'questionList'">
+            <h1>Questions</h1>
+            <button type="button" @click="display('addQuestions')" class="btnsearch" style="margin: 5px 0px 5px 80px">Add Questions</button>
+        <table>
+            <thead>
+                <tr>
+                    <th v-for="question in QuestionnaireHeader">
+                        {{question}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(question,index) in Questionnaire">
+                    <td>
+                        {{question.id}}
+                    </td>
+                    <td>
+                        {{question.questionText}}
+                    </td>			
+                    <td>
+                        {{question.choiceA}}
+                    </td>
+                    <td>
+                        {{question.choiceB}}
+                    </td>
+                    <td>
+                        {{question.choiceC}}
+                    </td>
+                    <td>
+                        {{question.correctAnswer}}
+                    </td>
+                    <td>
+                        <button type="button" @click="editQuestion(index)">Edit</button>
+                        <button type="button" @click="deleteQuestion(index)">Delete</button>
+                    </td>									
+                </tr>
+            </tbody>
+            </table>
+    </div>
+    <form v-show="view ==='addQuestions'" @submit.prevent = "postQuestions" class="FormNew" autocomplete="off">
+        <h2>New</h2>
+        <p>
+            <label>Question</label>
+            <input type="text"v-model="newItem.questionText">
+        </p>
+        <p>
+                <label>Choice A</label>
+                <input type="text"v-model="newItem.choiceA">
+        </p>
+        <p>
+                <label>Choice B</label>
+                <input type="text"v-model="newItem.choiceB">
+        </p>
+        <p>
+                <label>Choice C</label>
+                <input type="text"v-model="newItem.choiceC">
+        </p>
+        <p>
+                <label>Correct Answer</label>
+                <input type="text"v-model="newItem.correctAnswer">
+        </p>
+        <button type="button" @click = "display('questionList')">Cancel</button>
+        <button type="submit"> Save </button>
+    </form>
+    <form v-show="view==='editQuestion'" @submit.prevent = "updateQuestion" class="FormNew" autocomplete="off">
+        <h2>Edit</h2>
+        <p>
+            <label>Id</label>
+            <input type="text" v-model="editItem.id" readonly />
+        </p>
+        <p>
+            <label>Question</label>
+            <input type="text" v-model="editItem.questionText" required />
+        </p>
+        <p>
+            <label>Choice A</label>
+            <input type="text" v-model="editItem.choiceA" required />
+        </p>
+        <p>
+            <label>Choices B</label>
+            <input type="text" v-model="editItem.choiceB" required />
+        </p>
+        <p>
+            <label>Choice C</label>
+            <input type="text" v-model="editItem.choiceC" required />
+        </p>
+
+        <p>
+            <label>Correct Answer</label>
+            <input type="text"v-model="editItem.correctAnswer" required />
+        </p>
+        <button type="button" @click = "display('questionList')">Cancel</button>
+        <button type="submit"> Save </button>
+    </form>
+        
+
+        <form v-show="view === 'loginform'" @submit.prevent="login" autocomplete="off">
+            <h2>Login</h2>
+            <p>
+                <label>Email</label>
+                <input type="text" v-model="user.userName" required />
+            </p>
+            <p>
+                <label>Password</label>
+                <input type="password" v-model="user.password" required />
+            </p>
+            <p>
+                <button type="submit" :disabled="disabledBtn === 'btnLogin'" >Login</button>
+                <a href="#" @click="display('registerform')">Register</a>
+            </p>
+        </form>
+
+        <form v-show="view === 'registerform'" @submit.prevent="register('examinee')" autocomplete="off">
+            <h2>Register</h2>
+            <p>
+                <label>Email</label>
+                <input type="text" v-model="user.userName" required />
+            </p>
+            <p>
+                <label>Password</label>
+                <input type="password" v-model="user.password" required />
+            </p>
+            <p>
+                <label>Re-type Password</label>
+                <input type="password" v-model="user.retypePassword" required />
+            </p> 
+            <p>
+                <label>First Name</label>
+                <input type="text" v-model="user.firstName" required />
+            </p>             
+            <p>
+                <label>Gender</label>
+                <input type="text" v-model="user.gender" required />
+            </p>                                  
+            <p>
+                <button type="submit">Register</button>
+                <a href="#" @click="display('loginform')">Login</a>
+            </p>
+        </form>
+
+        <form v-show="view === 'changePasswordForm'" @submit.prevent="changePassword" autocomplete="off">
+            <h2>Change Password</h2>
+            <p>
+                <label>Current Password</label>
+                <input type="password" v-model="user.currentPassword" required />
+            </p>
+            <p>
+                <label>New Password</label>
+                <input type="password" v-model="user.newPassword" required />
+            </p>
+            <p>
+                <label>Retype Password</label>
+                <input type="password" v-model="user.retypePassword" required />
+            </p>
+            <p>
+                <button type="submit">Submit</button>
+                <button type="button" @click="display('questionList')">Cancel</button>
+            </p>
+        </form>
+    </div>
+
+    <!-- Vue JS and Axios -->
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>
+        var vueApp = new Vue({
+            el: '#examApp',
+            data: {
+                appUserStorageId: 'examApp123',
+                appName: "Exam App",
+                columnHeader: ['Id', 'Name', 'Email', 'Phone'],
+                baseUrl: "http://localhost:8082",
+                view: "loginform",
+                user: {},
+                loggedIn: false,
+                disabledBtn: "",
+                newItem: {},
+                editItem:{},
+                detailItem:{},
+                Questionnaire:[],	
+                QuestionnaireHeader:['ID','Questions','Choice A','Choice B','Choice C','Correct Answer'],                
+            },
+            methods: {
+                display: function (v) {
+                    this.view = v;
+                },
+                login: function () {
+                    this.disabledBtn = "btnLogin";
+                    axios.post(this.baseUrl + "/TOKEN?username=" + this.user.userName + "&password=" + this.user.password)
+                        .then(response => {
+                            var user = response.data;
+                            // If response has user token...
+                            if (user.token) {
+                                this.user = user;
+                                localStorage.setItem(this.appUserStorageId, JSON.stringify(user)); // store User data in localStorage
+                                this.loggedIn = true;
+                                this.getQuestions();
+                                this.disabledBtn = "";
+                                this.view = 'questionList';                                
+                            }
+                        })
+                        .catch(error => {
+                            alert(error.response.data.Message);
+                            this.disabledBtn = "";
+                        });
+                },
+                logout: function () {
+                    // remove user from local storage to log user out
+                    localStorage.removeItem(this.appUserStorageId);
+                    this.user = {};
+                    this.loggedIn = false;
+                    this.view = 'loginform';
+                },
+                register: function (regType) {
+                    if(this.user.password === this.user.retypePassword) {  
+                        this.user.role = regType; // employee                    
+                        axios.post(this.baseUrl + "/api/account/register", this.user)
+                            .then(response => {
+                                var data = response.data;
+                                if (data.userId) {
+                                    this.user.password = null;
+                                    this.user.retypePassword = null;
+                                    this.view = 'loginform';
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                alert(error.response.data.Message);
+                            });
+                    } else {
+                        alert("Password not the same.");
+                    }                   
+                },
+                changePassword: function () {
+                    if (this.user.newPassword === this.user.retypePassword) {
+                        axios.post(this.baseUrl + "/api/account/changepassword?username=" + this.user.userName + "&newPassword=" + this.user.newPassword + "&currentPassword=" + this.user.currentPassword)
+                            .then(response => {
+                                // Password change success, logout.
+                                alert(response.data);
+                                this.logout();
+                            })
+                            .catch(error => {
+                                alert(error.response.data.Message);
+                            });
+                    } else {
+                        alert('Password mismatch.');
+                    }
+                },
+                getQuestions: function(){
+					axios.get(this.baseUrl + "/api/question/all" )
+						.then(response => {
+							this.Questionnaire = response.data;
+							this.view = 'questionList';
+						})
+				 },
+                 postQuestions: function () {
+                    axios.post(this.baseUrl + "/api/Question", this.newItem)
+                        .then(response => {
+                            this.getQuestions();
+                            this.newItem = {};
+							alert('Successfully Added!');
+							this.view ='questionList';
+                        });
+                },                 
+				 editQuestion: function (index) {
+					 // WRONG --> axios.get(this.baseUrl + "/api/Question/{Id}", this.Questionnaire[index].Id)
+                    axios.get(this.baseUrl + "/api/Question/" + this.Questionnaire[index].id) // <-- CORRECT
+                        .then(response => {
+                            this.editItem = response.data;
+                            this.view = 'editQuestion';
+                        });
+                },
+				updateQuestion: function () {
+                    axios.put(this.baseUrl + "/api/Question", this.editItem)
+                        .then(response => {
+                            this.getQuestions();
+                            this.view = "questionList";
+                            this.editItem = {};
+                        });
+		   		 },
+				deleteQuestion: function (index){
+					var yes = confirm('Are you sure?');
+                    if (yes) {
+                        axios.delete(this.baseUrl + "/api/Question/" + this.Questionnaire[index].id)
+                            .then(response => {
+                                this.getQuestions();
+                            });
+                    }
+				}                
+            },
+            mounted: function () {
+                var user = JSON.parse(localStorage.getItem(this.appUserStorageId)); // If user is null then false
+                if (user) {
+                    this.loggedIn = true;
+                    this.user = user;
+                    this.getQuestions();
+                    this.view = 'questionList';
+                } else {    
+                    alert('You need to login first.')                
+                    this.view = 'loginform';
+                }
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

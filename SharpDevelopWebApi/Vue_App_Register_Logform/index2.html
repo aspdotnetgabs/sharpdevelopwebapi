@@ -1,0 +1,115 @@
+<html>
+    <head>
+        <title>Online Exam App</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="CSS/index.css">
+    </head>
+
+    <body>
+    <div id= "OnlineExamApp"  >  
+     <h1>{{appTitle}}</h1><br>
+    
+     <form v-show="view === 'regform'"  @submit.prevent="Register" class="container" >
+         <h2>Register</h2>
+         <input type="text" v-model="newUser.Lastname"  placeholder="Last Name" autofocus="autofocus" required/><br>
+         <input type="text" v-model="newUser.Firstname" placeholder="First Name" required/><br>
+         <input type="text" v-model="newUser.Gender"    placeholder="Gender"    required/> <br>
+         <input type="text" v-model="newUser.UserName"  placeholder="Username"  required/> <br>
+         <input type="text" v-model="newUser.Password"  placeholder="Password"  required/><br><b>
+         <button type="submit">REGISTER</button><br>
+        <label>  Already have an account? </label> <a href="#" type="button" @click= "display('logform')"  > Login </a>
+     </form>
+
+     <form v-show= "view === 'logform'" > 
+        <h2>Login</h2> 
+        <input type="text" v-model="newUser.UserName" placeholder="Username" required/><br>
+        <input type="password" v-model="newUser.Password" placeholder="Password" required/><br>
+        <button type="submit">LOGIN</button><br>
+        No account yet? <a href="#" @click="display('regform')" >Register</a>
+     </form>
+
+     <form v-show = "view === 'quesform'" autocomplete="off">
+         <h2>Exam Form</h2>
+         <p>{{question.QuestionText}}</p>
+         <p>
+            <input type="radio" name="choice" value="a" v-model="newExam.ExamineeAnswer"> {{question.ChoiceA}}
+         </p>
+         <p>
+             <input type="radio" name="choice" value="b" v-model="newExam.ExamineeAnswer"> {{question.ChoiceB}}
+         </p>
+         <p>
+             <input type="radio" name="choice" value="c" v-model="newExam.ExamineeAnswer"> {{question.ChoiceC}}
+         </p>
+     </form>
+    </div>
+
+    <!--Vue JS and Axios-->
+	<script src="js/vue.js"></script>
+	<script src="js/axios.min.js"></script>
+    <script>
+         var app =  new Vue({
+				el: '#OnlineExamApp',
+				data: {
+					appTitle : "Online Exam App",
+					baseUrl: "http://www.onlineexamapp.somee.com",				
+                    newUser: {},
+                    newExam:{},
+                    view: 'regform',
+                    question: {},
+                    quesStorage: [],
+                    examStorage: [],
+                    ctr: 0,
+				},
+                methods:{
+                    display: function(v){
+                        alert(v);
+                        this.view = v;
+                    },
+                    message: function(){
+                        alert('Please fill all fields!');
+                    },
+                    Login:function(){
+                    axios.get(this.baseUrl+ "api/account/login")
+                    .then(response => {
+                        alert('Successfully Login!');
+                        this.storeQuesFromData_Random();
+                        this.displayQuesByIndex();
+                         })
+                    },
+                    Register: function(){
+                    axios.post(this.baseUrl + "/api/account/register", this.newUser)
+                    .then(response => {
+                            this.newUser = {};
+                            alert('Successfully Registered!');
+                            this.view = "logform";
+                        })
+                    },
+                    storeQuesFromData_Random:function(){
+                    axios.get(this.baseUrl + "api/question/allwithoutanswer")
+                    .then(response => {
+                            this.quesStorage = response.data;
+                            this.view = "quesform";
+                        })
+                    },
+                    displayQuesByIndex:function(){
+                        this.question = {};
+                        this.question = this.quesStorage[this.ctr]
+                    },
+                    click_forward: function(){
+                        ctr++;
+                        if(ctr < quesStorage.length()){
+                            this.displayQuesByIndex();
+                        }                   
+                    },
+                    newExamEntry:function(){
+                        this.examStorage.add(this.newExamEntry);
+                    }
+                },
+            mounted: function(){
+              
+            }
+           
+        });             
+    </script>
+    </body>
+</html>

@@ -13,7 +13,6 @@ namespace SharpDevelopWebApi.Models
 {
 	public class Examinee : Person
 	{
-		public int UserId { get; set; }
 		[NotMapped]
 		public int Score { get; set; }	
 	}

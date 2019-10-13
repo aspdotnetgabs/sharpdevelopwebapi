@@ -47,7 +47,7 @@ namespace SharpDevelopWebApi.Controllers
         		
         		exam.QuestionId = updatedExam.QuestionId;
         		exam.Question = updatedExam.Question;
-        		exam.ExamineeUserId = updatedExam.ExamineeUserId;
+        		exam.ExamineeId = updatedExam.ExamineeId;
         		exam.Examinee = updatedExam.Examinee;
         		exam.ExamineeAnswer = updatedExam.ExamineeAnswer;
         		
