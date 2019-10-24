@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using LiteDB;
 using SharpDevelopWebApi.Helpers.JWT;
 using SharpDevelopWebApi.Models;
 
@@ -16,7 +17,50 @@ namespace SharpDevelopWebApi.Controllers
 	/// Description of ValuesController.
 	/// </summary>
 	public class SampleController : ApiController
-	{					
+	{
+		[HttpGet]
+		[Route("api/sample/LiteDb")]
+        public IHttpActionResult GetLiteDb()
+		{
+			// Open database (or create if doesn't exist)
+			using(var db = new LiteDatabase(HostingEnvironment.MapPath("~/App_Data/MyData.db")))
+			{
+			    // Get customer collection
+			    var col = db.GetCollection<Customer>("customers");					
+			
+			    // Use LINQ to query documents (with no index)
+			    var results = col.FindAll();
+			    
+			    return Ok(results);
+			}			
+			
+		}
+        
+		[HttpPost]
+		[Route("api/sample/LiteDb")]
+        public IHttpActionResult CreateLiteDb(Customer customer)
+		{
+			// Open database (or create if doesn't exist)
+			using(var db = new LiteDatabase(HostingEnvironment.MapPath("~/App_Data/MyData.db")))
+			{
+			    // Get customer collection
+			    var col = db.GetCollection<Customer>("customers");		
+			
+			    // Create unique index in Name field
+			    col.EnsureIndex(x => x.LastName, true);
+			
+			    // Insert new customer document (Id will be auto-incremented)
+			    var bson = col.Insert(customer);
+
+			
+			    // Use LINQ to query documents (with no index)
+			    //var results = col.FindAll();
+			    
+			    return Ok(customer);
+			}	
+		}        
+
+		
 		[HttpGet]
 		[Route("api/sample")]
         public IHttpActionResult Get(string url = "")
