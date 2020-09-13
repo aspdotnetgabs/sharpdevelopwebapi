@@ -33,8 +33,8 @@ jobs:
       working-directory: ./SharpDevelopWebApi
       run: ls
       
-    - name: FTP-Deploy-Action
-      uses: kevinpainchaud/simple-ftp-deploy-action@v 1.1.0
+    - name: Simple FTP deploy
+      uses: kevinpainchaud/simple-ftp-deploy-action@v1.1.0
       with:
        ftp_host: ftp://bernardgabon.somee.com
        ftp_username: bernardgabon
