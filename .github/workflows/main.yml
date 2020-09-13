@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         name: published_webapp
-        path: \SharpDevelopWebApi\bin\Release\Publish
+        path: SharpDevelopWebApi\bin\Release\Publish
