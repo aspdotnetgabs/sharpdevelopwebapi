@@ -27,12 +27,10 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         name: published_webapp
-        path: SharpDevelopWebApi\bin\
-        
-    - name: Change dir 
-      run: cd SharpDevelopWebApi
+        path: SharpDevelopWebApi\bin\        
       
     - name: List output files
+      working-directory: ./SharpDevelopWebApi
       run: ls
       
     - name: FTP-Deploy-Action
