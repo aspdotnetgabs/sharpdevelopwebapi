@@ -21,10 +21,10 @@ jobs:
       run: nuget restore SharpDevelopWebApi/SharpDevelopWebApi.sln
  
     - name: Build and Publish Web App
-      run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+      run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln 
  
     - name: Upload Artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: published_webapp
-        path: SharpDevelopWebApi\bin\Release\Publish
+        path: SharpDevelopWebApi\bin\
