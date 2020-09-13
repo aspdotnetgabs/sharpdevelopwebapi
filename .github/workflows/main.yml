@@ -33,11 +33,11 @@ jobs:
     needs: job_1
     runs-on: ubuntu-latest
     steps:
-    - name: Download math result for job 1
+    - name: Download Artifact
       uses: actions/download-artifact@v2
       
     - name: List output files
-      #working-directory: ./SharpDevelopWebApi
+      working-directory: ./published_webapp
       run: ls
       
     - name: FTP Deploy
@@ -46,4 +46,3 @@ jobs:
         ftp-server: ftp://bernardgabon.somee.com
         ftp-username: bernardgabon
         ftp-password: sds123...
-        local-dir: bin
