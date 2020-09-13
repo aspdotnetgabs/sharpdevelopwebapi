@@ -34,10 +34,9 @@ jobs:
       run: ls
       
     - name: FTP-Deploy-Action
-      uses: SamKirkland/FTP-Deploy-Action@3.1.1
+      uses: kevinpainchaud/simple-ftp-deploy-action@v 1.1.0
       with:
-        ftp-server: ftp://bernardgabon.somee.com
-        ftp-username: bernardgabon
-        ftp-password: sds123...
-        local-dir: bin
-
+       ftp_host: ftp://bernardgabon.somee.com
+       ftp_username: bernardgabon
+       ftp_password: sds123...
+       local_source_dir: "bin"
