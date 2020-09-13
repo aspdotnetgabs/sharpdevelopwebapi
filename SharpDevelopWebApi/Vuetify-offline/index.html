@@ -156,7 +156,7 @@
             data: {
                 appName: "Customer Webapp",
                 columnHeader: ['Id', 'Name', 'Email', 'Phone', 'Action'],
-                baseUrl: "http://localhost:8082/",
+                baseUrl: "http://localhost:8087/",
                 customers: [],                
                 searchKeyword: "",
                 newItem: {},
@@ -166,7 +166,7 @@
             },
             methods: {
                 getCustomers: function () {
-                    axios.get(this.baseUrl + "/api/customer")
+                    axios.get(this.baseUrl + "/api/Customer")
                         .then((response) => {
                             this.customers = response.data;
                         });

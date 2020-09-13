@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.OleDb;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using LiteDB;
+using Dapper;
 using SharpDevelopWebApi.Helpers.JWT;
 using SharpDevelopWebApi.Models;
 
@@ -17,68 +20,35 @@ namespace SharpDevelopWebApi.Controllers
 	/// Description of ValuesController.
 	/// </summary>
 	public class SampleController : ApiController
-	{
-		[HttpGet]
-		[Route("api/sample/LiteDb")]
-        public IHttpActionResult GetLiteDb()
-		{
-			// Open database (or create if doesn't exist)
-			using(var db = new LiteDatabase(HostingEnvironment.MapPath("~/App_Data/MyData.db")))
-			{
-			    // Get customer collection
-			    var col = db.GetCollection<Customer>("customers");					
-			
-			    // Use LINQ to query documents (with no index)
-			    var results = col.FindAll();
-			    
-			    return Ok(results);
-			}			
-			
-		}
-        
-		[HttpPost]
-		[Route("api/sample/LiteDb")]
-        public IHttpActionResult CreateLiteDb(Customer customer)
-		{
-			// Open database (or create if doesn't exist)
-			using(var db = new LiteDatabase(HostingEnvironment.MapPath("~/App_Data/MyData.db")))
-			{
-			    // Get customer collection
-			    var col = db.GetCollection<Customer>("customers");		
-			
-			    // Create unique index in Name field
-			    col.EnsureIndex(x => x.LastName, true);
-			
-			    // Insert new customer document (Id will be auto-incremented)
-			    var bson = col.Insert(customer);
-
-			
-			    // Use LINQ to query documents (with no index)
-			    //var results = col.FindAll();
-			    
-			    return Ok(customer);
-			}	
-		}        
-
-		
-		[HttpGet]
-		[Route("api/sample")]
-        public IHttpActionResult Get(string url = "")
-		{
-        	 var data = System.IO.File.ReadAllText(HostingEnvironment.MapPath("~/Templates/bootstrap.html"));
-            
-        	 var result = TuesPechkinPdf.ToPdf(data);
-        	
-			System.IO.File.WriteAllBytes(@"C:\Users\DRIVE_D\My Documents\_GIT_VCS\AspDotNetGabs\sharpdevelopwebapi\SharpDevelopWebApi\Templates\testpdf.pdf", result);
-						
-			return Ok(result.ToBase64String());
-		}
-
+	{					
         [HttpPost]
         [Route("api/sample")]
         public IHttpActionResult Post(Product product)
         {
             return Ok(product);
+        }
+        
+        [AllowAnonymous]
+        [Route("api/sample/getcontacts")]
+        public IHttpActionResult GetContacts()
+        {
+        	// @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + @"\MyAccessDb.mdb";
+        	string mdb = ConfigurationManager.ConnectionStrings["MyAccessDb"].ConnectionString; // @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + @"\MyAccessDb.mdb";
+        	var contact = new 
+        	{
+        		FullName = "Hewbhurt Gabon",
+        		Email = "gabs@gmail.com",
+        		BirthDate = "1981/09/17"
+        	};
+
+            using (var conn = new OleDbConnection(mdb))
+            {
+                //        		conn.Execute( "INSERT INTO contacts(FullName, Email, BirthDate) "
+                //	            	+ "VALUES (@FullName, @Email, @BirthDAte)", contact);
+                var contactList = conn.Query("Select Id, FullName, Email, BirthDate from contacts").ToList();
+                return Ok(contactList);
+            }
+            
         }
 
         [HttpPost]
