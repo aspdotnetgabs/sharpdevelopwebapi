@@ -3,10 +3,9 @@ name: Build Web App
 on: [push]
  
 jobs:
-  build:
- 
-    runs-on: ubuntu-latest
- 
+  job_1:
+    name: Build
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v1
       name: Checkout Code
@@ -24,19 +23,23 @@ jobs:
       run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln 
  
     - name: Upload Artifact
-      uses: actions/upload-artifact@v1.0.0
+      uses: actions/upload-artifact@v2
       with:
         name: published_webapp
-        path: SharpDevelopWebApi\bin\        
+        path: SharpDevelopWebApi\bin\    
+
+  job_2:
+    name: Publish
+    needs: job_1
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download math result for job 1
+      uses: actions/download-artifact@v2
       
-    - name: List output files
-      working-directory: ./SharpDevelopWebApi
-      run: ls
-      
-    - name: Simple FTP deploy
-      uses: kevinpainchaud/simple-ftp-deploy-action@v1.1.0
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
-       ftp_host: ftp://bernardgabon.somee.com
-       ftp_username: bernardgabon
-       ftp_password: sds123...
-       local_source_dir: "bin"
+        ftp-server: ftp://bernardgabon.somee.com
+        ftp-username: bernardgabon
+        ftp-password: sds123...
+        local-dir: bin
