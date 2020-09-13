@@ -43,6 +43,6 @@ jobs:
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
-        ftp-server: ftp://bernardgabon.somee.com
-        ftp-username: bernardgabon
-        ftp-password: sds123...
+        ftp-server: "ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/"
+        ftp-username: "bernardgabon"
+        ftp-password: "sds123..."
