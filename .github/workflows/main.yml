@@ -29,6 +29,9 @@ jobs:
         name: published_webapp
         path: SharpDevelopWebApi\bin\
         
+    - name: Change dir 
+      run: cd SharpDevelopWebApi
+      
     - name: List output files
       run: ls
       
