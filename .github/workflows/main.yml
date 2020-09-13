@@ -29,7 +29,7 @@ jobs:
         name: published_webapp
         path: SharpDevelopWebApi\bin\
         
-         FTP-Deploy-Action:
+  FTP-Deploy-Action:
     name: FTP-Deploy-Action
     runs-on: ubuntu-latest
     steps:
