@@ -29,14 +29,6 @@ jobs:
         name: published_webapp
         path: SharpDevelopWebApi\bin\
         
-  FTP-Deploy-Action:
-    name: FTP-Deploy-Action
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2.1.0
-      with:
-        fetch-depth: 2
-        
     - name: List output files
       run: ls
       
@@ -47,3 +39,4 @@ jobs:
         ftp-username: bernardgabon
         ftp-password: sds123...
         local-dir: bin
+
