@@ -1,9 +1,36 @@
 name: Build Web App
  
 on: [push]
+ 
 jobs:
-   job_2:
-    name: Publish
+  job_1:
+    name: Build
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+      name: Checkout Code
+     
+    - name: Setup MSBuild Path
+      uses: microsoft/setup-msbuild@v1.0.1
+       
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+     
+    - name: Restore NuGet Packages
+      run: nuget restore SharpDevelopWebApi/SharpDevelopWebApi.sln
+ 
+    - name: Build and Publish Web App
+      run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln 
+ 
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: published_webapp
+        path: SharpDevelopWebApi\bin\    
+
+  job_2:
+    name: Deploy
+    needs: job_1
     runs-on: ubuntu-latest
     steps:
     - name: Download Artifact
@@ -19,5 +46,4 @@ jobs:
         ftp-server: "ftp://bernardgabon.somee.com"
         ftp-username: "bernardgabon"
         ftp-password: "sds123..."
-        git-ftp-args: --remote-root www.bernardgabon.somee.com
-   
+	       git-ftp-args: --insecure --remote-root /www.bernardgabon.somee.com
