@@ -28,3 +28,29 @@ jobs:
       with:
         name: published_webapp
         path: SharpDevelopWebApi\bin\
+        
+         FTP-Deploy-Action:
+    name: FTP-Deploy-Action
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.1.0
+      with:
+        fetch-depth: 2
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+        
+    - name: Build Project
+        
+    - name: List output files
+      run: ls
+      
+    - name: FTP-Deploy-Action
+      uses: SamKirkland/FTP-Deploy-Action@3.1.1
+      with:
+        ftp-server: ftp://ftp.samkirkland.com/
+        ftp-username: myFTPUsername
+        ftp-password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: build # This folder is NOT going to upload by default unless you add it to .git-ftp-include
