@@ -46,4 +46,4 @@ jobs:
         ftp-server: "ftp://bernardgabon.somee.com"
         ftp-username: "bernardgabon"
         ftp-password: "sds123..."
-	       git-ftp-args: --insecure --remote-root /www.bernardgabon.somee.com
+        git-ftp-args: --insecure --remote-root /www.bernardgabon.somee.com
