@@ -37,13 +37,13 @@ jobs:
       uses: actions/download-artifact@v2
       
     - name: List output files
-      working-directory: ./published_webapp
       run: ls
       
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
-        ftp-server: "ftp://bernardgabon.somee.com"
+        ftp-server: "ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/"
         ftp-username: "bernardgabon"
         ftp-password: "sds123..."
-        git-ftp-args: --insecure --remote-root /www.bernardgabon.somee.com
+        local-dir: published_webapp/ 
+        git-ftp-args: --insecure
