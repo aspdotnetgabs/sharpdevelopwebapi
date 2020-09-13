@@ -18,10 +18,10 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.2
      
     - name: Restore NuGet Packages
-      run: nuget restore SharpDevelopWebApi.sln
+      run: nuget restore SharpDevelopWebApi/SharpDevelopWebApi.sln
  
     - name: Build and Publish Web App
-      run: msbuild SharpDevelopWebApi.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+      run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
  
     - name: Upload Artifact
       uses: actions/upload-artifact@v1.0.0
