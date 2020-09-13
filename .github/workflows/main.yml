@@ -43,7 +43,7 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
-        ftp-server: ftp://ftp.samkirkland.com/
-        ftp-username: myFTPUsername
-        ftp-password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: build # This folder is NOT going to upload by default unless you add it to .git-ftp-include
+        ftp-server: ftp://bernardgabon.somee.com
+        ftp-username: bernardgabon
+        ftp-password: sds123...
+        local-dir: bin
