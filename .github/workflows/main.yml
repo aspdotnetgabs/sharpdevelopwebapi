@@ -25,7 +25,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: published_webapp
+        name: publish
         path: SharpDevelopWebApi\bin\    
 
   job_2:
@@ -45,5 +45,5 @@ jobs:
         ftp-server: "ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/"
         ftp-username: "bernardgabon"
         ftp-password: "sds123..."
-        local-dir: published_webapp/ 
+        local-dir: publish
         git-ftp-args: --insecure
