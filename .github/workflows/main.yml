@@ -39,11 +39,20 @@ jobs:
     - name: List output files
       run: ls
       
-    - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@3.1.1
+    - name: Simple FTP deploy
+      uses: kevinpainchaud/simple-ftp-deploy-action@v1.1.0
       with:
-        ftp-server: "ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/"
-        ftp-username: "bernardgabon"
-        ftp-password: "sds123..."
-        local-dir: publish
-        git-ftp-args: --insecure
+        ftp_host: "ftp://bernardgabon.somee.com"
+        ftp_username: "bernardgabon"
+        ftp_password: "sds123..."
+        local_source_dir: "publish"
+        dist_target_dir: "www.bernardgabon.somee.com"
+      
+    #- name: FTP Deploy
+      #uses: SamKirkland/FTP-Deploy-Action@3.1.1
+      #with:
+        #ftp-server: "ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/"
+        #ftp-username: "bernardgabon"
+        #ftp-password: "sds123..."
+        #local-dir: publish
+        #git-ftp-args: --insecure
