@@ -41,7 +41,7 @@ A light-weight solid starting point for developing ASP.NET Web API application i
 ### Support for Github Actions FTP Deploy
  - Automate deploying websites and more
  - Simply update `/.github/workflows/main.yml` with your FTP credentials 
- - Secure your FTP password, go to Settings tab then select Secrets
+ - Secure your FTP password, go to **Settings** tab then select **Secrets**
 
 ### Portable Asp.Net Web Server
 Run the project without SharpDevelop in this tiny web server! 
