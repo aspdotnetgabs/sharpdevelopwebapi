@@ -4,6 +4,7 @@ A light-weight solid starting point for developing ASP.NET Web API application i
 
 ## Features and Libraries
  - EntityFramework.SharpDevelop
+ - Dapper
  - Swagger / Swashbuckle
  - Simple JWT Authentication
  - AutoMapper 
@@ -12,13 +13,12 @@ A light-weight solid starting point for developing ASP.NET Web API application i
  - TuesPechkin PDF 
  - SimpleExcelImport
  - Image/File Upload
-- Email / SMTP 
-- SimpleLogger 
+ - Email / SMTP 
+ - SimpleLogger 
 
 ### Why it's lite?
  - No OWIN
  - No ASP.NET Identity
-
 
 ### Vue JS Example
 
@@ -29,10 +29,15 @@ A light-weight solid starting point for developing ASP.NET Web API application i
  - Vuetify
 
 ### Running in IIS Express
- 1. Click Project Menu > Project Options 
+1. Click Project Menu > Project Options 
 2. In **Web** tab, choose **[Use IIS Express Web Server]**
 3. Enter a port number higher than `8001` 
 4. Click **[Create application/virtual directory]** button 
+
+### Support for Github Actions FTP Deploy
+ - Automate deploying websites and more
+ - Simply update `/.github/workflows/main.yml` with your FTP credentials 
+ - Secure your FTP password, go to Settings tab then select Secrets
 
 > *** Error indicating duplicate entry of type 'site' with unique key attributes...
 5. Goto `Documents\IISExpress\config` folder
