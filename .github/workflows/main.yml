@@ -22,7 +22,7 @@ jobs:
     - name: Build and Publish Web App
       run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln
     
-    - name: Create Publish folder
+    - name: Copy to Publish folder
       run: | 
        mkdir -p publish
        cp -R SharpDevelopWebApi/bin/ ./publish  
@@ -42,25 +42,19 @@ jobs:
     needs: job_1
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.1.0
+    - uses: actions/checkout@v2.3.2
+      with:
+        fetch-depth: 2
       
     - name: Download Artifact
       uses: actions/download-artifact@v2  
     
-    #- name: Simple FTP Deploy
-      #uses: kevinpainchaud/simple-ftp-deploy-action@v1.1.0
-      #with:
-        #ftp_host: "ftp://bernardgabon.somee.com"
-        #ftp_username: "bernardgabon"
-        #ftp_password: ${{ secrets.SOMEE_PASSWORD }}
-        #local_source_dir: "publish"
-        #dist_target_dir: "www.bernardgabon.somee.com"
-    
+    # To add a secret go to the Settings tab in your Github project then select Secrets
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
-        ftp-server: "ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/"
-        ftp-username: "bernardgabon"
+        ftp-server: ftp://bernardgabon.somee.com
+        ftp-username: bernardgabon
         ftp-password: ${{ secrets.SOMEE_PASSWORD }}
         local-dir: publish
-        git-ftp-args: --insecure
+        git-ftp-args: --insecure --remote-root www.bernardgabon.somee.com
