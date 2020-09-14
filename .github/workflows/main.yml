@@ -25,7 +25,7 @@ jobs:
     - name: Create Publish dir
       run: | 
        mkdir -p publish
-       cp -R SharpDevelopWebApi/bin/ ./publish/  
+       cp -R SharpDevelopWebApi/bin/ ./publish  
        cp App_Data/ ./publish/  
        cp SharpDevelopWebApi/Global.asax ./publish 
        cp SharpDevelopWebApi/web.config ./publish 
