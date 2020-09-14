@@ -24,11 +24,11 @@ jobs:
     
     - name: Create Publish dir
       run: | 
-       mkdir -p publish/bin
-       yes | cp -R SharpDevelopWebApi/bin/ ./publish/  
-       yes | cp App_Data/ ./publish/  
-       yes | cp SharpDevelopWebApi/Global.asax ./publish 
-       yes | cp SharpDevelopWebApi/web.config ./publish 
+       mkdir -p publish
+       \cp -R SharpDevelopWebApi/bin/ ./publish/  
+       \cp App_Data/ ./publish/  
+       \cp SharpDevelopWebApi/Global.asax ./publish 
+       \cp SharpDevelopWebApi/web.config ./publish 
        
  
     - name: Upload Artifact
