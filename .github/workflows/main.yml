@@ -20,7 +20,7 @@ jobs:
       run: nuget restore SharpDevelopWebApi/SharpDevelopWebApi.sln       
  
     - name: Build and Publish Web App
-      run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln
+      run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln /p:AutoParameterizationWebConfigConnectionStrings=False
     
     - name: Copy to Publish folder
       run: |       
