@@ -7,8 +7,8 @@ jobs:
     name: Build
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v1
-      name: Checkout Code
+    - name: Checkout Code
+      uses: actions/checkout@v2.3.2
      
     - name: Setup MSBuild Path
       uses: microsoft/setup-msbuild@v1.0.1
@@ -43,13 +43,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download Artifact
-      uses: actions/download-artifact@v2           
-      
-    - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@3.1.1
+      uses: actions/download-artifact@v2  
+    
+    - name: Simple FTP Deploy
+      uses: kevinpainchaud/simple-ftp-deploy-action@v1.1.0
       with:
-        ftp-server: "ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/"
-        ftp-username: "bernardgabon"
-        ftp-password: "sds123..."
-        local-dir: publish
-        git-ftp-args: --insecure
+        ftp_host: "ftp://bernardgabon.somee.com"
+        ftp_username: "bernardgabon"
+        ftp_password: ${{ secrets.SOMEE_PASSWORD }}
+        local_source_dir: "publish"
+        dist_target_dir: "www.bernardgabon.somee.com"
+      
+    #- name: FTP Deploy
+      #uses: SamKirkland/FTP-Deploy-Action@3.1.1
+      #with:
+        #ftp-server: "ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/"
+        #ftp-username: "bernardgabon"
+        #ftp-password: ${{ secrets.SOMEE_PASSWORD }}
+        #local-dir: publish
+        #git-ftp-args: --insecure
