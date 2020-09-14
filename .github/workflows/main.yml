@@ -17,9 +17,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: SharpDevelopWebApi/packages/
-        key: ${{ runner.os }}-nuget-${{ hashFiles('nuget-packages.txt') }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/nuget-packages.txt') }}
         restore-keys: |
-          ${{ runner.os }}-nuget-    
+          ${{ runner.os }}-nuget-test    
        
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.2
@@ -38,7 +38,7 @@ jobs:
        cp SharpDevelopWebApi/Global.asax ./publish 
        cp SharpDevelopWebApi/web.config ./publish 
        cp SharpDevelopWebApi/index.html ./publish 
-       cp nuget-packages.txt ./publish 
+       cp **/nuget-packages.txt ./publish 
        ls 
        
     - name: Upload Artifact
