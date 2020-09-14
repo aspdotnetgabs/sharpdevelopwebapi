@@ -12,15 +12,7 @@ jobs:
       
     - name: Setup MSBuild Path
       uses: microsoft/setup-msbuild@v1.0.1
-
-    - name: Cache Nuget Paths
-      uses: actions/cache@v2
-      with:
-        path: '**/packages/'
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/nuget-packages.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-test    
-       
+      
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.2
      
@@ -38,8 +30,6 @@ jobs:
        cp SharpDevelopWebApi/Global.asax ./publish 
        cp SharpDevelopWebApi/web.config ./publish 
        cp SharpDevelopWebApi/index.html ./publish 
-       cp **/nuget-packages.txt ./publish 
-       ls 
        
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
