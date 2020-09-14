@@ -37,8 +37,7 @@ jobs:
       with:
         files: 'publish/web.config'
       env:
-        CONNSTR: ${{ secrets.SOMEE_PASSWORD }}
-        CONNPRV: somedbprovider     
+        ConnectionStrings.Default: ${{ secrets.SOMEE_PASSWORD }} 
        
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
