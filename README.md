@@ -33,16 +33,15 @@ A light-weight solid starting point for developing ASP.NET Web API application i
 2. In **Web** tab, choose **[Use IIS Express Web Server]**
 3. Enter a port number higher than `8001` 
 4. Click **[Create application/virtual directory]** button 
+> *** Error indicating duplicate entry of type 'site' with unique key attributes...
+5. Goto `Documents\IISExpress\config` folder
+6. In `applicationhost.config`, delete `<site name=...>` entries in `<sites>...</sites>` 
+7. Repeat step 1.
 
 ### Support for Github Actions FTP Deploy
  - Automate deploying websites and more
  - Simply update `/.github/workflows/main.yml` with your FTP credentials 
  - Secure your FTP password, go to Settings tab then select Secrets
-
-> *** Error indicating duplicate entry of type 'site' with unique key attributes...
-5. Goto `Documents\IISExpress\config` folder
-6. In `applicationhost.config`, delete `<site name=...>` entries in `<sites>...</sites>` 
-7. Repeat step 1.
 
 ### Portable Asp.Net Web Server
 Run the project without SharpDevelop in this tiny web server! 
