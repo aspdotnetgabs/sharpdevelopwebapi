@@ -202,6 +202,7 @@
   <ItemGroup>
     <None Include="App_Data\MyAccessDb.mdb" />
     <None Include="Global.asax" />
+    <None Include="index.html" />
     <None Include="packages.config" />
     <None Include="web.config" />
   </ItemGroup>
