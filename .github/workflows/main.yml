@@ -53,8 +53,8 @@ jobs:
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
-        ftp-server: ftp://bernardgabon.somee.com
+        ftp-server: ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/
         ftp-username: bernardgabon
         ftp-password: ${{ secrets.SOMEE_PASSWORD }}
         local-dir: publish
-        git-ftp-args: --insecure --remote-root www.bernardgabon.somee.com
+        git-ftp-args: --insecure
