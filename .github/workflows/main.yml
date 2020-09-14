@@ -9,17 +9,17 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2.3.2
+      
+    - name: Setup MSBuild Path
+      uses: microsoft/setup-msbuild@v1.0.1
 
     - name: Cache Nuget Paths
       uses: actions/cache@v2
       with:
-        path: ${{ github.workspace }}/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        path: SharpDevelopWebApi/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('SharpDevelopWebApi/nuget-packages.txt') }}
         restore-keys: |
-          ${{ runner.os }}-nuget-
-     
-    - name: Setup MSBuild Path
-      uses: microsoft/setup-msbuild@v1.0.1
+          ${{ runner.os }}-nuget-    
        
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.2
@@ -31,13 +31,15 @@ jobs:
       run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln
     
     - name: Copy to Publish folder
-      run: | 
+      run: |       
        mkdir -p publish
        cp -R SharpDevelopWebApi/bin/ ./publish  
        cp -R SharpDevelopWebApi/App_Data/ ./publish 
        cp SharpDevelopWebApi/Global.asax ./publish 
        cp SharpDevelopWebApi/web.config ./publish 
        cp SharpDevelopWebApi/index.html ./publish 
+       cp SharpDevelopWebApi/nuget-packages.txt ./publish 
+       ls 
        
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
