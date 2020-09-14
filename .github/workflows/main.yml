@@ -29,15 +29,7 @@ jobs:
        cp -R SharpDevelopWebApi/App_Data/ ./publish 
        cp SharpDevelopWebApi/Global.asax ./publish 
        cp SharpDevelopWebApi/web.config ./publish 
-       cp SharpDevelopWebApi/index.html ./publish 
-       
-    #substitute production appsettings entries to appsettings json file
-    - name: Web.config Variable Substitution
-      uses: microsoft/variable-substitution@v1
-      with:
-        files: './publish/web.config'
-      env:
-        connectionStrings.Default: "Data Source=prodserver;Initial Catalog=mydb;User ID=xxxx;Password=xxxx"
+       cp SharpDevelopWebApi/index.html ./publish       
        
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -56,6 +48,13 @@ jobs:
       
     - name: Download Artifact
       uses: actions/download-artifact@v2     
+     
+    - name: Transform web.config
+      uses: jacobtomlinson/gha-find-replace@master
+      with:
+        find: "{{CONNSTR}}"
+        replace: ${{ secrets.SOMEE_PASSWORD }}
+        include: "publish/web.config"
     
     # To add a secret go to the Settings tab in your Github project then select Secrets
     - name: FTP Deploy
