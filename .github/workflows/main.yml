@@ -42,6 +42,8 @@ jobs:
     needs: job_1
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2.1.0
+      
     - name: Download Artifact
       uses: actions/download-artifact@v2  
     
@@ -53,7 +55,7 @@ jobs:
         #ftp_password: ${{ secrets.SOMEE_PASSWORD }}
         #local_source_dir: "publish"
         #dist_target_dir: "www.bernardgabon.somee.com"
-    - uses: actions/checkout@v2.1.0
+    
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
