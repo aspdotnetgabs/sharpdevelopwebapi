@@ -35,9 +35,9 @@ jobs:
     - name: Web.config Variable Substitution
       uses: microsoft/variable-substitution@v1
       with:
-        files: 'publish/web.config'
+        files: './publish/web.config'
       env:
-        ConnectionStrings.Default: ${{ secrets.SOMEE_PASSWORD }} 
+        SECRET: ${{ secrets.SOMEE_PASSWORD }} 
        
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
