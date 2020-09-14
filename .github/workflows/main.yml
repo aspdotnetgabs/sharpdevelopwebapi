@@ -16,7 +16,7 @@ jobs:
     - name: Cache Nuget Paths
       uses: actions/cache@v2
       with:
-        path: SharpDevelopWebApi/packages/
+        path: '**/packages/'
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/nuget-packages.txt') }}
         restore-keys: |
           ${{ runner.os }}-nuget-test    
