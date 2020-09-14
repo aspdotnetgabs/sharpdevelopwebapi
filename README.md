@@ -3,8 +3,8 @@
 A light-weight solid starting point for developing ASP.NET Web API application in portable [SharpDevelop](https://portable.info.pl/sharpdevelop-portable/). Great for student learning and small projects!
 
 ## Features and Libraries
- - EntityFramework.SharpDevelop
- - Dapper
+ - EntityFramework.SharpDevelop (SQL Server)
+ - Dapper (MS Access support)
  - Swagger / Swashbuckle
  - Simple JWT Authentication
  - AutoMapper 
