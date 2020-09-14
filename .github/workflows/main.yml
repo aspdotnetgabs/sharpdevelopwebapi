@@ -20,13 +20,21 @@ jobs:
       run: nuget restore SharpDevelopWebApi/SharpDevelopWebApi.sln
  
     - name: Build and Publish Web App
-      run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln 
+      run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln
+    
+    - name: Create Publish dir
+      run: | 
+       mkdir -p publish/bin
+       cp -R SharpDevelopWebApi/bin publish/bin  
+       cp Global.asax ./publish 
+       cp web.config ./publish 
+       
  
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: publish
-        path: SharpDevelopWebApi\bin\    
+        path: publish\    
 
   job_2:
     name: Deploy
