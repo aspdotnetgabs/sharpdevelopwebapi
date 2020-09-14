@@ -31,6 +31,15 @@ jobs:
        cp SharpDevelopWebApi/web.config ./publish 
        cp SharpDevelopWebApi/index.html ./publish 
        
+    #substitute production appsettings entries to appsettings json file
+    - name: Web.config Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: 'publish/web.config'
+      env:
+        CONNSTR: ${{ secrets.SOMEE_PASSWORD }}
+        CONNPRV: somedbprovider     
+       
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -47,7 +56,7 @@ jobs:
         fetch-depth: 2
       
     - name: Download Artifact
-      uses: actions/download-artifact@v2  
+      uses: actions/download-artifact@v2     
     
     # To add a secret go to the Settings tab in your Github project then select Secrets
     - name: FTP Deploy
