@@ -8,7 +8,7 @@ namespace SharpDevelopWebApi.Models
 {
     public class SDWebApiDbContext : DbContext
     {
-        public SDWebApiDbContext() : base("SDWebApiDb1") // name_of_dbconnection_string
+        public SDWebApiDbContext() : base("DefaultConn") // name_of_dbconnection_string
         {
         }
 
