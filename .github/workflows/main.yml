@@ -14,7 +14,7 @@ jobs:
      uses: jacobtomlinson/gha-find-replace@master
      with:
        find: '<ItemGroup Label="publish_config_placeholder"/>'
-       replace: '<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.targets" />'
+       replace: '<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" />'
        include: "SharpDevelopWebApi/SharpDevelopWebApi.csproj"
 
    - name: Transform Web.config
