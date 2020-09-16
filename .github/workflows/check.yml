@@ -1,0 +1,16 @@
+name: check
+
+on:
+  push:
+    branches:
+      - sdwebapi-vuejs
+  pull_request:
+    branches:
+      - sdwebapi-vuejs
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check password
+        uses: AlicanAkkus/pinder-action@0.1
