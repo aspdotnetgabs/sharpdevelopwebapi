@@ -17,7 +17,21 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.2
      
     - name: Restore NuGet Packages
-      run: nuget restore SharpDevelopWebApi/SharpDevelopWebApi.sln       
+      run: nuget restore SharpDevelopWebApi/SharpDevelopWebApi.sln      
+    
+    - name: Transform web.config
+      uses: jacobtomlinson/gha-find-replace@master
+      with:
+        find: '<ItemGroup Label="publish_config_placeholder"/>'
+        replace: '<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.targets" />'
+        include: "SharpDevelopWebApi/SharpDevelopWebApi.csproj"
+     
+    - name: Transform web.config
+      uses: jacobtomlinson/gha-find-replace@master
+      with:
+        find: "{{CONNSTR}}"
+        replace: ${{ secrets.SOMEE_PASSWORD }}
+        include: "SharpDevelopWebApi/web.config"
  
     - name: Build and Publish Web App
       run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:Configuration=Release    
@@ -38,14 +52,7 @@ jobs:
         fetch-depth: 2
       
     - name: Download Artifact
-      uses: actions/download-artifact@v2     
-     
-    - name: Transform web.config
-      uses: jacobtomlinson/gha-find-replace@master
-      with:
-        find: "{{CONNSTR}}"
-        replace: ${{ secrets.SOMEE_PASSWORD }}
-        include: "publish/web.config"
+      uses: actions/download-artifact@v2        
     
     # To add a secret go to the Settings tab in your Github project then select Secrets
     - name: FTP Deploy
