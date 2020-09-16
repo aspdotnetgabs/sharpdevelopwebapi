@@ -204,21 +204,19 @@
     <None Include="Global.asax" />
     <None Include="index.html" />
     <None Include="packages.config" />
-    <None Include="web.config" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data" />
   </ItemGroup>
-  
   <ItemGroup>
     <Content Include="AppData\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.config" />
     <Content Include="Global.asax" />
-    <Content Include="index.html" />   
+    <Content Include="index.html" />
   </ItemGroup>
-  
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
@@ -238,4 +236,5 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <ItemGroup Label="publish_config_placeholder"/>
 </Project>
