@@ -20,8 +20,8 @@ jobs:
    - name: Transform Web.config
      uses: jacobtomlinson/gha-find-replace@master
      with:
-       find: "{{CONNSTR}}"
-       replace: ${{ secrets.SOMEE_PASSWORD }}
+       find: "{{GITHUB_SECRET_CONNECTION_STRING}}"
+       replace: ${{ secrets.CONNECTION_STRING }}
        include: "SharpDevelopWebApi/Web.config"
        
    - name: Upload Artifact
