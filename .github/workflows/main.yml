@@ -3,8 +3,30 @@ name: Build Web App
 on: [push]
  
 jobs:
+  job_0:
+   name: Tranform Config
+   runs-on: ubuntu-latest
+   steps:
+   - name: Checkout Code
+     uses: actions/checkout@v2.3.2            
+
+   - name: Transform proj config
+     uses: jacobtomlinson/gha-find-replace@master
+     with:
+       find: '<ItemGroup Label="publish_config_placeholder"/>'
+       replace: '<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.targets" />'
+       include: "SharpDevelopWebApi/SharpDevelopWebApi.csproj"
+
+   - name: Transform Web.config
+     uses: jacobtomlinson/gha-find-replace@master
+     with:
+       find: "{{CONNSTR}}"
+       replace: ${{ secrets.SOMEE_PASSWORD }}
+       include: "SharpDevelopWebApi/Web.config"
+   
   job_1:
     name: Build
+    needs: job_0
     runs-on: windows-latest
     steps:
     - name: Checkout Code
@@ -17,21 +39,7 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.2
      
     - name: Restore NuGet Packages
-      run: nuget restore SharpDevelopWebApi/SharpDevelopWebApi.sln      
-    
-    - name: Transform web.config
-      uses: jacobtomlinson/gha-find-replace@master
-      with:
-        find: '<ItemGroup Label="publish_config_placeholder"/>'
-        replace: '<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.targets" />'
-        include: "SharpDevelopWebApi/SharpDevelopWebApi.csproj"
-     
-    - name: Transform web.config
-      uses: jacobtomlinson/gha-find-replace@master
-      with:
-        find: "{{CONNSTR}}"
-        replace: ${{ secrets.SOMEE_PASSWORD }}
-        include: "SharpDevelopWebApi/web.config"
+      run: nuget restore SharpDevelopWebApi/SharpDevelopWebApi.sln          
  
     - name: Build and Publish Web App
       run: msbuild SharpDevelopWebApi/SharpDevelopWebApi.sln /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:Configuration=Release    
