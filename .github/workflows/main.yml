@@ -1,6 +1,6 @@
 name: Build Web App
  
-on: [push]
+on: [push, pull_request]
  
 jobs:
   job_0:
@@ -21,7 +21,7 @@ jobs:
      uses: jacobtomlinson/gha-find-replace@master
      with:
        find: "{{GITHUB_SECRET_CONNECTION_STRING}}"
-       replace: ${{ secrets.CONNECTION_STRING }}
+       replace: ${{ secrets.SOMEE_CONNECTION_STRING }}
        include: "SharpDevelopWebApi/Web.config"
        
    - name: Upload Artifact
@@ -81,13 +81,13 @@ jobs:
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
-       ftp-server: ftp://bernardgabon.somee.com/www.bernardgabon.somee.com/
-       ftp-username: bernardgabon
+       ftp-server: ftp://${{ secrets.SOMEE_SITENAME }}/www.${{ secrets.SOMEE_SITENAME }}/
+       ftp-username: ${{ secrets.SOMEE_USERNAME }}
        ftp-password: ${{ secrets.SOMEE_PASSWORD }}
        local-dir: publish/
        git-ftp-args: --insecure
 
-    - name: Ping my site
-      uses: Leocardoso94/is-my-site-up@v1.2
+    - name: Check the site
+      uses: srt32/uptime@master
       with:
-       site: www.bernardgabon.somee.com
+        url-to-hit: "www.${{ secrets.SOMEE_SITENAME }}"
