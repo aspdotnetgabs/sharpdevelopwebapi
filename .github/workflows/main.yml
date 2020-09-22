@@ -87,7 +87,5 @@ jobs:
        local-dir: publish/
        git-ftp-args: --insecure
 
-    - name: Check the site
-      uses: srt32/uptime@master
-      with:
-        url-to-hit: "www.${{ secrets.SOMEE_SITENAME }}"
+    - name: Ping the site
+      run: ping -c 3 ${{ secrets.SOMEE_SITENAME }}
