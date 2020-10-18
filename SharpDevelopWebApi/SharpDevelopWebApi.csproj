@@ -199,6 +199,11 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\SDWebApiDbContext.cs" />
     <Compile Include="Models\Song.cs" />
+    <Compile Include="Models\StudGrade\Course.cs" />
+    <Compile Include="Models\StudGrade\Faculty.cs" />
+    <Compile Include="Models\StudGrade\Student.cs" />
+    <Compile Include="Models\StudGrade\StudentGrade.cs" />
+    <Compile Include="Models\StudGrade\Subject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +215,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data" />
+    <Folder Include="Models\StudGrade" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppData\**">
@@ -217,7 +223,6 @@
     </Content>
     <Content Include="Web.config" />
     <Content Include="Global.asax" />
-    <Content Include="index.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

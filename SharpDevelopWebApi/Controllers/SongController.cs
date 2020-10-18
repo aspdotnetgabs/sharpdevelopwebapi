@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
+using SharpDevelopWebApi.Models;
 
 namespace SharpDevelopWebApi.Controllers
 {
@@ -10,44 +13,70 @@ namespace SharpDevelopWebApi.Controllers
 	/// </summary>
 	public class SongController : ApiController
 	{
-		[Route("api/song/get1song")]
-		[HttpGet]
-		public IHttpActionResult GetSong()
-		{
-			return Ok(mySong);
-		}
+		SDWebApiDbContext _db = new SDWebApiDbContext();
 		
-		[Route("api/song")]
 		[HttpGet]
-		public IHttpActionResult GetSongs()
-		{
-			var songs = new List<Song>();
-			
-			var song1 = new Song();
-			song1.Id = 1;
-			song1.Title = "Show Me The Way To Heart";
-			song1.Artist = "Scott Grimes";
-			song1.Genre = "Ballad";
-			songs.Add(song1);
-			
-			var mySong = new Song();
-			mySong.Id = 2;
-			mySong.Title = "Hello My Love";
-			mySong.Artist = "Westlife";
-			mySong.Genre = "Pop";		
-			songs.Add(mySong);
-			
-			var song2 = new Song
-			{
-				Id = 3,
-				Title = "Back For Good",
-				Artist = "Take That",
-				Genre = "Pop"
-			};
-			songs.Add(song2);
-				
+		public IHttpActionResult GetAll()
+		{		
+			List<Song> songs = _db.Songs.ToList();
 			return Ok(songs);
 		}
 		
+		[HttpGet] 
+		public IHttpActionResult Get(int Id)
+		{
+			var song = _db.Songs.Find(Id);
+			if(song != null)
+				return Ok(song);
+			else
+				return BadRequest("Song not found");
+			
+		}
+		
+		[HttpPost]
+		public IHttpActionResult Create([FromBody]Song song)
+		{			
+			_db.Songs.Add(song);
+			_db.SaveChanges();
+			return Ok(song.Id);
+		}
+		
+		[HttpPut]
+		public IHttpActionResult Update([FromBody]Song updatedSong)
+		{
+			var song = _db.Songs.Find(updatedSong.Id);
+			if(song != null)
+			{
+				song.Artist = updatedSong.Artist;
+				song.Title = updatedSong.Title;
+				song.Genre = updatedSong.Genre;
+				_db.Entry(song).State = EntityState.Modified;
+				_db.SaveChanges();
+				
+				return Ok(song);			
+			}
+			else
+			{
+				return BadRequest("Song not found");
+			}
+
+		}
+		
+	
+		[HttpDelete]
+		public IHttpActionResult Delete(int Id)
+		{
+			var songToDelete = _db.Songs.Find(Id);
+			if(songToDelete != null)
+			{
+				_db.Songs.Remove(songToDelete);
+				_db.SaveChanges();
+				return Ok("Successfully deleted");
+			}
+			else
+			{
+				return BadRequest("Song not found");
+			}
+		}
 	}
 }

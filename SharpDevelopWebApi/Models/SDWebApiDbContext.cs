@@ -19,6 +19,8 @@ namespace SharpDevelopWebApi.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Song> Songs { get; set; }
+        
     }
 
 
