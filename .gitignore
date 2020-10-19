@@ -11,6 +11,11 @@
 *.txt
 *.csv
 *.accdb
+UpgradeLog*.txt 
+upgradelog*.txt
+
+#Exclude web.config to secure connection strings
+[Ww]eb.config
 
 # User-specific directories
 [Ll]og/
