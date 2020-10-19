@@ -80,7 +80,13 @@ jobs:
         fetch-depth: 2
       
     - name: Download Artifact
-      uses: actions/download-artifact@v2        
+      uses: actions/download-artifact@v2      
+
+    - name: Copy config files
+      run: |       
+       ls 
+       cd publish 
+       ls
     
     # To add a secret go to the Settings tab in your Github project then select Secrets
     - name: FTP Deploy
