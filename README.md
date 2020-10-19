@@ -20,18 +20,9 @@ A light-weight solid starting point for developing ASP.NET Web API application i
  - No OWIN
  - No ASP.NET Identity
 
-### Vue JS Example
-
- - Step by step Code Tutorial
- - JWT Account Login 
- - Bootstrap with Vue 
- - Single File Component with httpVueLoader
- - Vuetify 
- 
 ### Web.config missing?
 
- - Copy Web.github.config
- - Then rename to Web.config 
+ Just copy Web.github.config then rename to Web.config 
  
 ### Build Error? Could not resolve reference... Could not locate assembly...
 
@@ -64,12 +55,20 @@ You can browse the database using SQL Server Management Studio (SSMS) or portabl
  - [Somee.com](https://somee.com/FreeAspNetHosting.aspx)
  - [Smarterasp.net](https://www.smarterasp.net/secured_signup?plantype=FREE)
  - [myasp.net](https://www.myasp.net/freeaspnethosting)
-
+ 
 ### Learning Slides
 
   - JSON 
   -  ASP.NET Web API 
  - [Entity Framework 6 Code-First Tutorial](https://bernardgabon.com/blog/entity-framework-tutorial/) 
+ 
+### Vue JS Example
+
+ - Step by step Code Tutorial
+ - JWT Account Login 
+ - Bootstrap with Vue 
+ - Single File Component with httpVueLoader
+ - Vuetify   
 
 ### Warning
 
