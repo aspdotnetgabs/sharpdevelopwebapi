@@ -10,7 +10,7 @@ A light-weight solid starting point for developing ASP.NET Web API application i
  - AutoMapper 
  - Hangfire Core / Hangfire.MemoryStorage 
  - FluentValidation 
- - TuesPechkin PDF 
+ - ~~TuesPechkin PDF~~
  - SimpleExcelImport
  - Image/File Upload
  - Email / SMTP 
@@ -26,7 +26,17 @@ A light-weight solid starting point for developing ASP.NET Web API application i
  - JWT Account Login 
  - Bootstrap with Vue 
  - Single File Component with httpVueLoader
- - Vuetify
+ - Vuetify 
+ 
+### Web.config missing?
+
+ - Copy Web.github.config
+ - Then rename to Web.config 
+ 
+### Build Error? Could not resolve reference... Could not locate assembly...
+
+ - Run nuget.bat
+ - or execute this command `nuget restore`
 
 ### Running in IIS Express
 1. Click Project Menu > Project Options 
@@ -47,7 +57,7 @@ A light-weight solid starting point for developing ASP.NET Web API application i
 Run the project without SharpDevelop in this tiny web server! 
 
 ### Database Browsers
-You can browse the database using SQL Server Management Studio (SSMS) or portable version of HeidiSQL or [Database.NET](https://bit.ly/30tqqxU). To enable (LocalDB)\MSSQLLocalDB, install [SQL Server Express LocalDB](https://bit.ly/2Mlijj1).
+You can browse the database using SQL Server Management Studio (SSMS) or portable [Database.NET](https://bit.ly/30tqqxU). To enable (LocalDB)\MSSQLLocalDB, install [SQL Server Express LocalDB](https://bit.ly/2Mlijj1).
 
 ### Free ASP.NET Hosting 
 
