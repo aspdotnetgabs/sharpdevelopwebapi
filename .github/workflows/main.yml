@@ -83,7 +83,8 @@ jobs:
       uses: actions/download-artifact@v2      
 
     - name: Copy config files
-      run: |       
+      run: |
+       cd..       
        ls 
        cd publish 
        ls
