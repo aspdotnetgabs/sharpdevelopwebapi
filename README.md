@@ -1,6 +1,6 @@
 
 # SharpDevelopWebApi Boilerplate + Vue JS
-A light-weight solid starting point for developing ASP.NET Web API application in portable [SharpDevelop](https://portable.info.pl/sharpdevelop-portable/). Great for student learning and small projects!
+A light-weight solid starting point for developing ASP.NET Web API application in portable [SharpDevelop](https://portable.info.pl/sharpdevelop-portable/). Great for student learning and small medium size projects!
 
 ## Features and Libraries
  - EntityFramework.SharpDevelop (SQL Server)
