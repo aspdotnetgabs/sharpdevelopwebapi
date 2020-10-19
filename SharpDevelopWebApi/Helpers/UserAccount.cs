@@ -76,7 +76,7 @@ public partial class UserAccount
     {
         if (string.IsNullOrWhiteSpace(userPassword))
             return null;
-        if (string.IsNullOrWhiteSpace(userName))
+        if (string.IsNullOrWhiteSpace(userName) || userName.Any(Char.IsWhiteSpace))
             return null;
 
         var user = new UserAccount();
@@ -93,7 +93,7 @@ public partial class UserAccount
             user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(userPassword));
         }
 
-        user.Roles = userRoles;
+        user.Roles = System.Text.RegularExpressions.Regex.Replace(userRoles, @"\s+", "");
         user.CreatedOn = DateTime.Now;
         user.IsActive = !requiresActivation;
 

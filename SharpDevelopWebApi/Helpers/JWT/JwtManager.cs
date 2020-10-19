@@ -17,18 +17,25 @@ namespace SharpDevelopWebApi.Helpers.JWT
         /// </summary>
         private const string Secret = "d05e51107bcb9659c932a84b836ae63756990e0432b113b1db9e833632cc78b8";
 
-        public static string GenerateToken(string username, int expireMinutes = 20)
+        public static string GenerateToken(string username, string[] roles = null, int expireMinutes = 20)
         {
             var symmetricKey = Convert.FromBase64String(Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
 
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name, username));
+            if(roles != null)
+            {
+            	foreach (var role in roles)
+	            {
+                	claims.Add(new Claim(ClaimTypes.Role, role.Trim()));
+	            }        	
+            }            
+            
             var now = DateTime.UtcNow;
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                        {
-                            new Claim(ClaimTypes.Name, username)
-                        }),
+                Subject = new ClaimsIdentity(claims),
 
                 Expires = now.AddMinutes(Convert.ToInt32(expireMinutes)),
 
