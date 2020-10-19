@@ -17,6 +17,11 @@ jobs:
        replace: '<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" />'
        include: "SharpDevelopWebApi/SharpDevelopWebApi.csproj"
 
+   - name: Recreating Web.config
+     run: |   
+      rm -f SharpDevelopWebApi/Web.config     
+      mv SharpDevelopWebApi/Web.github.config SharpDevelopWebApi/Web.config 
+
    - name: Transform Web.config
      uses: jacobtomlinson/gha-find-replace@master
      with:
@@ -45,7 +50,7 @@ jobs:
       
     - name: Copy config files
       run: |       
-       cp config/* ./SharpDevelopWebApi     
+       cp config/* ./SharpDevelopWebApi 
       
     - name: Setup MSBuild Path
       uses: microsoft/setup-msbuild@v1.0.1
@@ -75,7 +80,14 @@ jobs:
         fetch-depth: 2
       
     - name: Download Artifact
-      uses: actions/download-artifact@v2        
+      uses: actions/download-artifact@v2      
+
+    - name: Copy config files
+      run: |
+       cd..       
+       ls 
+       cd publish 
+       ls
     
     # To add a secret go to the Settings tab in your Github project then select Secrets
     - name: FTP Deploy
