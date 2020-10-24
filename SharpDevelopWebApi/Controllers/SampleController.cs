@@ -20,10 +20,26 @@ namespace SharpDevelopWebApi.Controllers
 	/// Description of ValuesController.
 	/// </summary>
 	public class SampleController : ApiController
-	{					
+	{	
+		[ApiAuthorize]
+        [HttpGet]
+        [Route("api/sample/getproduct")]
+        public IHttpActionResult GetProduct()
+        {
+        	var product = new Product
+        	{
+        		Id = 1,
+        		Name = "Ariel",
+        		Price = 7.50M
+        	};
+        	
+            return Ok(product);
+        }
+		
+        [ApiAuthorize]
         [HttpPost]
-        [Route("api/sample")]
-        public IHttpActionResult Post(Product product)
+        [Route("api/sample/addproduct")]
+        public IHttpActionResult PostProduct(Product product)
         {
             return Ok(product);
         }
