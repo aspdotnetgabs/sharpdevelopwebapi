@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using SharpDevelopWebApi.Helpers.JWT;
 using SharpDevelopWebApi.Models;
 using System;
 using System.Collections.Generic;

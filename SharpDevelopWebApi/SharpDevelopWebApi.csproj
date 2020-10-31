@@ -181,12 +181,9 @@
     <Compile Include="Helpers\EmailService.cs" />
     <Compile Include="Helpers\FileUploadExtension.cs" />
     <Compile Include="Helpers\ImageUploadExtension.cs" />
+    <Compile Include="Helpers\JWTAuth\TokenManager.cs" />
+    <Compile Include="Helpers\JWTAuth\TokenValidator.cs" />
     <Compile Include="Helpers\RedirectToSwagger.cs" />
-    <Compile Include="Helpers\JWT\AddChallengeOnUnauthorizedResult.cs" />
-    <Compile Include="Helpers\JWT\AuthenticationFailureResult.cs" />
-    <Compile Include="Helpers\JWT\HttpAuthenticationChallengeContextExtensions.cs" />
-    <Compile Include="Helpers\JWT\JwtAuthenticationAttribute.cs" />
-    <Compile Include="Helpers\JWT\JwtManager.cs" />
     <Compile Include="Helpers\SimpleLogger.cs" />
     <Compile Include="Helpers\TuesPechkinPdf.cs" />
     <Compile Include="Helpers\UserAccount.cs" />
@@ -215,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data" />
+    <Folder Include="Helpers\JWTAuth" />
     <Folder Include="Models\StudGrade" />
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,6 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using Dapper;
-using SharpDevelopWebApi.Helpers.JWT;
 using SharpDevelopWebApi.Models;
 
 namespace SharpDevelopWebApi.Controllers
@@ -21,7 +20,7 @@ namespace SharpDevelopWebApi.Controllers
 	/// </summary>
 	public class SampleController : ApiController
 	{	
-		[ApiAuthorize]
+		[Authorize]
         [HttpGet]
         [Route("api/sample/getproduct")]
         public IHttpActionResult GetProduct()
@@ -36,7 +35,7 @@ namespace SharpDevelopWebApi.Controllers
             return Ok(product);
         }
 		
-        [ApiAuthorize]
+        [Authorize(Roles="admin")]
         [HttpPost]
         [Route("api/sample/addproduct")]
         public IHttpActionResult PostProduct(Product product)

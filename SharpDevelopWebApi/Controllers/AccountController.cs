@@ -8,7 +8,6 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using SharpDevelopWebApi;
-using SharpDevelopWebApi.Helpers.JWT;
 using SharpDevelopWebApi.Models;
 
 namespace SharpDevelopWebApi.Controllers
@@ -30,34 +29,12 @@ namespace SharpDevelopWebApi.Controllers
                 	userId = user.Id,
                 	userName = user.UserName,
                 	userRoles = userRoles,
-                	token = JwtManager.GenerateToken(username, userRoles)
+                	token = JWTAuth.TokenManager.createToken(username, userRoles)
                 };
                 return Ok(data);
             }
 
             return BadRequest("Login failed");
-        }
-
-        [HttpGet]
-        [Route("api/account/login")]
-        public IHttpActionResult Login(string username, string password)
-        {
-            var success = UserAccount.Authenticate(username, password);
-            if (success)
-            {
-                HttpContext.Current.Session.Add("currentUser", username);
-                return Ok("Login successful");
-            }
-            else
-                return BadRequest("Login failed");
-        }
-
-        [HttpGet]
-        [Route("api/account/logout")]
-        public IHttpActionResult Logout()
-        {
-            HttpContext.Current.Session.Clear();
-            return Ok("Logout successful");
         }
 
         [HttpPost]
@@ -101,15 +78,15 @@ namespace SharpDevelopWebApi.Controllers
                 return BadRequest("Account registration failed");
         }
         
-        [ApiAuthorize]
+        [Authorize(Roles="admin")]
         [HttpPost]
         [Route("api/account/registerbyadmin")]
         public IHttpActionResult RegisterWithRole(string username, string password, string comma_separated_roles = "")
         {
-        	var userRoles = UserAccount.GetUserRoles(User.Identity.Name);
-        	var isAdmin = userRoles.Contains(UserAccount.DEFAULT_ADMIN_LOGIN);
-        	if(!isAdmin)
-        		return BadRequest("Access forbidden. For administrator only.");
+        	// var userRoles = UserAccount.GetUserRoles(User.Identity.Name);
+        	// var isAdmin = userRoles.Contains(UserAccount.DEFAULT_ADMIN_LOGIN);
+        	// if(!isAdmin)
+        		// return BadRequest("Access forbidden. For administrator only.");
         	
             var user = UserAccount.GetUserByUserName(username);
             if(user != null)
@@ -122,7 +99,7 @@ namespace SharpDevelopWebApi.Controllers
                 return BadRequest("Account registration failed");
         }        
 
-        [HttpPost]
+        [HttpPut]
         [Route("api/account/changepassword")]
         public IHttpActionResult ChangePassword(string username, string newPassword, string currentPassword = "")
         {
@@ -144,6 +121,15 @@ namespace SharpDevelopWebApi.Controllers
             else
                 return BadRequest("Password change failed");
         }
+        
+        [Authorize]
+        [HttpGet]
+        [Route("api/account/me")]
+        public IHttpActionResult GetUserProfile()
+        {
+        	return Ok(UserAccount.GetCurrentUser());
+        }
+        
     }
 
 

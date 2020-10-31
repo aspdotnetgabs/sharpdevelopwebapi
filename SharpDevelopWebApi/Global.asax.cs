@@ -27,7 +27,9 @@ namespace SharpDevelopWebApi
         	
 			var config = System.Web.Http.GlobalConfiguration.Configuration;
 			
-			config.EnableCors(new EnableCorsAttribute("*","*","*"));		
+			config.EnableCors(new EnableCorsAttribute("*","*","*"));	
+
+			config.MessageHandlers.Add(new JWTAuth.TokenValidationHandler());			
 			
 			config.MapHttpAttributeRoutes();
             // Redirect root to Swagger UI
@@ -59,23 +61,5 @@ namespace SharpDevelopWebApi
             _backgroundJobServer.Dispose();
         }        
 
-        #region SessionInWebAPI
-        // Avoid Session at all cost!!!
-        // Use Session in Web Api in some special cases ONLY if you know what you're doing.
-        public override void Init()
-        {
-            this.PostAuthenticateRequest += MvcApplication_PostAuthenticateRequest;
-            base.Init();
-        }
-
-        void MvcApplication_PostAuthenticateRequest(object sender, EventArgs e)
-        {
-            bool IsWebApiRequest = HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/" + API_Route_Prefix);
-            if (IsWebApiRequest)
-            {
-                HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);
-            }
-        }
-        #endregion
     }
 }
