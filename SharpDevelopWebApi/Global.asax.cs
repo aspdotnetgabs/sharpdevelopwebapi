@@ -32,6 +32,7 @@ namespace SharpDevelopWebApi
 			config.MessageHandlers.Add(new JWTAuth.TokenValidationHandler());			
 			
 			config.MapHttpAttributeRoutes();
+			
             // Redirect root to Swagger UI
             config.Routes.MapHttpRoute(
                 name: "Swagger UI",
@@ -39,6 +40,7 @@ namespace SharpDevelopWebApi
                 defaults: null,
                 constraints: null,
                 handler: new RedirectHandler(SwaggerDocsConfig.DefaultRootUrlResolver, "swagger"));
+            
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: API_Route_Prefix + "/{controller}/{id}",

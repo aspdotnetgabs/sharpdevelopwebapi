@@ -38,7 +38,7 @@ namespace SharpDevelopWebApi
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "SharpDevelopWebApi | <a href=\"/vueclientapp\">Vue Client App</a> | <a href=\"/vuesimpleapp\">Vue Simple Tutorial</a> | <a href=\"https://bernardgabon.com/sdwebapi\">Download</a> | <a href=\"https://github.com/aspdotnetgabs/sharpdevelopwebapi\">Code</a>");
+                        c.SingleApiVersion("v1", "SharpDevelopWebApi | <a href=\"https://bernardgabon.com/sdwebapi\">Download</a> | <a href=\"https://github.com/aspdotnetgabs/sharpdevelopwebapi\">Code</a>");
 
                         // If you want the output Swagger docs to be indented properly, enable the "PrettyPrint" option.
                         //
