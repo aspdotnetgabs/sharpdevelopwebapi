@@ -62,6 +62,9 @@
     <Reference Include="Dapper">
       <HintPath>packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper.Contrib">
+      <HintPath>packages\Dapper.Contrib.1.43\lib\net45\Dapper.Contrib.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>packages\EntityFramework.SharpDevelop.6.0.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -207,6 +210,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App_Data\BillboardTo2013.xlsx" />
     <None Include="App_Data\MyAccessDb.mdb" />
     <None Include="Global.asax" />
     <None Include="index.html" />
