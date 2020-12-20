@@ -140,7 +140,7 @@ namespace SharpDevelopWebApi.Controllers
 			{
 			    connection.Open();	
 				connection.DeleteAll<Song>();			    
-			    // connection.Insert(songs);
+			    connection.Insert(songs);
 			}
 
 			return Ok(songs);
