@@ -25,128 +25,126 @@ namespace SharpDevelopWebApi.Controllers
 	/// Description of ValuesController.
 	/// </summary>
 	public class SampleController : ApiController
-	{	
+	{
 		[Authorize]
-        [HttpGet]
-        [Route("api/sample/getproduct")]
-        public IHttpActionResult GetProduct()
-        {
-        	var product = new Product
-        	{
-        		Id = 1,
-        		Name = "Ariel",
-        		Price = 7.50M
-        	};
+		[HttpGet]
+		[Route("api/sample/getproduct")]
+		public IHttpActionResult GetProduct()
+		{
+			var product = new Product 
+			{
+				Id = 1,
+				Name = "Ariel",
+				Price = 7.50M
+			};
         	
-            return Ok(product);
-        }
+			return Ok(product);
+		}
 		
-        [Authorize(Roles="admin")]
-        [HttpPost]
-        [Route("api/sample/addproduct")]
-        public IHttpActionResult PostProduct(Product product)
-        {
-            return Ok(product);
-        }
+		[Authorize(Roles = "admin")]
+		[HttpPost]
+		[Route("api/sample/addproduct")]
+		public IHttpActionResult PostProduct(Product product)
+		{
+			return Ok(product);
+		}
         
-        [AllowAnonymous]
-        [Route("api/sample/getcontacts")]
-        public IHttpActionResult GetContacts()
-        {
-        	// @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + @"\MyAccessDb.mdb";
-        	string mdb = ConfigurationManager.ConnectionStrings["MyAccessDb"].ConnectionString; // @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + @"\MyAccessDb.mdb";
-        	var contact = new 
+		[AllowAnonymous]
+		[Route("api/sample/getcontacts")]
+		public IHttpActionResult GetContacts()
+		{
+			// @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + @"\MyAccessDb.mdb";
+			string mdb = ConfigurationManager.ConnectionStrings["MyAccessDb"].ConnectionString; // @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + @"\MyAccessDb.mdb";
+			var contact = new 
         	{
         		FullName = "Hewbhurt Gabon",
         		Email = "gabs@gmail.com",
         		BirthDate = "1981/09/17"
         	};
 
-            using (var conn = new OleDbConnection(mdb))
-            {
-                //        		conn.Execute( "INSERT INTO contacts(FullName, Email, BirthDate) "
-                //	            	+ "VALUES (@FullName, @Email, @BirthDAte)", contact);
-                var contactList = conn.Query("Select Id, FullName, Email, BirthDate from contacts").ToList();
-                return Ok(contactList);
-            }
+			using (var conn = new OleDbConnection(mdb)) {
+				//        		conn.Execute( "INSERT INTO contacts(FullName, Email, BirthDate) "
+				//	            	+ "VALUES (@FullName, @Email, @BirthDAte)", contact);
+				var contactList = conn.Query("Select Id, FullName, Email, BirthDate from contacts").ToList();
+				return Ok(contactList);
+			}
             
-        }
+		}
 
-        [HttpPost]
-        [FileUpload.SwaggerForm()]
-        [Route("api/sample/upload")]
-        public IHttpActionResult UploadFile()
-        {
-            var httpRequest = HttpContext.Current.Request;
-            if (httpRequest.Files.Count > 0)
-            {
-                var docfiles = new List<string>();
-                foreach (string file in httpRequest.Files)
-                {
-                    var postedFile = httpRequest.Files[file];
-                    var filePath = HttpContext.Current.Server.MapPath("~/UploadedFiles/" + postedFile.FileName);
-                    postedFile.SaveAs(filePath);
-                    docfiles.Add(System.IO.Path.GetFileName(filePath));
-                }
-                return Ok(new { docfiles });
-            }
+		[HttpPost]
+		[FileUpload.SwaggerForm()]
+		[Route("api/sample/upload")]
+		public IHttpActionResult UploadFile()
+		{
+			var httpRequest = HttpContext.Current.Request;
+			if (httpRequest.Files.Count > 0) {
+				var docfiles = new List<string>();
+				foreach (string file in httpRequest.Files) 
+				{
+					var postedFile = httpRequest.Files[file];
+					var filePath = HttpContext.Current.Server.MapPath("~/UploadedFiles/" + postedFile.FileName);
+					postedFile.SaveAs(filePath);
+					docfiles.Add(System.IO.Path.GetFileName(filePath));
+				}
+				return Ok(new { docfiles });
+			}
 
-            return BadRequest();
-        }
+			return BadRequest();
+		}
         
-        [HttpPost]
-        [FileUpload.SwaggerForm()]
-        [Route("api/sample/uploadphoto")]
-        public IHttpActionResult UploadImage()
-        {
-        	var postedFile = HttpContext.Current.Request.Files[0];
-            var filePath = postedFile.SaveAsJpegFile();
-            return Ok(filePath);
-        }    
+		[HttpPost]
+		[FileUpload.SwaggerForm()]
+		[Route("api/sample/uploadphoto")]
+		public IHttpActionResult UploadImage()
+		{
+			var postedFile = HttpContext.Current.Request.Files[0];
+			var fileName = postedFile.SaveAsJpegFile();
+			return Ok(fileName);
+		}
 
 
-        [HttpPost]
-        [Route("api/sample/sendmail")]
-        public IHttpActionResult SendEmail(string EmailTo, string Subject, string Message)
-        {
-            var success = EmailService.SendEmail(EmailTo, Subject, Message);
-            if (success)
-                return Ok("Successfully sent.");
-            else
-                return BadRequest("Sending failed.");
-        }
+		[HttpPost]
+		[Route("api/sample/sendmail")]
+		public IHttpActionResult SendEmail(string EmailTo, string Subject, string Message)
+		{
+			var success = EmailService.SendEmail(EmailTo, Subject, Message);
+			if (success)
+				return Ok("Successfully sent.");
+			else
+				return BadRequest("Sending failed.");
+		}
         
-        [HttpGet]
-        [Route("api/sample/importsongs")]
-        public IHttpActionResult ImportSongs()
-        {        	
+		[HttpGet]
+		[Route("api/sample/importsongs")]
+		public IHttpActionResult ImportSongs()
+		{        	
 			var data = System.IO.File.ReadAllBytes(HttpContext.Current.Server.MapPath("~/App_Data/BillboardTo2013.xlsx"));
-	            var import = new ImportFromExcel();
-	            import.LoadXlsx(data); 
+			var import = new ImportFromExcel();
+			import.LoadXlsx(data); 
 
-	            int peak = 0;
-	            var songs = import.ExcelToList<Song2>(1, 1).Select(s => new Song
-	                                                                        {
-	                                                                        	Artist = s.Artist,
-	                                                                        	Title = s.Title,
-	                                                                        	ReleaseYear = int.Parse(s.ReleaseYear),
-	                                                                        	RecordLabel = s.RecordLabel,
-	                                                                        	Duration = s.Duration,
-	                                                                        	PeakChartPosition = int.TryParse(s.PeakChartPosition, out peak) ? peak : 0
-	                                                                        });
+			int peak = 0;
+			var songs = import.ExcelToList<Song2>(1, 1).Select(s => new Song 
+           	{
+				Artist = s.Artist,
+				Title = s.Title,
+				ReleaseYear = int.Parse(s.ReleaseYear),
+				RecordLabel = s.RecordLabel,
+				Duration = s.Duration,
+				PeakChartPosition = int.TryParse(s.PeakChartPosition, out peak) ? peak : 0
+			});
 	            
 			string conn = ConfigurationManager.ConnectionStrings["DefaultConn"].ConnectionString;
-			using (var connection = new SqlConnection(conn))
+			using (var connection = new SqlConnection(conn)) 
 			{
-			    connection.Open();	
+				connection.Open();	
 				connection.DeleteAll<Song>();			    
-			    connection.Insert(songs);
+				connection.Insert(songs);
 			}
 
 			return Ok(songs);
-        }
+		}
               
-    }
+	}
 
 
 

@@ -1,13 +1,4 @@
-﻿// *** Snippets ***
-// public byte[] Picture { get; set; }
-// <input type="file" name="FileUpload" accept="image/*" />
-// [HttpPost]
-// public ActionResult Create(MyClass myObject, HttpPostedFileBase FileUpload)
-// myObject.Picture = FileUpload.ToImageByteArray();
-// <img src="data:image/jpg;base64,@Model.Picture.ToBase64String()" />
-// <img src="@Model.Picture.ToBase64StringHTMLImgSrc()" />
-
-using System;
+﻿using System;
 using System.Web;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -107,7 +98,8 @@ public static class ImageUploadExtension
 
                 string folder = string.IsNullOrEmpty(strFolder) ? System.Web.HttpContext.Current.Server.MapPath("~/" + FOLDER) : System.Web.HttpContext.Current.Server.MapPath("~/" + strFolder);
                 string filename = string.IsNullOrEmpty(strFileName) ? Path.GetFileNameWithoutExtension(File.FileName) : strFileName;
-                string filenameExt = filename + "_" + GenerateUniqueChars() + ".jpg";
+                bool fileExist =  System.IO.File.Exists(Path.Combine(folder, filename + ".jpg"));
+                string filenameExt = filename + GenerateUniqueChars(fileExist) + ".jpg";
                 string path = Path.Combine(folder, filenameExt);
 
                 System.IO.Directory.CreateDirectory(folder);
@@ -360,9 +352,12 @@ public static class ImageUploadExtension
         }
     }
 
-    private static string GenerateUniqueChars()
+    private static string GenerateUniqueChars(bool fileExist = true)
     {
-    	return DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+    	if(fileExist)
+    		return "_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"); // append this to avoid file overwrite
+    	else
+    		return string.Empty;
     }
     #endregion
 
