@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
@@ -15,54 +16,91 @@ namespace SharpDevelopWebApi.Controllers
 	
 	public class VisionController : ApiController
 	{
+		
         // Add your Computer Vision subscription key and endpoint
         string subscriptionKey = "7d28cfb8f90547d79edfd384b46c7987";
         string endpoint = "https://westcentralus.api.cognitive.microsoft.com";
-        string ANALYZE_LOCAL_IMAGE = @"C:\Users\DRIVE_D\My Pictures\taylor ai vision.jpg"; 
         
-        /*
-         * AUTHENTICATE
-         * Creates a Computer Vision client used by each example.
-         */
+		// AUTHENTICATE. Creates a Computer Vision client
         private static ComputerVisionClient Authenticate(string endpoint, string key)
         {
-            ComputerVisionClient client =
-              new ComputerVisionClient(new ApiKeyServiceClientCredentials(key))
-              { Endpoint = endpoint };
+            ComputerVisionClient client = new ComputerVisionClient(new ApiKeyServiceClientCredentials(key))
+            { 
+            	Endpoint = endpoint
+            };
+            
             return client;
-        }        
+        }
+
+        private static string CreateDescription(ImageAnalysis imgAnalysis)
+        {
+        	var imageDesc = string.Empty;
+            foreach (var category in imgAnalysis.Categories)
+            {
+                if (category.Detail != null && category.Detail.Landmarks != null)
+                {
+                    foreach (var landmark in category.Detail.Landmarks)
+                    {
+                    	imageDesc += " I found a landmark " + landmark.Name;
+                    }
+                }
+                
+                if (category.Detail != null && category.Detail.Celebrities != null)
+                {
+                    foreach (var celeb in category.Detail.Celebrities)
+                    {
+                    	imageDesc += celeb.Name + " is in this photo. ";
+                    }
+                }              
+            }
+            
+			foreach (var caption in imgAnalysis.Description.Captions)
+            {
+				imageDesc += " In summary, the photo is about " + caption.Text;
+            }        
+
+			return imageDesc;
+        }
+		
         
-        
-		 private async Task<ImageAnalysis> AnalyzeImageLocal(ComputerVisionClient client, string localImage)
-		 {
+		/// <summary>
+		/// Retrieves a specific product by unique id
+		/// </summary>        
+		[HttpPost]
+		[FileUpload.SwaggerForm()]
+		public async Task<IHttpActionResult> UploadImage(bool asJson = false)
+		{
+			var postedFile = HttpContext.Current.Request.Files[0];
+			var imgByteArray = postedFile.ToImageByteArray();
+			
+			ComputerVisionClient client = Authenticate(endpoint, subscriptionKey);
+			
             // Creating a list that defines the features to be extracted from the image. 
             List<VisualFeatureTypes> features = new List<VisualFeatureTypes>()
 	        {
-	          VisualFeatureTypes.Categories, VisualFeatureTypes.Description,
-	          VisualFeatureTypes.Faces, VisualFeatureTypes.ImageType,
-	          VisualFeatureTypes.Tags, VisualFeatureTypes.Adult,
-	          VisualFeatureTypes.Color, VisualFeatureTypes.Brands,
-	          VisualFeatureTypes.Objects
+				VisualFeatureTypes.Categories, 
+				VisualFeatureTypes.Description
 	        };
             
-            using (Stream analyzeImageStream = File.OpenRead(localImage))
+            // Analyze image
+            using (Stream analyzeImageStream = new MemoryStream(imgByteArray))
             {
                 // Analyze the local image.
                 ImageAnalysis results = await client.AnalyzeImageInStreamAsync(analyzeImageStream, features);
-                return results;
-            }		 	
-		 }
-		 
-		 
-		[HttpGet] 
-		public async Task<IHttpActionResult> GetVision()
-		{
-			ComputerVisionClient client = Authenticate(endpoint, subscriptionKey);
-			var res = await AnalyzeImageLocal(client, ANALYZE_LOCAL_IMAGE);
-			return Ok(res);
+                
+                if(asJson)
+                	return Ok(results); 
+               	else
+               	{
+               		var imgDesc = CreateDescription(results);
+               		return Ok(imgDesc);
+               	}
+            }
 		}
 		
-		
+     
+               		
+
 
 	}
 }

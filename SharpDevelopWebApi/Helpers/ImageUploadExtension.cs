@@ -7,7 +7,7 @@ using System.IO;
 public static class ImageUploadExtension
 {
     #region DefaultSettings
-    private const int MAX_HEIGHT = 600; // default height in pixel
+    private const int MAX_HEIGHT = 720; // default height in pixel
     private const bool QUALITY = true; // true = high quality, false = fast performance
     /// <summary>
     /// The folder name of where the uploaded images are stored. http://SERVER/FOLDER
