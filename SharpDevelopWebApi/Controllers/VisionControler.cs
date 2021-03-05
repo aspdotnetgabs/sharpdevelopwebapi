@@ -79,10 +79,9 @@ namespace SharpDevelopWebApi.Controllers
 				VisualFeatureTypes.Description
 			};
             
-			// Analyze image
+			// Analyze the image
 			using (Stream analyzeImageStream = new MemoryStream(imgByteArray)) 
-			{
-				// Analyze the local image.
+			{				
 				ImageAnalysis results = await client.AnalyzeImageInStreamAsync(analyzeImageStream, features);
                 
 				if (asJson)
