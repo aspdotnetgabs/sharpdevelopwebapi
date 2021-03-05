@@ -39,7 +39,8 @@ namespace SharpDevelopWebApi.Controllers
 			{
 				if (category.Detail != null && category.Detail.Landmarks != null) 
 				{
-					foreach (var landmark in category.Detail.Landmarks) {
+					foreach (var landmark in category.Detail.Landmarks) 
+					{
 						imageDesc += " I found a landmark " + landmark.Name;
 					}
 				}
