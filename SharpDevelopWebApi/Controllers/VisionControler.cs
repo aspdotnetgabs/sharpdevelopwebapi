@@ -62,10 +62,7 @@ namespace SharpDevelopWebApi.Controllers
 			return imageDesc;
         }
 		
-        
-		/// <summary>
-		/// Retrieves a specific product by unique id
-		/// </summary>        
+            
 		[HttpPost]
 		[FileUpload.SwaggerForm()]
 		public async Task<IHttpActionResult> UploadImage(bool asJson = false)
