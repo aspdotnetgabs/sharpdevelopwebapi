@@ -18,8 +18,8 @@ namespace SharpDevelopWebApi.Controllers
 	{
 		
         // Add your Computer Vision subscription key and endpoint
-        string subscriptionKey = "7d28cfb8f90547d79edfd384b46c7987";
-        string endpoint = "https://westcentralus.api.cognitive.microsoft.com";
+        string subscriptionKey = "PUT YOUR API KEY HERE";
+        string endpoint = "PUT YOUR COMPUTER VISION API ENDPOINT HERE";
         
 		// AUTHENTICATE. Creates a Computer Vision client
         private static ComputerVisionClient Authenticate(string endpoint, string key)
