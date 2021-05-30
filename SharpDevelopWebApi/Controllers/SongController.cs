@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Mvc;
 using SharpDevelopWebApi.Models;
 
 namespace SharpDevelopWebApi.Controllers

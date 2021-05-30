@@ -15,7 +15,6 @@ using System.Web.Http.Cors;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using SharpDevelopWebApi.Models;
-using SimpleExcelImport;
 
 
 
@@ -113,36 +112,7 @@ namespace SharpDevelopWebApi.Controllers
 			else
 				return BadRequest("Sending failed.");
 		}
-        
-		[HttpGet]
-		[Route("api/sample/importsongs")]
-		public IHttpActionResult ImportSongs()
-		{        	
-			var data = System.IO.File.ReadAllBytes(HttpContext.Current.Server.MapPath("~/App_Data/BillboardTo2013.xlsx"));
-			var import = new ImportFromExcel();
-			import.LoadXlsx(data); 
-
-			int peak = 0;
-			var songs = import.ExcelToList<Song2>(1, 1).Select(s => new Song 
-           	{
-				Artist = s.Artist,
-				Title = s.Title,
-				ReleaseYear = int.Parse(s.ReleaseYear),
-				RecordLabel = s.RecordLabel,
-				Duration = s.Duration,
-				PeakChartPosition = int.TryParse(s.PeakChartPosition, out peak) ? peak : 0
-			});
-	            
-			string conn = ConfigurationManager.ConnectionStrings["DefaultConn"].ConnectionString;
-			using (var connection = new SqlConnection(conn)) 
-			{
-				connection.Open();	
-				connection.DeleteAll<Song>();			    
-				connection.Insert(songs);
-			}
-
-			return Ok(songs);
-		}
+       
               
 	}
 
