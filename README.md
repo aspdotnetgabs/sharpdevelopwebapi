@@ -11,8 +11,9 @@ A light-weight solid starting point for developing ASP.NET Web API application i
 - AutoMapper
 - Hangfire Core / Hangfire.MemoryStorage
 - FluentValidation
+- CsvHelper
 - ~~TuesPechkin PDF~~
-- SimpleExcelImport
+- ~~SimpleExcelImport~~
 - Image/File Upload
 - Email / SMTP
 - SimpleLogger
