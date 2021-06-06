@@ -52,7 +52,7 @@ Just copy Web.github.config then rename to Web.config
 
 ### Portable Asp.Net Web Server
 
-Run the project without SharpDevelop in this tiny web server!
+Run the project without SharpDevelop in this tiny web server! Make sure to change Compiling Target CPU to ANY PROCESSOR.
 
 ### Database Browsers
 
