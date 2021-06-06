@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Hosting;
+
 
 
 public static class SimpleLogger
@@ -18,7 +16,7 @@ public static class SimpleLogger
     /// </summary>
     public static void Init()
     {
-    	var ContentRootPath = HostingEnvironment.MapPath("~");
+    	var ContentRootPath = AppDomain.CurrentDomain.BaseDirectory; // HostingEnvironment.MapPath("~");
 
         DatetimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
         string Date = DateTime.UtcNow.ToString("yyyyMMdd");
