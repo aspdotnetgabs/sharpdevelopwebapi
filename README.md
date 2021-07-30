@@ -76,7 +76,7 @@ You can browse the database using SQL Server Management Studio (SSMS) or portabl
 - JWT Account Login
 - Bootstrap with Vue
 - Single File Component with httpVueLoader
-- Vuetify
+- [GabsVuetifyNoCLINodeWebpack](https://github.com/hubert17/GabsVuetifyNoCLINodeWebpack) - Vue SPA without CLI, Node and Webpack
 
 ### Warning
 
